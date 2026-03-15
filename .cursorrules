@@ -1,0 +1,894 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AXILER — Figma-to-Code Rules (Next.js 16 · Tailwind CSS v4 · React 19)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# PURPOSE: Enforce a 100% pixel-perfect Figma replication workflow.
+# Every section you build MUST match the Figma frame exactly — spacing,
+# typography, colors, breakpoints, and interactions.
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 0 · GOLDEN RULES (read first, always)
+
+1. **NEVER use raw / arbitrary values** (e.g. `w-[347px]`, `text-[#3a86ff]`, `mt-[22px]`).
+   Every value MUST come from the Tailwind design-token system defined in
+   `globals.css` via `@theme inline { }`. If a Figma value doesn't map to an
+   existing token, **add a new token first**, then reference it.
+2. **Mobile-first, always.** Default styles target the smallest viewport.
+   Layer up with `sm:`, `md:`, `lg:`, `xl:`, and `2xl:` prefixes.
+3. **Section-by-section.** Each Figma frame/section becomes its own component.
+   Never build the entire page in one file.
+4. **Pixel-perfect fidelity.** Match fonts, sizes, weights, line-heights, letter
+   spacing, colors, border-radii, shadows, and spacing 1:1 with Figma.
+5. **Zero layout shift.** Every image/media must have explicit `width` and
+   `height` or use `aspect-ratio` tokens to prevent CLS.
+
+
+## 1 · TECH STACK & VERSIONS
+
+| Layer       | Tech                   | Version    |
+|-------------|------------------------|------------|
+| Framework   | Next.js (App Router)   | 16.x       |
+| UI Library  | React                  | 19.x       |
+| Language    | TypeScript             | 5.x        |
+| Styling     | Tailwind CSS           | 4.x        |
+| PostCSS     | @tailwindcss/postcss   | 4.x        |
+| Icons       | react-icons            | latest     |
+| Fonts       | next/font/google       | built-in   |
+
+- Tailwind v4 uses the **CSS-first** configuration model. There is **NO
+  `tailwind.config.ts`**. All customisation lives inside `globals.css` under
+  `@theme inline { }`.
+
+
+## 2 · PROJECT STRUCTURE
+
+```
+axiler/
+├── app/
+│   ├── globals.css          ← design tokens + base styles
+│   ├── layout.tsx           ← root layout (fonts, metadata, providers)
+│   ├── page.tsx             ← home page (assembles sections)
+│   └── (routes)/            ← additional pages via route groups
+├── components/
+│   ├── sections/            ← Figma section components
+│   │   ├── shared/          ← sections used across multiple pages
+│   │   │   ├── CTA.tsx
+│   │   │   └── Footer.tsx
+│   │   ├── home/            ← sections specific to the home page
+│   │   │   ├── Hero.tsx
+│   │   │   ├── Features.tsx
+│   │   │   ├── Pricing.tsx
+│   │   │   └── Testimonials.tsx
+│   │   └── (other-pages)/   ← sections for other pages
+│   ├── ui/                  ← atomic UI primitives
+│   │   ├── Button.tsx
+│   │   ├── Badge.tsx
+│   │   ├── Card.tsx
+│   │   ├── Input.tsx
+│   │   ├── SectionWrapper.tsx
+│   │   └── …
+│   ├── layout/              ← structural layout components
+│   │   ├── Navbar.tsx
+│   │   ├── Container.tsx
+│   │   └── …
+│   └── shared/              ← reusable composed components
+│       ├── LogoCloud.tsx
+│       ├── SocialLinks.tsx
+│       └── …
+├── lib/
+│   ├── constants.ts         ← site-wide constants (nav links, etc.)
+│   ├── types.ts             ← shared TypeScript types/interfaces
+│   └── utils.ts             ← helper functions (cn(), formatters, etc.)
+├── public/
+│   ├── images/              ← optimised static images
+│   └── icons/               ← custom SVG icons (not in react-icons)
+├── hooks/                   ← custom React hooks
+│   ├── useMediaQuery.ts
+│   ├── useIntersectionObserver.ts
+│   └── …
+└── ...config files
+```
+
+### File naming rules
+- **Sections** → `PascalCase.tsx` inside `components/sections/{page or shared}/`
+- **Components** → `PascalCase.tsx` inside `components/{ui,layout,shared}/`
+- **Utilities / hooks** → `camelCase.ts`
+- **One component per file.** Co-locate types, sub-components and local helpers
+  only when they are exclusively used by that component.
+
+
+## 3 · DESIGN TOKENS (globals.css)
+
+All Figma design values are encoded as Tailwind v4 theme tokens inside
+`globals.css`. This is the **single source of truth** for the design system.
+
+```css
+@import "tailwindcss";
+
+/* ── CSS Variables ─────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --background: #ffffff;
+  --foreground: #171717;
+
+  /* Brand Palette — extract exact hex values from Figma */
+  --brand-primary: #TO_BE_SET;
+  --brand-primary-light: #TO_BE_SET;
+  --brand-primary-dark: #TO_BE_SET;
+  --brand-secondary: #TO_BE_SET;
+  --brand-accent: #TO_BE_SET;
+
+  /* Neutrals */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+
+  /* Semantic */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+
+  /* Shadows — match Figma shadow tokens */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Border radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    /* Override any other light-specific tokens here */
+  }
+}
+
+/* ── Tailwind v4 Theme Tokens ──────────────────────────────────── */
+@theme inline {
+  /* Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-light: var(--brand-primary-light);
+  --color-brand-primary-dark: var(--brand-primary-dark);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-accent: var(--brand-accent);
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-950: var(--neutral-950);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Spacing — extend when Figma uses non-standard values */
+  /* e.g. --spacing-18: 4.5rem; */
+
+  /* Border Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-full: var(--radius-full);
+
+  /* Shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+}
+
+/* ── Base Resets ───────────────────────────────────────────────── */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus visible ring for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+```
+
+### Token rules
+- **When Figma uses a value not in the token system:** add a new CSS variable in
+  `:root` AND a corresponding `@theme inline` entry. Commit the token before
+  using it in a component.
+- **Naming convention:** `--color-{category}-{shade}`, `--spacing-{name}`,
+  `--radius-{size}`, `--shadow-{size}`.
+- **NEVER skip the token layer.** `bg-brand-primary` ✅ · `bg-[#3a86ff]` ❌
+
+
+## 4 · COMPONENT PATTERNS
+
+### 4.1 Section Component Template
+
+Every Figma section/frame follows this exact template:
+
+```tsx
+// components/sections/home/SectionName.tsx
+import { SectionWrapper } from "@/components/ui/SectionWrapper";
+
+export default function SectionName() {
+  return (
+    <SectionWrapper id="section-name" className="py-16 md:py-24 lg:py-32">
+      {/* Section content */}
+    </SectionWrapper>
+  );
+}
+```
+
+### 4.2 SectionWrapper (reusable)
+
+```tsx
+// components/ui/SectionWrapper.tsx
+interface SectionWrapperProps {
+  children: React.ReactNode;
+  id?: string;
+  className?: string;
+  as?: React.ElementType;
+}
+
+export function SectionWrapper({
+  children,
+  id,
+  className = "",
+  as: Component = "section",
+}: SectionWrapperProps) {
+  return (
+    <Component id={id} className={`w-full ${className}`}>
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        {children}
+      </div>
+    </Component>
+  );
+}
+```
+
+### 4.3 Page Assembly
+
+```tsx
+// app/page.tsx
+import Hero from "@/components/sections/home/Hero";
+import Features from "@/components/sections/home/Features";
+import Pricing from "@/components/sections/home/Pricing";
+import Testimonials from "@/components/sections/home/Testimonials";
+import CTA from "@/components/sections/shared/CTA";
+
+export default function Home() {
+  return (
+    <main>
+      <Hero />
+      <Features />
+      <Pricing />
+      <Testimonials />
+      <CTA />
+    </main>
+  );
+}
+```
+
+### 4.4 Server vs Client Components
+
+| Default                      | Use `"use client"` when…                   |
+|------------------------------|--------------------------------------------|
+| All components are **Server** | useState, useEffect, useRef                |
+| by default in App Router     | Event handlers (onClick, onChange, etc.)    |
+|                              | Browser APIs (window, localStorage, etc.)  |
+|                              | Intersection Observer, animations          |
+|                              | Third-party client-only libraries          |
+
+**Rule:** Keep the `"use client"` boundary as low in the tree as possible.
+Extract only the interactive part into a small client component and keep the
+parent as a server component.
+
+
+## 5 · TAILWIND CSS USAGE RULES
+
+### 5.1 Strict class ordering (Logical groups)
+
+Follow this ordering in every `className`:
+1. **Layout** → `flex`, `grid`, `block`, `inline-flex`
+2. **Position** → `relative`, `absolute`, `sticky`, `fixed`
+3. **Box model** → `w-`, `h-`, `min-w-`, `max-w-`, `p-`, `m-`
+4. **Typography** → `text-`, `font-`, `leading-`, `tracking-`
+5. **Background / Border** → `bg-`, `border-`, `rounded-`
+6. **Effects** → `shadow-`, `opacity-`, `blur-`
+7. **Transitions** → `transition-`, `duration-`, `ease-`
+8. **State variants** → `hover:`, `focus:`, `active:`, `group-hover:`
+9. **Responsive** → `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
+
+### 5.2 Banned patterns
+
+```
+❌ NEVER DO THIS:
+- text-[14px]          → use text-sm or a custom token
+- bg-[#ff5733]         → define a token, then use bg-{token-name}
+- w-[345px]            → use w-full, max-w-sm, or a token
+- mt-[22px]            → use mt-5 or mt-6 (closest standard value)
+- p-[30px]             → use p-7 or p-8 and adjust the token
+- leading-[1.4]        → use leading-snug, leading-normal, or define a token
+- tracking-[0.02em]    → use tracking-tight, tracking-wide, or define a token
+- gap-[18px]           → use gap-4 or gap-5 or define a token
+- rounded-[12px]       → use rounded-xl or define --radius-custom
+- shadow-[...]         → define a --shadow-custom token
+- h-[100vh]            → use h-screen or h-dvh
+- from-[#...] to-[#...] → define gradient color tokens
+
+✅ ALWAYS DO THIS:
+- Use Tailwind's built-in scale values
+- Add custom tokens to @theme inline {} when no suitable value exists
+- Reference tokens via their Tailwind utility name
+```
+
+### 5.3 Responsive breakpoints
+
+| Prefix | Width    | Target               |
+|--------|----------|----------------------|
+| (none) | 0px+     | Mobile (default)     |
+| `sm:`  | 640px+   | Large phones         |
+| `md:`  | 768px+   | Tablets              |
+| `lg:`  | 1024px+  | Small laptops        |
+| `xl:`  | 1280px+  | Desktops             |
+| `2xl:` | 1536px+  | Large desktops       |
+
+**Mobile-first rule:** Write the mobile layout first with no prefix, then add
+larger breakpoint overrides.
+
+```tsx
+// ✅ Correct — mobile-first
+<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+// ❌ Wrong — desktop-first
+<div className="grid grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
+```
+
+### 5.4 Container strategy
+
+Never use `container` utility. Instead always use the `SectionWrapper` with
+`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8` for consistent page gutters.
+
+
+## 6 · TYPOGRAPHY RULES
+
+### 6.1 Font setup (already in layout.tsx)
+
+```tsx
+import { Geist, Geist_Mono } from "next/font/google";
+
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+```
+
+If the Figma design uses a **different** font:
+1. Import it via `next/font/google` or `next/font/local`.
+2. Add the CSS variable to `<body>`.
+3. Register it in `@theme inline { --font-{name}: var(--font-{name}-var); }`.
+4. Use it with `font-{name}`.
+
+### 6.2 Type scale mapping
+
+Map Figma text styles to Tailwind utilities:
+
+| Figma Style     | Tailwind Class                                    |
+|-----------------|---------------------------------------------------|
+| H1 / Hero       | `text-4xl sm:text-5xl lg:text-6xl font-bold`      |
+| H2 / Section    | `text-3xl sm:text-4xl lg:text-5xl font-bold`      |
+| H3 / Subsection | `text-2xl sm:text-3xl font-semibold`               |
+| H4              | `text-xl sm:text-2xl font-semibold`                |
+| H5              | `text-lg sm:text-xl font-medium`                   |
+| H6              | `text-base sm:text-lg font-medium`                 |
+| Body Large      | `text-lg leading-relaxed`                          |
+| Body            | `text-base leading-relaxed`                        |
+| Body Small      | `text-sm leading-relaxed`                          |
+| Caption         | `text-xs leading-normal`                           |
+| Overline        | `text-xs font-semibold uppercase tracking-widest`  |
+
+### 6.3 Semantic headings
+
+Always use the correct HTML heading element (`h1`–`h6`) matching the visual
+hierarchy. One `<h1>` per page. Style with Tailwind classes, not the element tag.
+
+```tsx
+// ✅ Correct
+<h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
+
+// ❌ Wrong — div masquerading as heading
+<div className="text-3xl font-bold">
+```
+
+
+## 7 · IMAGE & MEDIA RULES
+
+### 7.1 Always use next/image
+
+```tsx
+import Image from "next/image";
+
+<Image
+  src="/images/hero-illustration.webp"
+  alt="Descriptive alt text for accessibility"
+  width={800}
+  height={600}
+  className="w-full h-auto rounded-xl object-cover"
+  priority  // for above-the-fold images
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+/>
+```
+
+### 7.2 Image rules
+- **Always** set explicit `width` and `height` from the Figma frame.
+- **Always** provide meaningful `alt` text.
+- **Always** add `priority` to hero/LCP images.
+- **Always** add `sizes` prop for responsive images.
+- **Always** use `object-cover` or `object-contain` as appropriate.
+- **Prefer** WebP format. Export from Figma as WebP.
+- **Store** images in `public/images/` with descriptive kebab-case names.
+
+
+## 8 · ICONS (react-icons)
+
+### 8.1 Usage
+
+```tsx
+import { HiArrowRight } from "react-icons/hi2";      // Heroicons v2
+import { FiCheck } from "react-icons/fi";              // Feather Icons
+import { RiStarFill } from "react-icons/ri";            // Remix Icons
+
+<HiArrowRight className="size-5 text-brand-primary" aria-hidden="true" />
+```
+
+### 8.2 Icon rules
+- Use `size-{n}` (Tailwind's `width` + `height` shorthand) for sizing.
+- Always add `aria-hidden="true"` for decorative icons.
+- For actionable icons (buttons), wrap in `<button>` with `aria-label`.
+- Color icons with `text-{token}` classes.
+- Prefer these icon sets (in order): **Heroicons v2** (`hi2`), **Lucide** (`lu`),
+  **Feather** (`fi`), **Remix** (`ri`). Match the icon set used in Figma.
+- **Never** use inline SVG when the icon exists in react-icons.
+
+
+## 9 · ACCESSIBILITY (a11y)
+
+### 9.1 Mandatory practices
+
+| Rule                           | Implementation                                   |
+|--------------------------------|--------------------------------------------------|
+| Semantic HTML                  | Use `<header>`, `<main>`, `<nav>`, `<section>`, `<footer>`, `<article>` |
+| Heading hierarchy              | One `<h1>` per page; sequential `<h2>`→`<h6>`   |
+| Alt text                       | Every `<Image>` must have descriptive `alt`      |
+| Keyboard navigation            | All interactive elements focusable & operable    |
+| Focus indicators               | Never remove `outline`; use `focus-visible:`     |
+| Color contrast                 | WCAG AA minimum (4.5:1 normal, 3:1 large text)  |
+| ARIA labels                    | Buttons/links with icon-only content → `aria-label` |
+| Reduced motion                 | `motion-reduce:` variant for all animations      |
+| Form labels                    | Every `<input>` has a visible `<label>`          |
+| Link text                      | No "click here" — use descriptive text           |
+
+
+## 10 · ANIMATIONS & TRANSITIONS
+
+### 10.1 Rules
+- **Default transition:** `transition-all duration-300 ease-in-out`
+- **Hover states:** Subtle scale, color shift, or shadow changes.
+- **Scroll animations:** Use Intersection Observer via a custom hook.
+- **ALWAYS** add `motion-reduce:transition-none` or `motion-reduce:animate-none`
+  alongside any animation for accessibility.
+- **Never** use CSS `@keyframes` in components. Define them in `globals.css`
+  and register them in `@theme inline`.
+- **Performance:** Only animate `transform` and `opacity`. Never animate
+  `width`, `height`, `top`, `left`, `margin`, or `padding`.
+
+### 10.2 Scroll-reveal hook
+
+```tsx
+// hooks/useIntersectionObserver.ts
+"use client";
+import { useEffect, useRef, useState } from "react";
+
+interface UseIntersectionObserverOptions {
+  threshold?: number;
+  rootMargin?: string;
+  triggerOnce?: boolean;
+}
+
+export function useIntersectionObserver({
+  threshold = 0.1,
+  rootMargin = "0px",
+  triggerOnce = true,
+}: UseIntersectionObserverOptions = {}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          if (triggerOnce) observer.unobserve(element);
+        }
+      },
+      { threshold, rootMargin }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [threshold, rootMargin, triggerOnce]);
+
+  return { ref, isIntersecting };
+}
+```
+
+### 10.3 Fade-up pattern
+
+```tsx
+"use client";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+
+export default function AnimatedSection() {
+  const { ref, isIntersecting } = useIntersectionObserver();
+
+  return (
+    <div
+      ref={ref}
+      className={`
+        transition-all duration-700 ease-out
+        motion-reduce:transition-none
+        ${isIntersecting
+          ? "translate-y-0 opacity-100"
+          : "translate-y-8 opacity-0"
+        }
+      `}
+    >
+      {/* Content */}
+    </div>
+  );
+}
+```
+
+
+## 11 · PERFORMANCE RULES
+
+### 11.1 Core Web Vitals targets
+
+| Metric | Target   |
+|--------|----------|
+| LCP    | < 2.5s   |
+| INP    | < 200ms  |
+| CLS    | < 0.1    |
+
+### 11.2 Mandatory optimisations
+
+1. **Server Components by default.** Only add `"use client"` when necessary.
+2. **next/image** for all images — never use raw `<img>`.
+3. **next/font** for fonts — never use `<link>` to Google Fonts.
+4. **Dynamic imports** for heavy client components:
+   ```tsx
+   import dynamic from "next/dynamic";
+   const HeavyChart = dynamic(() => import("@/components/shared/Chart"), {
+     ssr: false,
+     loading: () => <div className="h-64 animate-pulse rounded-xl bg-neutral-200" />,
+   });
+   ```
+5. **Preload critical assets** — use `priority` on hero images.
+6. **Avoid layout shift** — always set dimensions on images and embeds.
+7. **Lazy load below-the-fold sections** when they include heavy components.
+8. **Minimize client-side JavaScript** — avoid pulling large libraries into
+   client bundles.
+
+
+## 12 · SEO RULES
+
+### 12.1 Metadata (per page)
+
+```tsx
+// app/page.tsx (or any route page.tsx)
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Page Title — Axiler",
+  description: "Compelling meta description under 160 characters.",
+  openGraph: {
+    title: "Page Title — Axiler",
+    description: "Compelling meta description.",
+    url: "https://axiler.com",
+    siteName: "Axiler",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Axiler Open Graph Image",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Page Title — Axiler",
+    description: "Compelling meta description.",
+    images: ["/images/og-image.jpg"],
+  },
+};
+```
+
+### 12.2 Semantic structure
+
+- One `<h1>` per page.
+- Sequential heading hierarchy: `<h1>` → `<h2>` → `<h3>`.
+- Use `<main id="main-content">` for skip-link target.
+- Use `<nav aria-label="Main navigation">` for navbars.
+- Use `<section aria-labelledby="section-heading-id">` with matching heading id.
+
+
+## 13 · COMPONENT CODING STANDARDS
+
+### 13.1 Props interface
+
+Always define a TypeScript interface for component props:
+
+```tsx
+interface FeatureCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  className?: string;
+}
+
+export function FeatureCard({ icon, title, description, className = "" }: FeatureCardProps) {
+  return (
+    <div className={`flex flex-col items-start gap-4 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-md ${className}`}>
+      <div className="flex size-12 items-center justify-center rounded-lg bg-brand-primary/10 text-brand-primary">
+        {icon}
+      </div>
+      <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+      <p className="text-sm leading-relaxed text-neutral-600">{description}</p>
+    </div>
+  );
+}
+```
+
+### 13.2 cn() utility for conditional classes
+
+```tsx
+// lib/utils.ts
+export function cn(...classes: (string | boolean | undefined | null)[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
+// Usage
+<div className={cn(
+  "flex items-center gap-2 rounded-lg px-4 py-2",
+  variant === "primary" && "bg-brand-primary text-white",
+  variant === "outline" && "border border-neutral-300 text-foreground",
+  className
+)} />
+```
+
+### 13.3 Button component template
+
+```tsx
+// components/ui/Button.tsx
+import { cn } from "@/lib/utils";
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
+  children: React.ReactNode;
+}
+
+export function Button({
+  variant = "primary",
+  size = "md",
+  className,
+  children,
+  ...props
+}: ButtonProps) {
+  return (
+    <button
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary disabled:pointer-events-none disabled:opacity-50",
+        // Variants
+        variant === "primary" && "bg-brand-primary text-white hover:bg-brand-primary-dark active:scale-[0.98]",
+        variant === "secondary" && "bg-brand-secondary text-white hover:opacity-90",
+        variant === "outline" && "border border-neutral-300 bg-transparent text-foreground hover:bg-neutral-100",
+        variant === "ghost" && "bg-transparent text-foreground hover:bg-neutral-100",
+        // Sizes
+        size === "sm" && "h-9 px-3 text-sm",
+        size === "md" && "h-11 px-5 text-base",
+        size === "lg" && "h-13 px-7 text-lg",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+
+## 14 · FIGMA-TO-CODE WORKFLOW (Section by Section)
+
+### Step 1: Inspect the Figma Section
+- Note the **frame width** (desktop reference) and content layout.
+- Extract all **colors** → map to tokens or create new ones.
+- Extract all **font sizes, weights, line heights** → map to Tailwind scale.
+- Extract all **spacing** (padding, gap, margin) → map to Tailwind spacing scale.
+- Extract all **border radii, shadows** → map to tokens.
+- Note **responsive** behaviour (auto-layout, constraints, min/max).
+
+### Step 2: Create the Token (if needed)
+- Add any new CSS variable to `:root` in `globals.css`.
+- Add corresponding entry in `@theme inline { }`.
+
+### Step 3: Build Atomic Components
+- If the section needs a reusable element (card, button, badge), build it in
+  `components/ui/` first.
+
+### Step 4: Build the Section Component
+- Create the file in `components/sections/{page-or-shared}/SectionName.tsx`.
+- Use `SectionWrapper` for consistent padding/max-width.
+- Build mobile-first, then add breakpoint variants.
+- Verify at all 6 breakpoints (0, 640, 768, 1024, 1280, 1536px).
+
+### Step 5: Assemble into Page
+- Import the section in `app/page.tsx` (or the relevant route).
+- Ensure section ordering matches Figma.
+
+### Step 6: Test & Validate
+- **Visual diff** against Figma at mobile, tablet, and desktop.
+- Run Lighthouse audit → score 90+ on all categories.
+- Check keyboard navigation and screen reader flow.
+- Validate no arbitrary Tailwind values remain.
+
+
+## 15 · NAMING CONVENTIONS
+
+| Item                | Convention          | Example                      |
+|---------------------|---------------------|------------------------------|
+| Component files     | PascalCase.tsx      | `FeatureCard.tsx`            |
+| Section files       | PascalCase.tsx      | `Hero.tsx`                   |
+| Utility files       | camelCase.ts        | `formatDate.ts`              |
+| Hook files          | camelCase.ts        | `useMediaQuery.ts`           |
+| CSS variables       | kebab-case          | `--brand-primary`            |
+| Tailwind tokens     | kebab-case          | `bg-brand-primary`           |
+| Image files         | kebab-case          | `hero-illustration.webp`     |
+| Route directories   | kebab-case          | `about-us/`                  |
+| Constants           | UPPER_SNAKE_CASE    | `MAX_ITEMS_PER_PAGE`         |
+| TypeScript types    | PascalCase          | `FeatureCardProps`           |
+| ID attributes       | kebab-case          | `id="hero-section"`          |
+
+
+## 16 · CODE QUALITY CHECKLIST (Before Every PR)
+
+- [ ] Zero arbitrary/raw Tailwind values
+- [ ] All colors reference design tokens
+- [ ] Mobile-first responsive: works at 320px → 1536px+
+- [ ] All images use `next/image` with width, height, alt, sizes
+- [ ] Icons use `react-icons` with `aria-hidden` or `aria-label`
+- [ ] Semantic HTML (`<section>`, `<nav>`, `<header>`, `<footer>`, `<main>`)
+- [ ] One `<h1>` per page, correct heading order
+- [ ] Focus-visible styles on all interactive elements
+- [ ] `motion-reduce:` variants on all animations
+- [ ] No `"use client"` unless strictly necessary
+- [ ] TypeScript — no `any` types, all props typed
+- [ ] Console.log statements removed
+- [ ] Metadata (title, description, OG) set per page
+- [ ] Lighthouse: Performance ≥ 90, Accessibility ≥ 95, SEO ≥ 95
+- [ ] No layout shift (CLS < 0.1)
+- [ ] Tested on Chrome, Firefox, Safari, Edge
+- [ ] All section components wrapped in `SectionWrapper`
+
+
+## 17 · FORBIDDEN PATTERNS
+
+```
+❌ Inline styles              → style={{ color: "red" }}
+❌ Raw <img> tags              → Use next/image Image component
+❌ Raw <a> tags for internal   → Use next/link Link component
+❌ Arbitrary Tailwind values   → text-[14px], bg-[#fff], w-[350px]
+❌ !important in Tailwind      → !text-red-500
+❌ CSS Modules for layout      → Use Tailwind utilities exclusively
+❌ External CSS libraries      → No Bootstrap, Material UI, etc.
+❌ Untyped props               → Always define TypeScript interfaces
+❌ console.log in production   → Remove or use debug utility
+❌ Div soup                    → Use semantic HTML elements
+❌ Desktop-first responsive    → Always write mobile-first
+❌ Hardcoded strings           → Extract to constants or CMS
+❌ Unused imports              → Clean up every file
+❌ Default exports for components → Use named exports (exception: page/layout)
+❌ Giant monolithic components → Break into sub-components (< 150 lines)
+❌ Nested ternaries            → Extract to variables or functions
+```
+
+
+## 18 · DARK MODE SUPPORT
+
+If the Figma design includes a dark mode:
+
+1. Define dark tokens in `@media (prefers-color-scheme: dark)` block in `:root`.
+2. Use `dark:` variant prefix for dark-specific overrides:
+   ```tsx
+   <div className="bg-white dark:bg-neutral-900 text-foreground">
+   ```
+3. Ensure all color tokens have dark variants.
+4. Test both modes at every breakpoint.
+
+If dark mode is NOT in the Figma design, only implement the light theme but
+**still define** the dark CSS custom properties for future use.
+
+
+## 19 · DEPLOYMENT & BUILD CHECKS
+
+Before shipping:
+```bash
+# Type checking
+npx tsc --noEmit
+
+# Lint
+npm run lint
+
+# Production build (catches build-time errors)
+npm run build
+
+# Lighthouse CI (via Chrome DevTools or npx unlighthouse)
+# Target: Perf ≥ 90, A11y ≥ 95, SEO ≥ 95, Best Practices ≥ 95
+```
+
+
+## 20 · SUMMARY — THE 10 COMMANDMENTS
+
+1. **Thou shalt not use arbitrary Tailwind values.**
+2. **Thou shalt define all design values as tokens.**
+3. **Thou shalt build mobile-first, always.**
+4. **Thou shalt use semantic HTML elements.**
+5. **Thou shalt use `next/image` and `next/font`.**
+6. **Thou shalt use `react-icons` for all icons.**
+7. **Thou shalt type all props with TypeScript interfaces.**
+8. **Thou shalt keep components under 150 lines.**
+9. **Thou shalt respect accessibility (WCAG AA).**
+10. **Thou shalt test at every breakpoint before shipping.**
