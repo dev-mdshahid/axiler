@@ -1,11 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { GoBug } from "react-icons/go";
 import { IoWarningOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 import { HiArrowUpTray } from "react-icons/hi2";
+
+// Loop cycle: glow moves Scans → arrow → Detects → arrow → Alerts → arrow → Escalates, then reset (no pause)
+const CYCLE_DURATION_MS = 3000;
+const SEGMENT_FRAC = 1 / 4; // each of 4 steps gets 1/4 of cycle
+const GRAY_STROKE = "#404040";
+const PROGRESS_RESET_EPS = 0.002; // treat as 0 when reset so first step stays gray
+
+// Phase 2: after journey reaches Escalates — exact flow with gaps (all cumulative from phase2 start)
+// Order: connecting line → patching tool grayed → patches glow → manual handoff → bottom text
+const PHASE2_GAP_MS = 550; // gap between each step
+const PHASE2_CONNECTOR_AT_MS = 0;
+const PHASE2_PATCHING_SECTION_AT_MS = PHASE2_GAP_MS; // 550ms — section visible, patches grayed
+const PHASE2_PATCHES_LIT_AT_MS = PHASE2_GAP_MS * 2; // 1100ms — patches glow
+const PHASE2_HANDOFF_AT_MS = PHASE2_GAP_MS * 3; // 1650ms — manual handoff
+const PHASE2_BOTTOM_TEXT_AT_MS = PHASE2_GAP_MS * 4; // 2200ms — bottom text
+const PAUSE_AFTER_CYCLE_MS = 5000; // after flow completes, wait 5s then reset (like AutonomousPlatformCard)
+const ESCALATES_SEGMENT_START = 3 * SEGMENT_FRAC; // 0.75
 
 interface FlowStepConfig {
   icon: React.ReactNode;
@@ -48,14 +65,32 @@ const TOOL_B_STEP: FlowStepConfig = {
   glowColor: "rgba(34,197,94,0.4)",
 };
 
+function getSegmentProgress(cycleProgress: number, segmentIndex: number) {
+  if (cycleProgress < PROGRESS_RESET_EPS) return 0;
+  const segStart = segmentIndex * SEGMENT_FRAC;
+  const segEnd = (segmentIndex + 1) * SEGMENT_FRAC;
+  if (cycleProgress <= segStart) return 0;
+  if (cycleProgress >= segEnd) return 1;
+  return (cycleProgress - segStart) / SEGMENT_FRAC;
+}
+
+function isStepLit(cycleProgress: number, stepIndex: number) {
+  if (cycleProgress < PROGRESS_RESET_EPS) return false;
+  // Step 0 (Scans) lights at start; steps 1,2,3 light at end of segments 0,1,2
+  if (stepIndex === 0) return true;
+  return cycleProgress >= stepIndex * SEGMENT_FRAC;
+}
+
 function FlowNode({
   step,
   index,
   animate,
+  lit,
 }: {
   step: FlowStepConfig;
   index: number;
   animate: boolean;
+  lit: boolean;
 }) {
   return (
     <div
@@ -67,22 +102,22 @@ function FlowNode({
       }}
     >
       <div
-        className="flex size-11 items-center justify-center rounded-xl border sm:size-12"
+        className="flex size-11 items-center justify-center rounded-xl border sm:size-12 transition-colors duration-300"
         style={{
-          borderColor: `${step.color}30`,
-          background: `${step.color}0A`,
-          color: step.color,
-          boxShadow: animate
-            ? `0 0 10px ${step.glowColor}, 0 0 20px ${step.glowColor}30`
-            : "none",
-          transition: `box-shadow 0.6s ease ${600 + index * 150}ms`,
+          borderColor: lit ? `${step.color}35` : "rgba(113,113,122,0.4)",
+          background: lit ? `${step.color}0D` : "rgba(63,63,70,0.3)",
+          color: lit ? step.color : "#71717a",
+          transition:
+            "border-color 0.3s ease, background 0.3s ease, color 0.3s ease",
         }}
       >
         {step.icon}
       </div>
       <span
-        className="text-[11px] font-medium sm:text-xs"
-        style={{ color: step.color }}
+        className="text-[11px] font-medium sm:text-xs transition-colors duration-300"
+        style={{
+          color: lit ? step.color : "#71717a",
+        }}
       >
         {step.label}
       </span>
@@ -90,13 +125,23 @@ function FlowNode({
   );
 }
 
+const ARROW_PATH_D = "M0,6 L28,6";
+
 function FlowConnector({
   animate,
-  index,
+  revealProgress,
+  color,
 }: {
   animate: boolean;
   index: number;
+  revealProgress: number;
+  color: string;
+  glowColor: string;
+  isPaused: boolean;
+  nextStepLit: boolean;
 }) {
+  const lineReveal = revealProgress;
+
   return (
     <div className="flex items-center px-0.5 pb-5 sm:px-1">
       <svg
@@ -107,44 +152,44 @@ function FlowConnector({
         className="w-6 sm:w-9"
         aria-hidden="true"
       >
-        <line
-          x1="0"
-          y1="6"
-          x2="28"
-          y2="6"
-          stroke="#404040"
-          strokeWidth="3"
-          strokeDasharray="4 3"
-          opacity="0.3"
-          style={{
-            strokeDashoffset: animate ? 0 : 28,
-            transition: `stroke-dashoffset 0.6s ease ${400 + index * 150}ms`,
-            filter: "blur(2px)",
-          }}
-        />
-        <line
-          x1="0"
-          y1="6"
-          x2="28"
-          y2="6"
-          stroke="#525252"
+        {/* Gray base line — dashed, always visible when card is shown */}
+        <path
+          d={ARROW_PATH_D}
+          pathLength="1"
+          stroke={GRAY_STROKE}
           strokeWidth="1.5"
-          strokeDasharray="4 3"
+          strokeLinecap="round"
+          opacity={animate ? 0.5 : 0}
           style={{
-            strokeDashoffset: animate ? 0 : 28,
-            transition: `stroke-dashoffset 0.6s ease ${400 + index * 150}ms`,
+            strokeDasharray: "0.04 0.96",
+            transition: "opacity 0.3s ease",
           }}
         />
+        {/* Colored line — arrow lightens up as progress moves */}
+        <path
+          d={ARROW_PATH_D}
+          pathLength="1"
+          stroke={color}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          style={{
+            strokeDasharray: 1,
+            strokeDashoffset: 1 - lineReveal,
+            opacity: lineReveal > 0 ? 1 : 0,
+            transition: "stroke-dashoffset 0.08s linear, opacity 0.15s ease",
+          }}
+        />
+        {/* Arrowhead — colored when segment complete */}
         <path
           d="M26 2L32 6L26 10"
-          stroke="#525252"
+          stroke={revealProgress >= 1 ? color : "#525252"}
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
           style={{
             opacity: animate ? 1 : 0,
-            transition: `opacity 0.3s ease ${700 + index * 150}ms`,
+            transition: "opacity 0.3s ease, stroke 0.3s ease",
           }}
         />
       </svg>
@@ -152,7 +197,13 @@ function FlowConnector({
   );
 }
 
-function BreakIndicator({ animate }: { animate: boolean }) {
+function BreakIndicator({
+  showConnectingLine,
+  showHandoff,
+}: {
+  showConnectingLine: boolean;
+  showHandoff: boolean;
+}) {
   return (
     <div className="my-5 flex flex-col items-center gap-2 sm:my-6">
       <svg
@@ -163,6 +214,7 @@ function BreakIndicator({ animate }: { animate: boolean }) {
         className="size-10 sm:size-12"
         aria-hidden="true"
       >
+        {/* Top dashed line — part of connector */}
         <line
           x1="24"
           y1="0"
@@ -172,10 +224,13 @@ function BreakIndicator({ animate }: { animate: boolean }) {
           strokeWidth="1.5"
           strokeDasharray="3 3"
           style={{
-            strokeDashoffset: animate ? 0 : 20,
-            transition: "stroke-dashoffset 0.5s ease 1s",
+            strokeDashoffset: showConnectingLine ? 0 : 20,
+            opacity: showConnectingLine ? 1 : 0,
+            transition:
+              "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
           }}
         />
+        {/* Red circle glow */}
         <circle
           cx="24"
           cy="24"
@@ -184,11 +239,12 @@ function BreakIndicator({ animate }: { animate: boolean }) {
           stroke="rgba(239,68,68,0.3)"
           strokeWidth="6"
           style={{
-            opacity: animate ? 1 : 0,
-            transition: "opacity 0.5s ease 1.2s",
+            opacity: showHandoff ? 1 : 0,
+            transition: "opacity 0.4s ease",
             filter: "blur(4px)",
           }}
         />
+        {/* Red circle */}
         <circle
           cx="24"
           cy="24"
@@ -197,22 +253,24 @@ function BreakIndicator({ animate }: { animate: boolean }) {
           stroke="#ef4444"
           strokeWidth="1.5"
           style={{
-            opacity: animate ? 1 : 0,
-            transform: animate ? "scale(1)" : "scale(0)",
+            opacity: showHandoff ? 1 : 0,
+            transform: showHandoff ? "scale(1)" : "scale(0)",
             transformOrigin: "center",
-            transition: "all 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.1s",
+            transition: "all 0.45s cubic-bezier(0.34,1.56,0.64,1)",
           }}
         />
+        {/* Cross icon */}
         <path
           d="M19 19L29 29M29 19L19 29"
           stroke="#ef4444"
           strokeWidth="1.5"
           strokeLinecap="round"
           style={{
-            opacity: animate ? 1 : 0,
-            transition: "opacity 0.3s ease 1.4s",
+            opacity: showHandoff ? 1 : 0,
+            transition: "opacity 0.35s ease 0.1s",
           }}
         />
+        {/* Bottom dashed line — connecting line at bottom */}
         <line
           x1="24"
           y1="35"
@@ -222,16 +280,18 @@ function BreakIndicator({ animate }: { animate: boolean }) {
           strokeWidth="1.5"
           strokeDasharray="3 3"
           style={{
-            strokeDashoffset: animate ? 0 : 20,
-            transition: "stroke-dashoffset 0.5s ease 1.5s",
+            strokeDashoffset: showConnectingLine ? 0 : 20,
+            opacity: showConnectingLine ? 1 : 0,
+            transition:
+              "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
           }}
         />
       </svg>
       <span
         className="text-[10px] font-semibold tracking-[0.15em] text-red-400/70 uppercase sm:text-xs"
         style={{
-          opacity: animate ? 1 : 0,
-          transition: "opacity 0.4s ease 1.6s",
+          opacity: showHandoff ? 1 : 0,
+          transition: "opacity 0.4s ease",
         }}
       >
         Manual Handoff
@@ -281,10 +341,102 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
   const [mounted, setMounted] = useState(false);
   const show = animate && mounted;
 
+  const [cycleProgress, setCycleProgress] = useState(0);
+  const cycleProgressRef = useRef(0);
+  const lastTick = useRef<number>(0);
+  const justResetRef = useRef(false);
+  const [allGray, setAllGray] = useState(true); // start grayed out, then glow runs
+  const allGrayRef = useRef(true);
+
+  // Phase 2: triggered when journey first reaches Escalates; then sequential reveal
+  const phase2TriggeredRef = useRef(false);
+  const [phase2Triggered, setPhase2Triggered] = useState(false);
+  const [showConnectingLine, setShowConnectingLine] = useState(false);
+  const [showPatchingSection, setShowPatchingSection] = useState(false);
+  const [showPatchesLit, setShowPatchesLit] = useState(false);
+  const [showHandoff, setShowHandoff] = useState(false);
+  const [showBottomText, setShowBottomText] = useState(false);
+
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // Trigger phase 2 once when cycle first reaches Escalates segment
+  useEffect(() => {
+    if (!show || phase2TriggeredRef.current) return;
+    if (cycleProgress >= ESCALATES_SEGMENT_START) {
+      phase2TriggeredRef.current = true;
+      setPhase2Triggered(true);
+    }
+  }, [show, cycleProgress]);
+
+  // Phase 2 sequential reveal: connector → patching grayed → patches glow → handoff → bottom text
+  useEffect(() => {
+    if (!phase2Triggered) return;
+    const t1 = window.setTimeout(() => setShowConnectingLine(true), PHASE2_CONNECTOR_AT_MS);
+    const t2 = window.setTimeout(() => setShowPatchingSection(true), PHASE2_PATCHING_SECTION_AT_MS);
+    const t3 = window.setTimeout(() => setShowPatchesLit(true), PHASE2_PATCHES_LIT_AT_MS);
+    const t4 = window.setTimeout(() => setShowHandoff(true), PHASE2_HANDOFF_AT_MS);
+    const t5 = window.setTimeout(() => setShowBottomText(true), PHASE2_BOTTOM_TEXT_AT_MS);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+    };
+  }, [phase2Triggered]);
+
+  // After flow completes (bottom text shown), wait 5s then reset so the whole flow starts from the beginning
+  useEffect(() => {
+    if (!showBottomText || !show) return;
+    const resetTimer = window.setTimeout(() => {
+      phase2TriggeredRef.current = false;
+      setPhase2Triggered(false);
+      setShowConnectingLine(false);
+      setShowPatchingSection(false);
+      setShowPatchesLit(false);
+      setShowHandoff(false);
+      setShowBottomText(false);
+      cycleProgressRef.current = 0;
+      setCycleProgress(0);
+      justResetRef.current = true;
+      allGrayRef.current = true;
+      setAllGray(true);
+    }, PAUSE_AFTER_CYCLE_MS);
+    return () => clearTimeout(resetTimer);
+  }, [showBottomText, show]);
+
+  // Animation loop: advance cycle; do not reset here — only global reset (after 5s) restarts the flow
+  const rafId = useRef<number>(0);
+  useEffect(() => {
+    if (!show) return;
+    lastTick.current = performance.now();
+    const tick = (now: number) => {
+      const deltaMs = now - lastTick.current;
+      lastTick.current = now;
+      let p = cycleProgressRef.current;
+
+      if (justResetRef.current) {
+        justResetRef.current = false;
+      } else {
+        p += deltaMs / CYCLE_DURATION_MS;
+        if (allGrayRef.current && p > 0.02) {
+          allGrayRef.current = false;
+          setAllGray(false);
+        }
+      }
+      if (p >= 1) {
+        p = 1; // cap at complete; reset only via global flow reset
+      }
+      cycleProgressRef.current = p;
+      setCycleProgress(p);
+      rafId.current = requestAnimationFrame(tick);
+    };
+    rafId.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId.current);
+  }, [show]);
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
@@ -376,39 +528,64 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
           <div className="flex items-center justify-center gap-0">
             {TOOL_A_STEPS.map((step, i) => (
               <div key={step.label} className="flex items-center">
-                <FlowNode step={step} index={i} animate={show} />
+                <FlowNode
+                  step={step}
+                  index={i}
+                  animate={show}
+                  lit={allGray ? false : isStepLit(cycleProgress, i)}
+                />
                 {i < TOOL_A_STEPS.length - 1 && (
-                  <FlowConnector animate={show} index={i} />
+                  <FlowConnector
+                    animate={show}
+                    index={i}
+                    revealProgress={
+                      allGray ? 0 : getSegmentProgress(cycleProgress, i)
+                    }
+                    color={TOOL_A_STEPS[i].color}
+                    glowColor={TOOL_A_STEPS[i].glowColor}
+                    isPaused={false}
+                    nextStepLit={
+                      allGray ? false : isStepLit(cycleProgress, i + 1)
+                    }
+                  />
                 )}
               </div>
             ))}
           </div>
         </ToolBox>
 
-        <BreakIndicator animate={show} />
+        <BreakIndicator
+          showConnectingLine={showConnectingLine}
+          showHandoff={showHandoff}
+        />
 
-        {/* Tool B */}
+        {/* Tool B — hidden until phase 2; then visible grayed, then patches lit */}
         <ToolBox
           label="Patching Tool"
           toolNumber={2}
-          animate={show}
-          delay={1400}
+          animate={showPatchingSection}
+          delay={0}
         >
           <div className="flex justify-center">
-            <FlowNode step={TOOL_B_STEP} index={5} animate={show} />
+            <FlowNode
+              step={TOOL_B_STEP}
+              index={5}
+              animate={showPatchingSection}
+              lit={showPatchesLit}
+            />
           </div>
         </ToolBox>
 
         {/* Spacer to push bottom text down consistently */}
         <div className="flex-1" />
 
-        {/* Bottom text */}
+        {/* Bottom text — appears last, after manual handoff */}
         <p
           className="mt-8 text-center text-xs leading-relaxed text-neutral-500 sm:mt-10 sm:text-sm"
           style={{
-            opacity: show ? 1 : 0,
-            transform: show ? "translateY(0)" : "translateY(8px)",
-            transition: "all 0.5s ease 1.8s",
+            opacity: showBottomText ? 1 : 0,
+            transform: showBottomText ? "translateY(0)" : "translateY(8px)",
+            transition: "all 0.5s ease",
           }}
         >
           Teams stitch signals manually,
