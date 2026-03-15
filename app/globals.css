@@ -125,6 +125,9 @@
 
   /* Spacing */
   --spacing-navbar: var(--navbar-height);
+
+  /* What It Does — red alert shake */
+  --animate-wid-red-alert-shake: wid-red-alert-shake 0.15s ease-in-out infinite;
 }
 
 /* ── Base Resets ───────────────────────────────────────────────── */
@@ -286,4 +289,36 @@ html {
   50% {
     text-shadow: 0 0 16px var(--glow);
   }
+}
+
+/* Shaky red alert when left flow completes (manual handoff) */
+@keyframes wid-red-alert-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-5px);
+  }
+  30% {
+    transform: translateX(4px);
+  }
+  45% {
+    transform: translateX(-4px);
+  }
+  60% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+}
+
+.wid-red-alert-shake {
+  animation: wid-red-alert-shake 0.12s ease-in-out infinite;
+}
+
+/* Shake for 2s then stop (used after left flow completes) */
+.wid-shake-red-2s {
+  animation: wid-red-alert-shake 0.2s ease-in-out 10 forwards;
 }

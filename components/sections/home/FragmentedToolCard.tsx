@@ -18,10 +18,10 @@ const PROGRESS_RESET_EPS = 0.002; // treat as 0 when reset so first step stays g
 const PHASE2_GAP_MS = 550; // gap between each step
 const PHASE2_CONNECTOR_AT_MS = 0;
 const PHASE2_PATCHING_SECTION_AT_MS = PHASE2_GAP_MS; // 550ms — section visible, patches grayed
-const PHASE2_PATCHES_LIT_AT_MS = PHASE2_GAP_MS * 2; // 1100ms — patches glow
-const PHASE2_HANDOFF_AT_MS = PHASE2_GAP_MS * 3; // 1650ms — manual handoff
-const PHASE2_BOTTOM_TEXT_AT_MS = PHASE2_GAP_MS * 4; // 2200ms — bottom text
-const PAUSE_AFTER_CYCLE_MS = 5000; // after flow completes, wait 5s then reset (like AutonomousPlatformCard)
+const PHASE2_PATCHES_LIT_AT_MS = PHASE2_GAP_MS * 2; // 1100ms — patches icon glows
+const PHASE2_HANDOFF_AFTER_PATCHES_MS = 1000; // extra gap so handoff clearly comes after patches
+const PHASE2_HANDOFF_AT_MS =
+  PHASE2_PATCHES_LIT_AT_MS + PHASE2_HANDOFF_AFTER_PATCHES_MS; // manual handoff
 const ESCALATES_SEGMENT_START = 3 * SEGMENT_FRAC; // 0.75
 
 interface FlowStepConfig {
@@ -226,8 +226,7 @@ function BreakIndicator({
           style={{
             strokeDashoffset: showConnectingLine ? 0 : 20,
             opacity: showConnectingLine ? 1 : 0,
-            transition:
-              "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
+            transition: "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
           }}
         />
         {/* Red circle glow */}
@@ -282,8 +281,7 @@ function BreakIndicator({
           style={{
             strokeDashoffset: showConnectingLine ? 0 : 20,
             opacity: showConnectingLine ? 1 : 0,
-            transition:
-              "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
+            transition: "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
           }}
         />
       </svg>
@@ -337,7 +335,17 @@ function ToolBox({
   );
 }
 
-export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
+export function FragmentedToolCard({
+  animate = false,
+  runCycle = true,
+  onLeftComplete,
+  resetTrigger = 0,
+}: {
+  animate?: boolean;
+  runCycle?: boolean;
+  onLeftComplete?: () => void;
+  resetTrigger?: number;
+}) {
   const [mounted, setMounted] = useState(false);
   const show = animate && mounted;
 
@@ -355,63 +363,73 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
   const [showPatchingSection, setShowPatchingSection] = useState(false);
   const [showPatchesLit, setShowPatchesLit] = useState(false);
   const [showHandoff, setShowHandoff] = useState(false);
-  const [showBottomText, setShowBottomText] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
+  // Parent-driven reset: when resetTrigger changes, reset entire left flow
+  useEffect(() => {
+    if (resetTrigger === 0) return; // skip initial mount
+    phase2TriggeredRef.current = false;
+    setPhase2Triggered(false);
+    setShowConnectingLine(false);
+    setShowPatchingSection(false);
+    setShowPatchesLit(false);
+    setShowHandoff(false);
+    cycleProgressRef.current = 0;
+    setCycleProgress(0);
+    justResetRef.current = true;
+    allGrayRef.current = true;
+    setAllGray(true);
+  }, [resetTrigger]);
+
+  // Notify parent when left flow reaches final state (handoff shown)
+  useEffect(() => {
+    if (showHandoff && onLeftComplete) onLeftComplete();
+  }, [showHandoff, onLeftComplete]);
+
   // Trigger phase 2 once when cycle first reaches Escalates segment
   useEffect(() => {
-    if (!show || phase2TriggeredRef.current) return;
+    if (!show || phase2TriggeredRef.current || !runCycle) return;
     if (cycleProgress >= ESCALATES_SEGMENT_START) {
       phase2TriggeredRef.current = true;
       setPhase2Triggered(true);
     }
-  }, [show, cycleProgress]);
+  }, [show, runCycle, cycleProgress]);
 
-  // Phase 2 sequential reveal: connector → patching grayed → patches glow → handoff → bottom text
+  // Phase 2 sequential reveal: connector → patching grayed → patches glow → handoff
   useEffect(() => {
     if (!phase2Triggered) return;
-    const t1 = window.setTimeout(() => setShowConnectingLine(true), PHASE2_CONNECTOR_AT_MS);
-    const t2 = window.setTimeout(() => setShowPatchingSection(true), PHASE2_PATCHING_SECTION_AT_MS);
-    const t3 = window.setTimeout(() => setShowPatchesLit(true), PHASE2_PATCHES_LIT_AT_MS);
-    const t4 = window.setTimeout(() => setShowHandoff(true), PHASE2_HANDOFF_AT_MS);
-    const t5 = window.setTimeout(() => setShowBottomText(true), PHASE2_BOTTOM_TEXT_AT_MS);
+    const t1 = window.setTimeout(
+      () => setShowConnectingLine(true),
+      PHASE2_CONNECTOR_AT_MS,
+    );
+    const t2 = window.setTimeout(
+      () => setShowPatchingSection(true),
+      PHASE2_PATCHING_SECTION_AT_MS,
+    );
+    const t3 = window.setTimeout(
+      () => setShowPatchesLit(true),
+      PHASE2_PATCHES_LIT_AT_MS,
+    );
+    const t4 = window.setTimeout(
+      () => setShowHandoff(true),
+      PHASE2_HANDOFF_AT_MS,
+    );
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
       clearTimeout(t4);
-      clearTimeout(t5);
     };
   }, [phase2Triggered]);
 
-  // After flow completes (bottom text shown), wait 5s then reset so the whole flow starts from the beginning
-  useEffect(() => {
-    if (!showBottomText || !show) return;
-    const resetTimer = window.setTimeout(() => {
-      phase2TriggeredRef.current = false;
-      setPhase2Triggered(false);
-      setShowConnectingLine(false);
-      setShowPatchingSection(false);
-      setShowPatchesLit(false);
-      setShowHandoff(false);
-      setShowBottomText(false);
-      cycleProgressRef.current = 0;
-      setCycleProgress(0);
-      justResetRef.current = true;
-      allGrayRef.current = true;
-      setAllGray(true);
-    }, PAUSE_AFTER_CYCLE_MS);
-    return () => clearTimeout(resetTimer);
-  }, [showBottomText, show]);
-
-  // Animation loop: advance cycle; do not reset here — only global reset (after 5s) restarts the flow
+  // Animation loop: advance cycle only when runCycle is true; parent handles reset via resetTrigger
   const rafId = useRef<number>(0);
   useEffect(() => {
-    if (!show) return;
+    if (!show || !runCycle) return;
     lastTick.current = performance.now();
     const tick = (now: number) => {
       const deltaMs = now - lastTick.current;
@@ -428,7 +446,7 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
         }
       }
       if (p >= 1) {
-        p = 1; // cap at complete; reset only via global flow reset
+        p = 1; // cap at complete; reset only via parent resetTrigger
       }
       cycleProgressRef.current = p;
       setCycleProgress(p);
@@ -436,7 +454,7 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
     };
     rafId.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId.current);
-  }, [show]);
+  }, [show, runCycle]);
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
@@ -579,13 +597,13 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
         {/* Spacer to push bottom text down consistently */}
         <div className="flex-1" />
 
-        {/* Bottom text — appears last, after manual handoff */}
+        {/* Bottom text — always visible with the card (not part of animation flow) */}
         <p
           className="mt-8 text-center text-xs leading-relaxed text-neutral-500 sm:mt-10 sm:text-sm"
           style={{
-            opacity: showBottomText ? 1 : 0,
-            transform: showBottomText ? "translateY(0)" : "translateY(8px)",
-            transition: "all 0.5s ease",
+            opacity: show ? 1 : 0,
+            transform: show ? "translateY(0)" : "translateY(8px)",
+            transition: "all 0.5s ease 200ms",
           }}
         >
           Teams stitch signals manually,

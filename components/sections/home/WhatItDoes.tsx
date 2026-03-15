@@ -1,8 +1,13 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { FragmentedToolCard } from "./FragmentedToolCard";
 import { AutonomousPlatformCard } from "./AutonomousPlatformCard";
+
+type FlowPhase = "left" | "shake" | "right" | "hold";
+
+const SHAKE_DURATION_MS = 2000;
 
 export default function WhatItDoes() {
   const { ref: sectionRef, isIntersecting: sectionVisible } =
@@ -13,6 +18,30 @@ export default function WhatItDoes() {
 
   const { ref: rightCardRef, isIntersecting: rightVisible } =
     useIntersectionObserver({ threshold: 0.15 });
+
+  const [phase, setPhase] = useState<FlowPhase>("left");
+  const [resetTrigger, setResetTrigger] = useState(0);
+
+  const onLeftComplete = useCallback(() => {
+    setPhase("shake");
+  }, []);
+
+  const onRightComplete = useCallback(() => {
+    setPhase("hold");
+  }, []);
+
+  // After shaky red animation (2s), start right side animation
+  useEffect(() => {
+    if (phase !== "shake") return;
+    const t = setTimeout(() => setPhase("right"), SHAKE_DURATION_MS);
+    return () => clearTimeout(t);
+  }, [phase]);
+
+  const runLeft = phase === "left";
+  const runRight = phase === "right";
+  const rightGrayedOut = phase === "left" || phase === "shake";
+  const showGreenGlow = phase === "right" || phase === "hold";
+  const isShaking = phase === "shake";
 
   return (
     <section
@@ -63,9 +92,22 @@ export default function WhatItDoes() {
               leftVisible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-10 opacity-0"
-            }`}
+            } ${isShaking ? "wid-shake-red-2s" : ""}`}
+            style={
+              isShaking
+                ? {
+                    boxShadow:
+                      "0 0 24px rgba(239,68,68,0.5), 0 0 48px rgba(239,68,68,0.25), inset 0 0 0 1px rgba(239,68,68,0.3)",
+                  }
+                : undefined
+            }
           >
-            <FragmentedToolCard animate={leftVisible} />
+            <FragmentedToolCard
+              animate={leftVisible}
+              runCycle={runLeft}
+              onLeftComplete={onLeftComplete}
+              resetTrigger={resetTrigger}
+            />
           </div>
 
           <div
@@ -76,7 +118,14 @@ export default function WhatItDoes() {
                 : "translate-y-10 opacity-0"
             }`}
           >
-            <AutonomousPlatformCard animate={rightVisible} />
+            <AutonomousPlatformCard
+              animate={rightVisible}
+              grayedOut={rightGrayedOut}
+              runCycle={runRight}
+              onRightComplete={onRightComplete}
+              resetTrigger={resetTrigger}
+              showGreenGlow={showGreenGlow}
+            />
           </div>
         </div>
       </div>

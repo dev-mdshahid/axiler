@@ -8,8 +8,7 @@ import { IoWarningOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 
 // Loop cycle: each branch gets a segment; spark moves along line, line colors with it, icon lights when spark reaches end
-const CYCLE_DURATION_MS = 6000;
-const PAUSE_AFTER_CYCLE_MS = 5000;
+const CYCLE_DURATION_MS = 3000;
 const SEGMENT_FRAC = 1 / 4; // each of 4 branches gets 1/4 of cycle
 const GRAY_STROKE = "#404040";
 const PROGRESS_RESET_EPS = 0.002; // treat as 0 when reset so first branch stays gray
@@ -178,8 +177,18 @@ function isBranchLit(cycleProgress: number, branchIndex: number) {
 
 export function AutonomousPlatformCard({
   animate = false,
+  grayedOut = false,
+  runCycle = true,
+  onRightComplete,
+  resetTrigger = 0,
+  showGreenGlow = false,
 }: {
   animate?: boolean;
+  grayedOut?: boolean;
+  runCycle?: boolean;
+  onRightComplete?: () => void;
+  resetTrigger?: number;
+  showGreenGlow?: boolean;
 }) {
   const [mounted, setMounted] = useState(false);
   const show = animate && mounted;
@@ -187,7 +196,7 @@ export function AutonomousPlatformCard({
   const diagramRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
 
-  // Loop cycle: 0..1 over CYCLE_DURATION_MS, then reset
+  // Loop cycle: 0..1 over CYCLE_DURATION_MS; parent resets via resetTrigger
   const [cycleProgress, setCycleProgress] = useState(0);
   const cycleProgressRef = useRef(0);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
@@ -199,17 +208,28 @@ export function AutonomousPlatformCard({
   >([null, null, null, null]);
   const rafId = useRef<number>(0);
   const lastTick = useRef<number>(0);
-  const pauseStartRef = useRef<number>(0);
-  const isPausedRef = useRef(false);
   const justResetRef = useRef(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [allGray, setAllGray] = useState(false);
-  const allGrayRef = useRef(false);
+  const [allGray, setAllGray] = useState(true); // start grayed when waiting for left
+  const allGrayRef = useRef(true);
+  const completedNotifiedRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // Parent-driven reset: when resetTrigger changes, reset to initial gray state
+  useEffect(() => {
+    if (resetTrigger === 0) return;
+    justResetRef.current = true;
+    allGrayRef.current = true;
+    setAllGray(true);
+    setIsPaused(false);
+    completedNotifiedRef.current = false;
+    cycleProgressRef.current = 0;
+    setCycleProgress(0);
+  }, [resetTrigger]);
 
   useEffect(() => {
     function measure() {
@@ -233,48 +253,43 @@ export function AutonomousPlatformCard({
     if (lengths.some((l) => l > 0)) setPathLengths(lengths);
   }, [show, dims?.w, dims?.h]);
 
-  // Animation loop: advance cycle, pause 5s when complete, then reset (Detects grays out)
+  // Notify parent once when right cycle reaches completion (stays at 1; parent handles 5s hold + reset)
   useEffect(() => {
-    if (!show) return;
+    if (
+      cycleProgress >= 1 &&
+      !completedNotifiedRef.current &&
+      onRightComplete
+    ) {
+      completedNotifiedRef.current = true;
+      onRightComplete();
+    }
+  }, [cycleProgress, onRightComplete]);
+
+  // Animation loop: advance only when runCycle and not grayedOut; cap at 1, no self-reset
+  const effectiveGray = grayedOut || allGray;
+  useEffect(() => {
+    if (!show || !runCycle || grayedOut) return;
     lastTick.current = performance.now();
     const tick = (now: number) => {
       const deltaMs = now - lastTick.current;
       lastTick.current = now;
       let p = cycleProgressRef.current;
 
-      if (isPausedRef.current) {
-        if (
-          deltaMs >= 0 &&
-          now - pauseStartRef.current >= PAUSE_AFTER_CYCLE_MS
-        ) {
-          isPausedRef.current = false;
-          setIsPaused(false);
-          justResetRef.current = true;
-          allGrayRef.current = true;
-          setAllGray(true);
-          p = 0;
-          cycleProgressRef.current = p;
-          setCycleProgress(p);
-        }
+      if (justResetRef.current) {
+        justResetRef.current = false;
       } else {
-        if (justResetRef.current) {
-          justResetRef.current = false;
-        } else {
-          p += deltaMs / CYCLE_DURATION_MS;
-          if (allGrayRef.current && p > 0.02) {
-            allGrayRef.current = false;
-            setAllGray(false);
-          }
+        p += deltaMs / CYCLE_DURATION_MS;
+        if (allGrayRef.current && p > 0.02) {
+          allGrayRef.current = false;
+          setAllGray(false);
         }
-        if (p >= 1) {
-          p = 1;
-          isPausedRef.current = true;
-          setIsPaused(true);
-          pauseStartRef.current = now;
-        }
-        cycleProgressRef.current = p;
-        setCycleProgress(p);
       }
+      if (p >= 1) {
+        p = 1;
+        setIsPaused(true); // hold final state (spark/lines lit)
+      }
+      cycleProgressRef.current = p;
+      setCycleProgress(p);
 
       const points: ({ x: number; y: number } | null)[] = [];
       const lengths = pathLengthsRef.current;
@@ -294,7 +309,7 @@ export function AutonomousPlatformCard({
     };
     rafId.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId.current);
-  }, [show, pathLengths]);
+  }, [show, runCycle, grayedOut, pathLengths]);
 
   // All coordinates in real pixels
   const hubCx = HUB_D / 2; // hub centre X
@@ -302,7 +317,26 @@ export function AutonomousPlatformCard({
   const lineEndX = dims ? dims.w - ICON_COL_W : 0; // where lines meet icon left edge
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
+    <div
+      className={`relative flex h-full flex-col overflow-hidden rounded-2xl border transition-all duration-500 ${
+        grayedOut ? "opacity-70 grayscale" : "opacity-100 grayscale-0"
+      } ${
+        showGreenGlow
+          ? "border-wid-accent-green/40 bg-wid-card-bg shadow-[0_0_32px_rgba(34,197,94,0.2),0_0_64px_rgba(34,197,94,0.1),0_8px_32px_-8px_rgba(0,0,0,0.4)] -translate-y-0.5"
+          : "border-wid-card-border bg-wid-card-bg shadow-wid-card"
+      }`}
+    >
+      {/* Green glow background when right flow is active or in final state */}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(34,197,94,0.12) 0%, rgba(34,197,94,0.05) 50%, transparent 70%)",
+          filter: "blur(28px)",
+          opacity: showGreenGlow ? 1 : 0,
+        }}
+        aria-hidden="true"
+      />
       {/* Background glows */}
       <div
         className="pointer-events-none absolute inset-0"
@@ -400,10 +434,10 @@ export function AutonomousPlatformCard({
                   const cx1 = hubCx + span * 0.4;
                   const cx2 = hubCx + span * 0.7;
                   const pathD = `M${hubCx},${hubCy} C${cx1},${hubCy} ${cx2},${ey} ${lineEndX},${ey}`;
-                  const lineReveal = allGray
+                  const lineReveal = effectiveGray
                     ? 0
                     : getSegmentProgress(cycleProgress, i);
-                  const lit = allGray ? false : isBranchLit(cycleProgress, i);
+                  const lit = effectiveGray ? false : isBranchLit(cycleProgress, i);
                   const point = sparkPoints[i];
 
                   return (
@@ -528,7 +562,7 @@ export function AutonomousPlatformCard({
                   index={i}
                   animate={show}
                   diagramH={dims.h}
-                  lit={allGray ? false : isBranchLit(cycleProgress, i)}
+                  lit={effectiveGray ? false : isBranchLit(cycleProgress, i)}
                   isPaused={isPaused}
                 />
               ))}
