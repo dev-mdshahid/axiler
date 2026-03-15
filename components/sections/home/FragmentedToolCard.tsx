@@ -7,7 +7,6 @@ import { IoWarningOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 import { HiArrowUpTray } from "react-icons/hi2";
 
-/* ── Flow step config ──────────────────────────────────────────── */
 interface FlowStepConfig {
   icon: React.ReactNode;
   label: string;
@@ -17,25 +16,25 @@ interface FlowStepConfig {
 
 const TOOL_A_STEPS: FlowStepConfig[] = [
   {
-    icon: <HiMagnifyingGlass className="size-4 sm:size-5" aria-hidden="true" />,
+    icon: <HiMagnifyingGlass className="size-5" aria-hidden="true" />,
     label: "Scans",
     color: "#C0A9FF",
     glowColor: "rgba(192,169,255,0.4)",
   },
   {
-    icon: <GoBug className="size-4 sm:size-5" aria-hidden="true" />,
+    icon: <GoBug className="size-5" aria-hidden="true" />,
     label: "Detects",
     color: "#22c55e",
     glowColor: "rgba(34,197,94,0.4)",
   },
   {
-    icon: <IoWarningOutline className="size-4 sm:size-5" aria-hidden="true" />,
+    icon: <IoWarningOutline className="size-5" aria-hidden="true" />,
     label: "Alerts",
     color: "#fbbf24",
     glowColor: "rgba(251,191,36,0.4)",
   },
   {
-    icon: <HiArrowUpTray className="size-4 sm:size-5" aria-hidden="true" />,
+    icon: <HiArrowUpTray className="size-5" aria-hidden="true" />,
     label: "Escalates",
     color: "#f472b6",
     glowColor: "rgba(244,114,182,0.4)",
@@ -43,13 +42,12 @@ const TOOL_A_STEPS: FlowStepConfig[] = [
 ];
 
 const TOOL_B_STEP: FlowStepConfig = {
-  icon: <FiCheckCircle className="size-4 sm:size-5" aria-hidden="true" />,
+  icon: <FiCheckCircle className="size-5" aria-hidden="true" />,
   label: "Patches",
   color: "#22c55e",
   glowColor: "rgba(34,197,94,0.4)",
 };
 
-/* ── Animated Flow Node ─────────────────────────────────────────── */
 function FlowNode({
   step,
   index,
@@ -61,7 +59,7 @@ function FlowNode({
 }) {
   return (
     <div
-      className="flex flex-col items-center gap-1.5 sm:gap-2"
+      className="flex flex-col items-center gap-2"
       style={{
         opacity: animate ? 1 : 0,
         transform: animate ? "scale(1)" : "scale(0)",
@@ -69,7 +67,7 @@ function FlowNode({
       }}
     >
       <div
-        className="flex size-10 items-center justify-center rounded-xl border sm:size-12"
+        className="flex size-11 items-center justify-center rounded-xl border sm:size-12"
         style={{
           borderColor: `${step.color}30`,
           background: `${step.color}0A`,
@@ -82,14 +80,16 @@ function FlowNode({
       >
         {step.icon}
       </div>
-      <span className="text-xs font-medium" style={{ color: step.color }}>
+      <span
+        className="text-[11px] font-medium sm:text-xs"
+        style={{ color: step.color }}
+      >
         {step.label}
       </span>
     </div>
   );
 }
 
-/* ── Connector Arrow with animated dash ─────────────────────────── */
 function FlowConnector({
   animate,
   index,
@@ -104,10 +104,9 @@ function FlowConnector({
         height="12"
         viewBox="0 0 36 12"
         fill="none"
-        className="w-7 sm:w-9"
+        className="w-6 sm:w-9"
         aria-hidden="true"
       >
-        {/* Glow line */}
         <line
           x1="0"
           y1="6"
@@ -123,7 +122,6 @@ function FlowConnector({
             filter: "blur(2px)",
           }}
         />
-        {/* Main line */}
         <line
           x1="0"
           y1="6"
@@ -154,7 +152,6 @@ function FlowConnector({
   );
 }
 
-/* ── Break indicator (gap between tools) ───────────────────────── */
 function BreakIndicator({ animate }: { animate: boolean }) {
   return (
     <div className="my-5 flex flex-col items-center gap-2 sm:my-6">
@@ -166,7 +163,6 @@ function BreakIndicator({ animate }: { animate: boolean }) {
         className="size-10 sm:size-12"
         aria-hidden="true"
       >
-        {/* Dashed vertical line top */}
         <line
           x1="24"
           y1="0"
@@ -180,7 +176,6 @@ function BreakIndicator({ animate }: { animate: boolean }) {
             transition: "stroke-dashoffset 0.5s ease 1s",
           }}
         />
-        {/* Red glow circle */}
         <circle
           cx="24"
           cy="24"
@@ -194,7 +189,6 @@ function BreakIndicator({ animate }: { animate: boolean }) {
             filter: "blur(4px)",
           }}
         />
-        {/* Red circle ring */}
         <circle
           cx="24"
           cy="24"
@@ -209,7 +203,6 @@ function BreakIndicator({ animate }: { animate: boolean }) {
             transition: "all 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.1s",
           }}
         />
-        {/* Cross inside circle */}
         <path
           d="M19 19L29 29M29 19L19 29"
           stroke="#ef4444"
@@ -220,7 +213,6 @@ function BreakIndicator({ animate }: { animate: boolean }) {
             transition: "opacity 0.3s ease 1.4s",
           }}
         />
-        {/* Dashed vertical line bottom */}
         <line
           x1="24"
           y1="35"
@@ -236,7 +228,7 @@ function BreakIndicator({ animate }: { animate: boolean }) {
         />
       </svg>
       <span
-        className="text-xs font-semibold tracking-widest text-red-400/70 uppercase"
+        className="text-[10px] font-semibold tracking-[0.15em] text-red-400/70 uppercase sm:text-xs"
         style={{
           opacity: animate ? 1 : 0,
           transition: "opacity 0.4s ease 1.6s",
@@ -248,7 +240,6 @@ function BreakIndicator({ animate }: { animate: boolean }) {
   );
 }
 
-/* ── Tool Box with label ────────────────────────────────────────── */
 function ToolBox({
   label,
   toolNumber,
@@ -272,21 +263,20 @@ function ToolBox({
       }}
     >
       <div className="mb-2.5 flex items-center gap-2">
-        <span className="flex size-5 items-center justify-center rounded-md bg-neutral-800 text-xs font-bold text-neutral-500">
+        <span className="flex size-5 items-center justify-center rounded-md bg-neutral-800 text-[10px] font-bold text-neutral-500">
           {toolNumber}
         </span>
-        <span className="text-xs font-semibold tracking-widest text-neutral-400 uppercase">
+        <span className="text-[10px] font-semibold tracking-[0.15em] text-neutral-400 uppercase sm:text-xs">
           {label}
         </span>
       </div>
-      <div className="rounded-xl border border-dashed border-neutral-700/80 bg-neutral-900/20 px-4 py-5 sm:px-6 sm:py-6">
+      <div className="rounded-xl border border-dashed border-neutral-700/80 bg-neutral-900/20 px-3 py-5 sm:px-6 sm:py-6">
         {children}
       </div>
     </div>
   );
 }
 
-/* ── Main Card ──────────────────────────────────────────────────── */
 export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
   const [mounted, setMounted] = useState(false);
   const show = animate && mounted;
@@ -298,7 +288,6 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
-      {/* Subtle background radial glow */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -307,12 +296,50 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
         }}
         aria-hidden="true"
       />
+      {/* Bottom-left glow — matches flow step colors */}
+      <div
+        className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full opacity-40 sm:size-56"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(192,169,255,0.25) 0%, rgba(244,114,182,0.18) 30%, rgba(239,68,68,0.12) 50%, rgba(34,197,94,0.08) 70%, transparent 100%)",
+          filter: "blur(40px)",
+        }}
+        aria-hidden="true"
+      />
+      {/* Fill lower-right empty space */}
+      <div
+        className="pointer-events-none absolute -bottom-12 -right-12 h-40 w-3/4 opacity-50 sm:h-48 sm:w-2/3 md:h-56"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 70% at 70% 90%, rgba(192,169,255,0.12) 0%, rgba(244,114,182,0.06) 40%, rgba(34,197,94,0.04) 70%, transparent 100%)",
+          filter: "blur(32px)",
+        }}
+        aria-hidden="true"
+      />
+      {/* Fill top-right area */}
+      <div
+        className="pointer-events-none absolute -right-8 top-8 h-32 w-1/2 opacity-60 sm:h-40 sm:w-2/5"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 80% at 90% 20%, rgba(251,191,36,0.08) 0%, rgba(34,197,94,0.05) 50%, transparent 100%)",
+          filter: "blur(28px)",
+        }}
+        aria-hidden="true"
+      />
+      {/* Subtle dot pattern */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(255,255,255) 1px, transparent 0)`,
+          backgroundSize: "24px 24px",
+        }}
+        aria-hidden="true"
+      />
 
-      {/* ── Card Content ──────────────────────────────── */}
-      <div className="relative z-10 flex flex-1 flex-col px-5 pt-7 pb-7 sm:px-8 sm:pt-9 sm:pb-9">
+      <div className="relative z-10 flex flex-1 flex-col px-5 pt-8 pb-8 sm:px-8 sm:pt-10 sm:pb-10">
         {/* Badge */}
         <div
-          className="mx-auto mb-4 flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/8 px-3 py-1"
+          className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/8 px-3 py-1"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(-8px)",
@@ -320,12 +347,14 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
           }}
         >
           <span className="size-1.5 rounded-full bg-red-400" />
-          <span className="text-xs font-medium text-red-400">The Problem</span>
+          <span className="text-xs font-medium text-red-400">
+            Typical Solution
+          </span>
         </div>
 
         {/* Title */}
         <h3
-          className="mb-8 text-center text-base font-bold text-foreground sm:mb-10 sm:text-lg"
+          className="mb-8 text-center text-lg font-bold text-foreground sm:mb-10 sm:text-xl"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",
@@ -337,9 +366,14 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
           <span className="text-neutral-400">Fragmented Across Tools</span>
         </h3>
 
-        {/* Tool A → pipeline flow */}
-        <ToolBox label="Scanning Tool" toolNumber={1} animate={show} delay={250}>
-          <div className="flex items-center justify-center gap-0.5 sm:gap-1">
+        {/* Tool A */}
+        <ToolBox
+          label="Scanning Tool"
+          toolNumber={1}
+          animate={show}
+          delay={250}
+        >
+          <div className="flex items-center justify-center gap-0">
             {TOOL_A_STEPS.map((step, i) => (
               <div key={step.label} className="flex items-center">
                 <FlowNode step={step} index={i} animate={show} />
@@ -351,10 +385,9 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
           </div>
         </ToolBox>
 
-        {/* Break */}
         <BreakIndicator animate={show} />
 
-        {/* Tool B → single step */}
+        {/* Tool B */}
         <ToolBox
           label="Patching Tool"
           toolNumber={2}
@@ -366,6 +399,9 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
           </div>
         </ToolBox>
 
+        {/* Spacer to push bottom text down consistently */}
+        <div className="flex-1" />
+
         {/* Bottom text */}
         <p
           className="mt-8 text-center text-xs leading-relaxed text-neutral-500 sm:mt-10 sm:text-sm"
@@ -376,9 +412,9 @@ export function FragmentedToolCard({ animate = false }: { animate?: boolean }) {
           }}
         >
           Teams stitch signals manually,
-          <br className="hidden sm:block" />
+          <br />
           while{" "}
-          <span className="font-medium text-red-400">
+          <span className="font-semibold text-red-400">
             attackers automate at scale.
           </span>
         </p>

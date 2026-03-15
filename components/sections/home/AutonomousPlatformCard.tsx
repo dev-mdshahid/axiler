@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { GoBug } from "react-icons/go";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoWarningOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 
-/* ── Branch config ──────────────────────────────────────────────── */
 interface BranchConfig {
   icon: React.ReactNode;
   label: string;
@@ -17,32 +16,38 @@ interface BranchConfig {
 
 const BRANCHES: BranchConfig[] = [
   {
-    icon: <GoBug className="size-4" aria-hidden="true" />,
+    icon: <GoBug className="size-5" aria-hidden="true" />,
     label: "Detects",
     color: "#22c55e",
     glowColor: "rgba(34,197,94,0.4)",
   },
   {
-    icon: <HiMagnifyingGlass className="size-4" aria-hidden="true" />,
+    icon: <HiMagnifyingGlass className="size-5" aria-hidden="true" />,
     label: "Prioritizes",
     color: "#fbbf24",
     glowColor: "rgba(251,191,36,0.4)",
   },
   {
-    icon: <IoWarningOutline className="size-4" aria-hidden="true" />,
+    icon: <IoWarningOutline className="size-5" aria-hidden="true" />,
     label: "Responds",
     color: "#f472b6",
     glowColor: "rgba(244,114,182,0.4)",
   },
   {
-    icon: <FiCheckCircle className="size-4" aria-hidden="true" />,
+    icon: <FiCheckCircle className="size-5" aria-hidden="true" />,
     label: "Remediates",
     color: "#C0A9FF",
     glowColor: "rgba(192,169,255,0.4)",
   },
 ];
 
-/* ── Hub Center ─────────────────────────────────────────────────── */
+// Icon column width in px — must match the w-[ICON_COL_W] class below
+const ICON_COL_W = 148;
+// Hub circle diameter in px — must match size-[HUB_D] class below
+const HUB_D = 80;
+// Y positions of each branch as fraction of diagram height (tighter spacing)
+const BRANCH_Y_FRACS = [0.14, 0.36, 0.58, 0.8];
+
 function HubCenter({ animate }: { animate: boolean }) {
   return (
     <div
@@ -53,32 +58,32 @@ function HubCenter({ animate }: { animate: boolean }) {
         transition: "all 0.7s cubic-bezier(0.34,1.56,0.64,1) 300ms",
       }}
     >
-      {/* Outer rotating glow ring */}
       <div
-        className="absolute size-24 rounded-full sm:size-28"
+        className="absolute rounded-full"
         style={{
+          width: HUB_D * 1.35,
+          height: HUB_D * 1.35,
           background:
             "conic-gradient(from 0deg, rgba(192,169,255,0.25), rgba(34,197,94,0.25), rgba(251,191,36,0.25), rgba(244,114,182,0.25), rgba(192,169,255,0.25))",
-          animation: animate
-            ? "wid-hub-ring-spin 8s linear infinite"
-            : "none",
+          animation: animate ? "wid-hub-ring-spin 8s linear infinite" : "none",
           filter: "blur(12px)",
           opacity: animate ? 1 : 0,
           transition: "opacity 0.8s ease 500ms",
         }}
         aria-hidden="true"
       />
-
-      {/* Inner circle */}
-      <div className="relative flex size-18 flex-col items-center justify-center rounded-full border border-neutral-700/80 bg-neutral-900/90 sm:size-22">
+      <div
+        className="relative flex flex-col items-center justify-center rounded-full border border-neutral-700/80 bg-neutral-900/90"
+        style={{ width: HUB_D, height: HUB_D }}
+      >
         <Image
           src="/assets/what-it-does/cade-logo.svg"
           alt="CADE logo"
           width={35}
           height={23}
-          className="h-auto w-7 sm:w-9"
+          className="h-auto w-7"
         />
-        <span className="mt-1 text-center text-xs font-bold leading-none tracking-wide text-neutral-300">
+        <span className="mt-1 text-center text-[10px] font-bold leading-none tracking-wide text-neutral-300">
           CADE
         </span>
       </div>
@@ -86,146 +91,38 @@ function HubCenter({ animate }: { animate: boolean }) {
   );
 }
 
-/*
- * ── Y-position config ────────────────────────────────────────────
- * Both the SVG endpoints and the absolutely-positioned labels share
- * these SAME percentage values so they always align perfectly.
- * Values represent the % from top of the diagram container where
- * each branch icon center sits.
- */
-const BRANCH_Y_PERCENTS = [5, 35, 65, 95]; // top → bottom
-
-/* ── Connector SVG (curved bezier from hub to branch row) ──────── */
-function ConnectorSVG({
-  animate,
-  branches,
-}: {
-  animate: boolean;
-  branches: BranchConfig[];
-}) {
-  /*
-   * SVG viewBox: 0 0 120 100  (percentage-based coordinates)
-   * Hub origin: x=0, y=50 (vertical center)
-   * Endpoints: x=120, y = BRANCH_Y_PERCENTS[i]
-   */
-  const startX = 0;
-  const startY = 50;
-  const endX = 120;
-
-  return (
-    <svg
-      viewBox="0 0 120 100"
-      fill="none"
-      className="absolute inset-0 h-full w-[55%]"
-      aria-hidden="true"
-      preserveAspectRatio="none"
-    >
-      {branches.map((branch, i) => {
-        const ey = BRANCH_Y_PERCENTS[i];
-        const cp1x = 50;
-        const cp1y = startY;
-        const cp2x = 70;
-        const cp2y = ey;
-        const pathD = `M${startX},${startY} C${cp1x},${cp1y} ${cp2x},${cp2y} ${endX},${ey}`;
-        const delay = 500 + i * 150;
-
-        return (
-          <g key={branch.label}>
-            {/* Glow path (wider, blurred) */}
-            <path
-              d={pathD}
-              stroke={branch.color}
-              strokeWidth="3"
-              fill="none"
-              strokeLinecap="round"
-              opacity="0.2"
-              style={{
-                strokeDasharray: 300,
-                strokeDashoffset: animate ? 0 : 300,
-                transition: `stroke-dashoffset 0.9s ease ${delay}ms`,
-                filter: `blur(4px)`,
-              }}
-              vectorEffect="non-scaling-stroke"
-            />
-            {/* Main path */}
-            <path
-              d={pathD}
-              stroke={branch.color}
-              strokeWidth="1.5"
-              fill="none"
-              strokeLinecap="round"
-              style={{
-                strokeDasharray: 300,
-                strokeDashoffset: animate ? 0 : 300,
-                transition: `stroke-dashoffset 0.9s ease ${delay}ms`,
-              }}
-              vectorEffect="non-scaling-stroke"
-            />
-            {/* Traveling dot */}
-            <circle r="2" fill={branch.color} opacity="0">
-              <animateMotion
-                dur="3s"
-                repeatCount="indefinite"
-                begin={`${delay / 1000 + 0.8}s`}
-                path={pathD}
-              />
-              <animate
-                attributeName="opacity"
-                values="0;0.9;0.9;0"
-                dur="3s"
-                repeatCount="indefinite"
-                begin={`${delay / 1000 + 0.8}s`}
-              />
-            </circle>
-            {/* Arrow dot at endpoint */}
-            <circle
-              cx={endX}
-              cy={ey}
-              r="2.5"
-              fill={branch.color}
-              style={{
-                opacity: animate ? 1 : 0,
-                transition: `opacity 0.4s ease ${delay + 600}ms`,
-                filter: `drop-shadow(0 0 4px ${branch.glowColor})`,
-              }}
-            />
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
-/* ── Branch Label (absolutely positioned) ─────────────────────── */
 function BranchLabel({
   branch,
   index,
   animate,
+  diagramH,
 }: {
   branch: BranchConfig;
   index: number;
   animate: boolean;
+  diagramH: number;
 }) {
   const delay = 700 + index * 150;
-  const topPercent = BRANCH_Y_PERCENTS[index];
+  const topPx = BRANCH_Y_FRACS[index] * diagramH;
 
   return (
     <div
       className="absolute right-0 flex items-center gap-2.5"
       style={{
-        top: `${topPercent}%`,
+        top: topPx,
+        width: ICON_COL_W,
         transform: animate
           ? "translateY(-50%)"
-          : "translateY(-50%) translateX(-12px)",
+          : "translateY(-50%) translateX(-10px)",
         opacity: animate ? 1 : 0,
         transition: `all 0.5s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms`,
       }}
     >
       <div
-        className="flex size-9 items-center justify-center rounded-xl border sm:size-10"
+        className="flex size-11 shrink-0 items-center justify-center rounded-xl border sm:size-12"
         style={{
-          borderColor: `${branch.color}30`,
-          background: `${branch.color}0A`,
+          borderColor: `${branch.color}35`,
+          background: `${branch.color}0D`,
           color: branch.color,
           boxShadow: animate
             ? `0 0 10px ${branch.glowColor}, 0 0 20px ${branch.glowColor}30`
@@ -236,7 +133,7 @@ function BranchLabel({
         {branch.icon}
       </div>
       <span
-        className="text-sm font-semibold whitespace-nowrap sm:text-base"
+        className="whitespace-nowrap text-xs font-semibold sm:text-sm"
         style={{ color: branch.color }}
       >
         {branch.label}
@@ -245,7 +142,6 @@ function BranchLabel({
   );
 }
 
-/* ── Main Card ──────────────────────────────────────────────────── */
 export function AutonomousPlatformCard({
   animate = false,
 }: {
@@ -254,14 +150,35 @@ export function AutonomousPlatformCard({
   const [mounted, setMounted] = useState(false);
   const show = animate && mounted;
 
+  const diagramRef = useRef<HTMLDivElement>(null);
+  const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
+
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    function measure() {
+      const el = diagramRef.current;
+      if (!el) return;
+      const { width, height } = el.getBoundingClientRect();
+      if (width > 0 && height > 0) setDims({ w: width, h: height });
+    }
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (diagramRef.current) ro.observe(diagramRef.current);
+    return () => ro.disconnect();
+  }, []);
+
+  // All coordinates in real pixels
+  const hubCx = HUB_D / 2;                          // hub centre X
+  const hubCy = dims ? dims.h / 2 : 0;              // hub centre Y (vertical middle)
+  const lineEndX = dims ? dims.w - ICON_COL_W : 0;  // where lines meet icon left edge
+
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
-      {/* Subtle background radial glow */}
+      {/* Background glows */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -270,12 +187,46 @@ export function AutonomousPlatformCard({
         }}
         aria-hidden="true"
       />
+      <div
+        className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full opacity-40 sm:size-56"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(192,169,255,0.3) 0%, rgba(244,114,182,0.2) 30%, rgba(251,191,36,0.15) 50%, rgba(34,197,94,0.1) 70%, transparent 100%)",
+          filter: "blur(40px)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -bottom-12 -right-12 h-40 w-3/4 opacity-50 sm:h-48 sm:w-2/3 md:h-56"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 70% at 70% 90%, rgba(192,169,255,0.12) 0%, rgba(244,114,182,0.06) 40%, rgba(34,197,94,0.04) 70%, transparent 100%)",
+          filter: "blur(32px)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-8 top-8 h-32 w-1/2 opacity-60 sm:h-40 sm:w-2/5"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 80% at 90% 20%, rgba(251,191,36,0.08) 0%, rgba(34,197,94,0.05) 50%, transparent 100%)",
+          filter: "blur(28px)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(255,255,255) 1px, transparent 0)`,
+          backgroundSize: "24px 24px",
+        }}
+        aria-hidden="true"
+      />
 
-      {/* ── Card Content ──────────────────────────────── */}
-      <div className="relative z-10 flex flex-1 flex-col px-5 pt-7 pb-7 sm:px-8 sm:pt-9 sm:pb-9">
+      <div className="relative z-10 flex flex-1 flex-col px-5 pt-8 pb-8 sm:px-8 sm:pt-10 sm:pb-10">
         {/* Badge */}
         <div
-          className="mx-auto mb-4 flex items-center gap-1.5 rounded-full border border-wid-accent-green/20 bg-wid-accent-green/10 px-3 py-1"
+          className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-wid-accent-green/20 bg-wid-accent-green/10 px-3 py-1"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(-8px)",
@@ -284,13 +235,13 @@ export function AutonomousPlatformCard({
         >
           <span className="size-1.5 rounded-full bg-wid-accent-green" />
           <span className="text-xs font-medium text-wid-accent-green">
-            The Solution
+            Axiler Solution
           </span>
         </div>
 
         {/* Title */}
         <h3
-          className="mb-8 text-center text-base font-bold text-foreground sm:mb-10 sm:text-lg"
+          className="mb-8 text-center text-lg font-bold text-foreground sm:mb-10 sm:text-xl"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",
@@ -302,25 +253,126 @@ export function AutonomousPlatformCard({
           <span className="text-neutral-400">Context-Driven Control</span>
         </h3>
 
-        {/* ── Diagram: Hub → Connectors → Labels ──────── */}
-        <div className="mx-auto flex items-center justify-center gap-0">
-          {/* Hub */}
-          <HubCenter animate={show} />
+        {/* Diagram — single relative container measured by ResizeObserver */}
+        <div className="relative mx-auto w-full max-w-sm flex-1">
+          <div
+            ref={diagramRef}
+            className="relative h-full min-h-64 w-full sm:min-h-72 md:min-h-80"
+          >
+            {/* Full-diagram SVG — pixel viewBox, no distortion */}
+            {dims && (
+              <svg
+                viewBox={`0 0 ${dims.w} ${dims.h}`}
+                width={dims.w}
+                height={dims.h}
+                fill="none"
+                className="absolute inset-0"
+                aria-hidden="true"
+              >
+                {BRANCHES.map((branch, i) => {
+                  const ey = BRANCH_Y_FRACS[i] * dims.h;
+                  const span = lineEndX - hubCx;
+                  const cx1 = hubCx + span * 0.4;
+                  const cx2 = hubCx + span * 0.7;
+                  const pathD = `M${hubCx},${hubCy} C${cx1},${hubCy} ${cx2},${ey} ${lineEndX},${ey}`;
+                  const delay = 500 + i * 150;
 
-          {/* Connectors + Labels in one relative container so they share coordinates */}
-          <div className="relative h-56 w-48 sm:h-64 sm:w-56 md:h-72 md:w-64">
-            {/* SVG connector lines — fills left ~55% of container */}
-            <ConnectorSVG animate={show} branches={BRANCHES} />
+                  return (
+                    <g key={branch.label}>
+                      {/* Glow */}
+                      <path
+                        d={pathD}
+                        pathLength="1"
+                        stroke={branch.color}
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                        opacity="0.15"
+                        style={{
+                          strokeDasharray: 1,
+                          strokeDashoffset: show ? 0 : 1,
+                          transition: `stroke-dashoffset 0.9s ease ${delay}ms`,
+                          filter: "blur(4px)",
+                        }}
+                      />
+                      {/* Crisp line */}
+                      <path
+                        d={pathD}
+                        pathLength="1"
+                        stroke={branch.color}
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        style={{
+                          strokeDasharray: 1,
+                          strokeDashoffset: show ? 0 : 1,
+                          transition: `stroke-dashoffset 0.9s ease ${delay}ms`,
+                        }}
+                      />
+                      {/* Travelling dot */}
+                      <circle r="3" fill={branch.color} opacity="0">
+                        <animateMotion
+                          dur="3s"
+                          repeatCount="indefinite"
+                          begin={`${delay / 1000 + 0.9}s`}
+                          path={pathD}
+                        />
+                        <animate
+                          attributeName="opacity"
+                          values="0;0.9;0.9;0"
+                          dur="3s"
+                          repeatCount="indefinite"
+                          begin={`${delay / 1000 + 0.9}s`}
+                        />
+                      </circle>
+                      {/* Terminal dot */}
+                      <circle
+                        cx={lineEndX}
+                        cy={ey}
+                        r="3.5"
+                        fill={branch.color}
+                        style={{
+                          opacity: show ? 1 : 0,
+                          transition: `opacity 0.4s ease ${delay + 700}ms`,
+                          filter: `drop-shadow(0 0 4px ${branch.glowColor})`,
+                        }}
+                      />
+                    </g>
+                  );
+                })}
+              </svg>
+            )}
 
-            {/* Branch labels — absolutely positioned at matching Y percentages */}
-            {BRANCHES.map((branch, i) => (
-              <BranchLabel
-                key={branch.label}
-                branch={branch}
-                index={i}
-                animate={show}
-              />
-            ))}
+            {/* Hub — left edge, vertically centred */}
+            <div className="absolute left-0 top-1/2 z-10 -translate-y-1/2">
+              <HubCenter animate={show} />
+            </div>
+
+            {/* Label below hub */}
+            <div
+              className="absolute left-0 z-10 flex items-center justify-center"
+              style={{
+                width: HUB_D,
+                top: "50%",
+                transform: `translateY(${HUB_D / 2 + 6}px)`,
+                opacity: show ? 1 : 0,
+                transition: "opacity 0.6s ease 800ms",
+              }}
+            >
+              <p className="text-center text-[10px] font-medium leading-tight text-neutral-500 sm:text-xs">
+                Our one autonomous platform
+              </p>
+            </div>
+
+            {/* Icon + label column — right edge */}
+            {dims &&
+              BRANCHES.map((branch, i) => (
+                <BranchLabel
+                  key={branch.label}
+                  branch={branch}
+                  index={i}
+                  animate={show}
+                  diagramH={dims.h}
+                />
+              ))}
           </div>
         </div>
 
@@ -334,15 +386,16 @@ export function AutonomousPlatformCard({
           }}
         >
           From{" "}
-          <span className="font-medium text-wid-accent-pink">
+          <span className="font-semibold text-wid-accent-pink">
             threat to fix
           </span>
           , unified in one{" "}
-          <span className="font-medium text-wid-accent-purple">
+          <span className="font-semibold text-wid-accent-purple">
             agentic platform
           </span>
           , in{" "}
-          <span className="font-medium text-wid-accent-green">real time</span>.
+          <span className="font-semibold text-wid-accent-green">real time</span>
+          .
         </p>
       </div>
     </div>
