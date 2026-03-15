@@ -7,6 +7,13 @@ import { HiMagnifyingGlass } from "react-icons/hi2";
 import { IoWarningOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 
+// Loop cycle: each branch gets a segment; spark moves along line, line colors with it, icon lights when spark reaches end
+const CYCLE_DURATION_MS = 6000;
+const PAUSE_AFTER_CYCLE_MS = 5000;
+const SEGMENT_FRAC = 1 / 4; // each of 4 branches gets 1/4 of cycle
+const GRAY_STROKE = "#404040";
+const PROGRESS_RESET_EPS = 0.002; // treat as 0 when reset so first branch stays gray
+
 interface BranchConfig {
   icon: React.ReactNode;
   label: string;
@@ -44,7 +51,7 @@ const BRANCHES: BranchConfig[] = [
 // Icon column width in px — must match the w-[ICON_COL_W] class below
 const ICON_COL_W = 148;
 // Hub circle diameter in px — must match size-[HUB_D] class below
-const HUB_D = 80;
+const HUB_D = 90;
 // Y positions of each branch as fraction of diagram height (tighter spacing)
 const BRANCH_Y_FRACS = [0.14, 0.36, 0.58, 0.8];
 
@@ -81,11 +88,11 @@ function HubCenter({ animate }: { animate: boolean }) {
           alt="CADE logo"
           width={35}
           height={23}
-          className="h-auto w-7"
+          className="h-auto w-12 sm:w-14"
         />
-        <span className="mt-1 text-center text-[10px] font-bold leading-none tracking-wide text-neutral-300">
+        {/* <span className="mt-1 text-center text-[10px] font-bold leading-none tracking-wide text-neutral-300">
           CADE
-        </span>
+        </span> */}
       </div>
     </div>
   );
@@ -96,14 +103,19 @@ function BranchLabel({
   index,
   animate,
   diagramH,
+  lit,
+  isPaused,
 }: {
   branch: BranchConfig;
   index: number;
   animate: boolean;
   diagramH: number;
+  lit: boolean;
+  isPaused: boolean;
 }) {
   const delay = 700 + index * 150;
   const topPx = BRANCH_Y_FRACS[index] * diagramH;
+  const beatGlow = lit && isPaused;
 
   return (
     <div
@@ -119,27 +131,49 @@ function BranchLabel({
       }}
     >
       <div
-        className="flex size-11 shrink-0 items-center justify-center rounded-xl border sm:size-12"
+        className={`flex size-11 shrink-0 items-center justify-center rounded-xl border sm:size-12 transition-colors duration-300 ${beatGlow ? "wid-icon-beat-glow" : ""}`}
         style={{
-          borderColor: `${branch.color}35`,
-          background: `${branch.color}0D`,
-          color: branch.color,
-          boxShadow: animate
+          borderColor: lit ? `${branch.color}35` : "rgba(113,113,122,0.4)",
+          background: lit ? `${branch.color}0D` : "rgba(63,63,70,0.3)",
+          color: lit ? branch.color : "#71717a",
+          boxShadow: lit
             ? `0 0 10px ${branch.glowColor}, 0 0 20px ${branch.glowColor}30`
             : "none",
-          transition: `box-shadow 0.6s ease ${delay + 200}ms`,
+          transition:
+            "border-color 0.3s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
+          ...(beatGlow && { ["--glow" as string]: branch.glowColor }),
         }}
       >
         {branch.icon}
       </div>
       <span
-        className="whitespace-nowrap text-xs font-semibold sm:text-sm"
-        style={{ color: branch.color }}
+        className={`whitespace-nowrap text-xs font-semibold sm:text-sm transition-colors duration-300 ${beatGlow ? "wid-text-beat-glow" : ""}`}
+        style={{
+          color: lit ? branch.color : "#71717a",
+          ...(beatGlow && { ["--glow" as string]: branch.glowColor }),
+        }}
       >
         {branch.label}
       </span>
     </div>
   );
+}
+
+function getSegmentProgress(cycleProgress: number, branchIndex: number) {
+  // When progress is at 0 (or just reset), all lines stay gray
+  if (cycleProgress < PROGRESS_RESET_EPS) return 0;
+  const segStart = branchIndex * SEGMENT_FRAC;
+  const segEnd = (branchIndex + 1) * SEGMENT_FRAC;
+  if (cycleProgress <= segStart) return 0;
+  if (cycleProgress >= segEnd) return 1;
+  return (cycleProgress - segStart) / SEGMENT_FRAC;
+}
+
+function isBranchLit(cycleProgress: number, branchIndex: number) {
+  // When progress is at 0 (or just reset), no branch is lit
+  if (cycleProgress < PROGRESS_RESET_EPS) return false;
+  const segEnd = (branchIndex + 1) * SEGMENT_FRAC;
+  return cycleProgress >= segEnd;
 }
 
 export function AutonomousPlatformCard({
@@ -152,6 +186,25 @@ export function AutonomousPlatformCard({
 
   const diagramRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
+
+  // Loop cycle: 0..1 over CYCLE_DURATION_MS, then reset
+  const [cycleProgress, setCycleProgress] = useState(0);
+  const cycleProgressRef = useRef(0);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const [pathLengths, setPathLengths] = useState<number[]>([0, 0, 0, 0]);
+  const pathLengthsRef = useRef<number[]>([0, 0, 0, 0]);
+  pathLengthsRef.current = pathLengths;
+  const [sparkPoints, setSparkPoints] = useState<
+    ({ x: number; y: number } | null)[]
+  >([null, null, null, null]);
+  const rafId = useRef<number>(0);
+  const lastTick = useRef<number>(0);
+  const pauseStartRef = useRef<number>(0);
+  const isPausedRef = useRef(false);
+  const justResetRef = useRef(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [allGray, setAllGray] = useState(false);
+  const allGrayRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 100);
@@ -171,10 +224,82 @@ export function AutonomousPlatformCard({
     return () => ro.disconnect();
   }, []);
 
+  // Measure path lengths when paths are in DOM
+  useEffect(() => {
+    if (!show || !dims) return;
+    const lengths = pathRefs.current.map((path) =>
+      path ? path.getTotalLength() : 0,
+    );
+    if (lengths.some((l) => l > 0)) setPathLengths(lengths);
+  }, [show, dims?.w, dims?.h]);
+
+  // Animation loop: advance cycle, pause 5s when complete, then reset (Detects grays out)
+  useEffect(() => {
+    if (!show) return;
+    lastTick.current = performance.now();
+    const tick = (now: number) => {
+      const deltaMs = now - lastTick.current;
+      lastTick.current = now;
+      let p = cycleProgressRef.current;
+
+      if (isPausedRef.current) {
+        if (
+          deltaMs >= 0 &&
+          now - pauseStartRef.current >= PAUSE_AFTER_CYCLE_MS
+        ) {
+          isPausedRef.current = false;
+          setIsPaused(false);
+          justResetRef.current = true;
+          allGrayRef.current = true;
+          setAllGray(true);
+          p = 0;
+          cycleProgressRef.current = p;
+          setCycleProgress(p);
+        }
+      } else {
+        if (justResetRef.current) {
+          justResetRef.current = false;
+        } else {
+          p += deltaMs / CYCLE_DURATION_MS;
+          if (allGrayRef.current && p > 0.02) {
+            allGrayRef.current = false;
+            setAllGray(false);
+          }
+        }
+        if (p >= 1) {
+          p = 1;
+          isPausedRef.current = true;
+          setIsPaused(true);
+          pauseStartRef.current = now;
+        }
+        cycleProgressRef.current = p;
+        setCycleProgress(p);
+      }
+
+      const points: ({ x: number; y: number } | null)[] = [];
+      const lengths = pathLengthsRef.current;
+      for (let i = 0; i < BRANCHES.length; i++) {
+        const path = pathRefs.current[i];
+        const len = lengths[i];
+        const sparkProg = getSegmentProgress(p, i);
+        if (path && len > 0) {
+          const pt = path.getPointAtLength(sparkProg * len);
+          points.push({ x: pt.x, y: pt.y });
+        } else {
+          points.push(null);
+        }
+      }
+      setSparkPoints(points);
+      rafId.current = requestAnimationFrame(tick);
+    };
+    rafId.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId.current);
+  }, [show, pathLengths]);
+
   // All coordinates in real pixels
-  const hubCx = HUB_D / 2;                          // hub centre X
-  const hubCy = dims ? dims.h / 2 : 0;              // hub centre Y (vertical middle)
-  const lineEndX = dims ? dims.w - ICON_COL_W : 0;  // where lines meet icon left edge
+  const hubCx = HUB_D / 2; // hub centre X
+  const hubCy = dims ? dims.h / 2 : 0; // hub centre Y (vertical middle)
+  const lineEndX = dims ? dims.w - ICON_COL_W : 0; // where lines meet icon left edge
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
@@ -275,26 +400,27 @@ export function AutonomousPlatformCard({
                   const cx1 = hubCx + span * 0.4;
                   const cx2 = hubCx + span * 0.7;
                   const pathD = `M${hubCx},${hubCy} C${cx1},${hubCy} ${cx2},${ey} ${lineEndX},${ey}`;
-                  const delay = 500 + i * 150;
+                  const lineReveal = allGray
+                    ? 0
+                    : getSegmentProgress(cycleProgress, i);
+                  const lit = allGray ? false : isBranchLit(cycleProgress, i);
+                  const point = sparkPoints[i];
 
                   return (
                     <g key={branch.label}>
-                      {/* Glow */}
+                      {/* Gray base line — always visible */}
                       <path
+                        ref={(el) => {
+                          pathRefs.current[i] = el;
+                        }}
                         d={pathD}
                         pathLength="1"
-                        stroke={branch.color}
-                        strokeWidth="6"
+                        stroke={GRAY_STROKE}
+                        strokeWidth="1.5"
                         strokeLinecap="round"
-                        opacity="0.15"
-                        style={{
-                          strokeDasharray: 1,
-                          strokeDashoffset: show ? 0 : 1,
-                          transition: `stroke-dashoffset 0.9s ease ${delay}ms`,
-                          filter: "blur(4px)",
-                        }}
+                        opacity="0.5"
                       />
-                      {/* Crisp line */}
+                      {/* Colored line — reveals as spark moves; fully hidden when lineReveal is 0 */}
                       <path
                         d={pathD}
                         pathLength="1"
@@ -303,36 +429,67 @@ export function AutonomousPlatformCard({
                         strokeLinecap="round"
                         style={{
                           strokeDasharray: 1,
-                          strokeDashoffset: show ? 0 : 1,
-                          transition: `stroke-dashoffset 0.9s ease ${delay}ms`,
+                          strokeDashoffset: 1 - lineReveal,
+                          opacity: lineReveal > 0 ? 1 : 0,
+                          transition:
+                            "stroke-dashoffset 0.08s linear, opacity 0.15s ease",
+                          ...(isPaused &&
+                            lit && {
+                              color: branch.color,
+                              animation:
+                                "wid-line-glow-beat 2.2s ease-in-out infinite",
+                            }),
                         }}
                       />
-                      {/* Travelling dot */}
-                      <circle r="3" fill={branch.color} opacity="0">
-                        <animateMotion
-                          dur="3s"
-                          repeatCount="indefinite"
-                          begin={`${delay / 1000 + 0.9}s`}
-                          path={pathD}
+                      {/* Colored glow behind line — no beat so blur stays; hidden when lineReveal is 0 */}
+                      <path
+                        d={pathD}
+                        pathLength="1"
+                        stroke={branch.color}
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                        style={{
+                          strokeDasharray: 1,
+                          strokeDashoffset: 1 - lineReveal,
+                          opacity: lineReveal > 0 ? 0.15 : 0,
+                          transition:
+                            "stroke-dashoffset 0.08s linear, opacity 0.15s ease",
+                          filter: "blur(4px)",
+                        }}
+                      />
+                      {/* Spark moving along path — visible only while traveling */}
+                      {point && (
+                        <circle
+                          r="4"
+                          cx={point.x}
+                          cy={point.y}
+                          fill={branch.color}
+                          style={{
+                            filter: `drop-shadow(0 0 6px ${branch.glowColor})`,
+                            opacity:
+                              lineReveal > 0.01 && lineReveal < 0.99 ? 1 : 0,
+                            transition: "opacity 0.05s ease",
+                          }}
                         />
-                        <animate
-                          attributeName="opacity"
-                          values="0;0.9;0.9;0"
-                          dur="3s"
-                          repeatCount="indefinite"
-                          begin={`${delay / 1000 + 0.9}s`}
-                        />
-                      </circle>
-                      {/* Terminal dot */}
+                      )}
+                      {/* Terminal dot — colored when branch is lit */}
                       <circle
                         cx={lineEndX}
                         cy={ey}
                         r="3.5"
-                        fill={branch.color}
+                        fill={lit ? branch.color : GRAY_STROKE}
                         style={{
-                          opacity: show ? 1 : 0,
-                          transition: `opacity 0.4s ease ${delay + 700}ms`,
-                          filter: `drop-shadow(0 0 4px ${branch.glowColor})`,
+                          opacity: 0.8,
+                          transition: "fill 0.3s ease",
+                          color: branch.color,
+                          filter: lit
+                            ? `drop-shadow(0 0 4px ${branch.glowColor})`
+                            : "none",
+                          ...(isPaused &&
+                            lit && {
+                              animation:
+                                "wid-line-glow-beat 2.2s ease-in-out infinite",
+                            }),
                         }}
                       />
                     </g>
@@ -371,6 +528,8 @@ export function AutonomousPlatformCard({
                   index={i}
                   animate={show}
                   diagramH={dims.h}
+                  lit={allGray ? false : isBranchLit(cycleProgress, i)}
+                  isPaused={isPaused}
                 />
               ))}
           </div>
