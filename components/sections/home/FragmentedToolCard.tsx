@@ -458,6 +458,17 @@ export function FragmentedToolCard({
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
+      {/* Wave background — left half so it joins with right card */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url(/assets/what-it-does/wave-shape.svg)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "0% 100%",
+          backgroundSize: "200% auto",
+        }}
+        aria-hidden="true"
+      />
       <div
         className="pointer-events-none absolute inset-0"
         style={{

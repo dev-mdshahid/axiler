@@ -326,6 +326,17 @@ export function AutonomousPlatformCard({
           : "border-wid-card-border bg-wid-card-bg shadow-wid-card"
       }`}
     >
+      {/* Wave background — right half so it joins with left card */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url(/assets/what-it-does/wave-shape.svg)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "100% 100%",
+          backgroundSize: "200% auto",
+        }}
+        aria-hidden="true"
+      />
       {/* Green glow background when right flow is active or in final state */}
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-700"
