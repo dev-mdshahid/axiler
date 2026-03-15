@@ -469,6 +469,18 @@ export function FragmentedToolCard({
         }}
         aria-hidden="true"
       />
+      {/* Glow blending with wave — bottom of card */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-90"
+        style={{
+          backgroundImage: "url(/assets/what-it-does/glow-shape.svg)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "0% 110%",
+          backgroundSize: "contain",
+          mixBlendMode: "screen",
+        }}
+        aria-hidden="true"
+      />
       <div
         className="pointer-events-none absolute inset-0"
         style={{

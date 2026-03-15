@@ -337,6 +337,18 @@ export function AutonomousPlatformCard({
         }}
         aria-hidden="true"
       />
+      {/* Glow blending with wave — bottom of card */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-90"
+        style={{
+          backgroundImage: "url(/assets/what-it-does/glow-shape.svg)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "0% 150%",
+          backgroundSize: "contain",
+          mixBlendMode: "screen",
+        }}
+        aria-hidden="true"
+      />
       {/* Green glow background when right flow is active or in final state */}
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-700"
@@ -448,7 +460,9 @@ export function AutonomousPlatformCard({
                   const lineReveal = effectiveGray
                     ? 0
                     : getSegmentProgress(cycleProgress, i);
-                  const lit = effectiveGray ? false : isBranchLit(cycleProgress, i);
+                  const lit = effectiveGray
+                    ? false
+                    : isBranchLit(cycleProgress, i);
                   const point = sparkPoints[i];
 
                   return (
