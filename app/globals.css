@@ -48,6 +48,16 @@
 
   /* Navbar */
   --navbar-height: 5rem;
+
+  /* What It Does Section */
+  --wid-section-bg: #100B0C;
+  --wid-card-bg: #050404;
+  --wid-card-shadow: 0px -36px 78px -42px #4A3752;
+  --wid-accent-green: #22c55e;
+  --wid-accent-pink: #f472b6;
+  --wid-accent-purple: #C0A9FF;
+  --wid-accent-yellow: #fbbf24;
+  --wid-card-border: rgba(255, 255, 255, 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -100,6 +110,16 @@
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
+  --shadow-wid-card: var(--wid-card-shadow);
+
+  /* What It Does Section Colors */
+  --color-wid-section-bg: var(--wid-section-bg);
+  --color-wid-card-bg: var(--wid-card-bg);
+  --color-wid-accent-green: var(--wid-accent-green);
+  --color-wid-accent-pink: var(--wid-accent-pink);
+  --color-wid-accent-purple: var(--wid-accent-purple);
+  --color-wid-accent-yellow: var(--wid-accent-yellow);
+  --color-wid-card-border: var(--wid-card-border);
 
   /* Spacing */
   --spacing-navbar: var(--navbar-height);
@@ -121,4 +141,62 @@ html {
 *:focus-visible {
   outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
+}
+
+/* ── WhatItDoes Section Animations ─────────────────────────────── */
+
+/* Traveling dot along a flow path */
+@keyframes wid-dot-travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Glow pulse for nodes / icons */
+@keyframes wid-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 8px currentColor); }
+  50% { filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor); }
+}
+
+/* Soft opacity pulse for background glow */
+@keyframes wid-bg-glow {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.5; }
+}
+
+/* Dash offset animation for SVG line drawing */
+@keyframes wid-dash-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Flow line shimmer */
+@keyframes wid-line-shimmer {
+  0% { stroke-dashoffset: 40; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* Scale-in pop for flow step nodes */
+@keyframes wid-node-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Fade-in-up for text elements */
+@keyframes wid-fade-up {
+  0% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Rotating ring for hub */
+@keyframes wid-hub-ring-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Cross mark for fragmented "break" */
+@keyframes wid-cross-appear {
+  0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
