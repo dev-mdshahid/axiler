@@ -177,11 +177,11 @@ export default function Cade() {
                     {/* Node Box */}
                     <div 
                       className={`relative w-full h-full flex items-center gap-3 rounded-2xl border bg-[#050505] backdrop-blur-xl px-4 sm:px-5 cursor-default transition-all duration-300 ${
-                        isHovered ? 'scale-105 -translate-y-1 bg-white/5' : ''
+                        isHovered ? 'scale-105 -translate-y-1 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.8)]' : ''
                       }`}
                       style={{
-                        borderColor: isHovered ? `${node.color}90` : (isCade ? "rgba(96, 165, 250, 0.4)" : "rgba(255,255,255,0.08)"),
-                        boxShadow: isHovered ? `0 10px 30px -10px rgba(0,0,0,0.5), inset 0 0 20px -5px ${node.color}40` : `inset 0 0 20px -10px ${node.glow}`,
+                        borderColor: isHovered ? `${node.color}80` : (isCade ? "rgba(96, 165, 250, 0.4)" : "rgba(255,255,255,0.08)"),
+                        boxShadow: isHovered ? `0 0 20px -5px ${node.color}30, inset 0 0 15px -10px ${node.color}20` : `inset 0 0 20px -10px transparent`,
                       }}
                     >
                       {isCade && (
@@ -193,7 +193,9 @@ export default function Cade() {
 
                       {/* Inner static glow element for that soft colored ambient look */}
                       <div
-                        className="absolute inset-0 -z-10 rounded-2xl opacity-60 mix-blend-screen pointer-events-none transition-opacity group-hover:opacity-100"
+                        className={`absolute inset-0 -z-10 rounded-2xl mix-blend-screen pointer-events-none transition-opacity duration-300 ${
+                          isHovered ? 'opacity-30' : 'opacity-60'
+                        }`}
                         style={{
                           background: `radial-gradient(ellipse at center, ${node.glow} 0%, transparent 70%)`,
                         }}
@@ -201,8 +203,13 @@ export default function Cade() {
 
                       {node.icon && (
                         <div
-                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black/40 border border-white/5 transition-colors group-hover:bg-black/60 group-hover:border-white/20"
-                          style={{ color: node.color }}
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black/60 border transition-all duration-300 ${
+                            isHovered ? 'border-white/20' : 'border-white/5'
+                          }`}
+                          style={{
+                            color: node.color,
+                            boxShadow: isHovered ? `0 0 15px -5px ${node.color}60` : 'none'
+                          }}
                         >
                           {node.icon}
                           {node.id === "threat" && (
@@ -212,8 +219,11 @@ export default function Cade() {
                       )}
 
                       <span
-                        className="text-sm font-semibold tracking-wide whitespace-nowrap"
-                        style={{ color: node.color }}
+                        className="text-sm font-bold tracking-wide whitespace-nowrap transition-all duration-300"
+                        style={{ 
+                          color: isHovered ? '#ffffff' : node.color,
+                          textShadow: isHovered ? `0 0 10px ${node.color}80` : 'none'
+                        }}
                       >
                         {node.label}
                       </span>
