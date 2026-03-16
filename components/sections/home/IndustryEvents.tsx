@@ -12,7 +12,7 @@ export default function IndustryEvents() {
   });
 
   return (
-    <section className="relative w-full bg-[#03040C] py-20 md:py-32 overflow-hidden border-t border-white/5">
+    <section className="relative w-full bg-[#03040C] py-20 md:py-28 lg:py-36 overflow-hidden border-t border-white/5">
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="absolute top-[20%] right-0 h-[400px] w-[600px] rounded-full bg-blue-500/5 blur-[120px]" />
@@ -26,14 +26,14 @@ export default function IndustryEvents() {
         }`}
       >
         {/* Header Section */}
-        <div className="flex flex-col items-center mb-16 md:mb-24 text-center">
-          <div className="mb-6 inline-flex uppercase tracking-[0.2em] text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
+        <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
+          <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
             Knowledge Sharing
           </div>
-          <h2 className="text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
             Industry Events & Engagements
           </h2>
-          <p className="text-lg leading-relaxed text-neutral-400 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
             Learn how different sectors are affected by cyber attacks and the importance of early security measures.
           </p>
         </div>

@@ -110,7 +110,7 @@ export default function Lifecycle() {
   return (
     <section
       id="security-lifecycle-main"
-      className="relative w-full bg-[#03040C] py-20 md:py-32 overflow-hidden"
+      className="relative w-full bg-[#03040C] py-20 md:py-28 lg:py-36 overflow-hidden"
     >
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -125,15 +125,15 @@ export default function Lifecycle() {
         }`}
       >
         {/* Header section */}
-        <div className="mb-16 flex flex-col items-center text-center max-w-4xl mx-auto">
-          <div className="mb-6 inline-flex uppercase tracking-[0.2em] text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
+        <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
+          <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
             Axiler Security Lifecycle
           </div>
-          <h2 className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
             Agentic Intelligence Across <br className="hidden sm:block" />
             The Application Security Lifecycle
           </h2>
-          <p className="text-lg leading-relaxed text-neutral-400">
+          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
             Axiler deploys purpose-built AI agents that operate across every
             layer of modern application security. From visibility and validation
             to autonomous remediation, security becomes continuous, contextual,

@@ -139,7 +139,7 @@ export default function Services() {
   const activeData = TABS_DATA.find((tab) => tab.id === activeTab) || TABS_DATA[0];
 
   return (
-    <section id="security-lifecycle" className="w-full bg-background py-16 md:py-24 lg:py-32 relative overflow-hidden">
+    <section id="security-lifecycle" className="w-full bg-background py-20 md:py-28 lg:py-36 relative overflow-hidden">
       {/* Background Glows to match the screenshot vibe */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-[500px] w-[800px] bg-brand-primary opacity-20 blur-[120px] rounded-full" />
@@ -151,13 +151,15 @@ export default function Services() {
           isIntersecting ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
         }`}
       >
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 flex flex-col items-center text-center sm:mb-16 md:mb-20">
-            <h2 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Agentic Intelligence Across <br className="hidden sm:block" />
-              The Application Security Lifecycle
+          <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
+          <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
+            <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-4 py-1.5 rounded-full">
+              Industries
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+              Secure Every Sector
             </h2>
-            <p className="mt-6 max-w-4xl text-base leading-relaxed text-neutral-400 sm:text-lg">
+            <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
               Axiler deploys purpose-built AI agents that operate across every layer of modern
               application security. From visibility and validation to autonomous remediation,
               security becomes continuous, contextual, and self-improving.

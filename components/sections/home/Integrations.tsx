@@ -117,19 +117,21 @@ export default function Integrations() {
   return (
     <section
       id="integrations"
-      className="w-full bg-[#050509] py-12 px-4 sm:px-6 md:px-8 md:py-24 overflow-hidden"
+      className="relative w-full bg-[#050509] py-20 md:py-28 lg:py-36 overflow-hidden"
     >
       <div
         ref={ref}
-        className={`mx-auto flex w-full flex-col items-center gap-10 md:gap-12 text-center transition-all duration-700 ease-out motion-reduce:transition-none ${
+        className={`relative z-10 mx-auto w-full transition-all duration-700 ease-out motion-reduce:transition-none ${
           isIntersecting
             ? "translate-y-0 opacity-100"
             : "translate-y-8 opacity-0"
         }`}
       >
-        <h2 className="max-w-3xl text-balance text-3xl sm:text-[32px] md:text-[40px] lg:text-[48px] font-semibold leading-tight text-white">
-          Integrates Seamlessly Into Ecosystems You Already Trust
-        </h2>
+        <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white">
+            Integrates Seamlessly Into Ecosystems You Already Trust
+          </h2>
+        </div>
 
         <div className="flex w-full flex-col gap-8">
           {INTEGRATION_ROWS.map((row, rowIndex) => {

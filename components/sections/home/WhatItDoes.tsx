@@ -53,34 +53,32 @@ export default function WhatItDoes() {
         {/* Section Heading */}
         <div
           ref={sectionRef}
-          className={`mb-14 text-center transition-all duration-700 ease-out motion-reduce:transition-none md:mb-18 lg:mb-20 ${
+          className={`mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto transition-all duration-700 ease-out motion-reduce:transition-none ${
             sectionVisible
               ? "translate-y-0 opacity-100"
               : "translate-y-8 opacity-0"
           }`}
         >
-          <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-wid-accent-purple uppercase sm:text-sm">
+          <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-wid-accent-purple bg-wid-accent-purple/10 border border-wid-accent-purple/20 px-4 py-1.5 rounded-full">
             Why Axiler
-          </p>
+          </div>
 
           <h2
             id="what-it-does-heading"
-            className="text-3xl leading-tight font-bold text-foreground sm:text-4xl lg:text-5xl"
+            className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5"
           >
-            <span className="text-foreground">Fragmented Tools</span>
+            <span className="text-white">Fragmented Tools</span>
             <span className="mx-2 text-neutral-500 sm:mx-3">vs.</span>
-            {/* <br className="sm:hidden" /> */}
             <br />
             <span className="bg-linear-to-r from-wid-accent-purple to-wid-accent-green bg-clip-text text-transparent">
               One Autonomous Platform
             </span>
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-neutral-400 sm:text-base">
+          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
             Traditional security stacks create noise.
             <br className="hidden sm:block" />
-            Axiler unifies detection through remediation in a single agentic
-            flow.
+            Axiler unifies detection through remediation in a single agentic flow.
           </p>
         </div>
 

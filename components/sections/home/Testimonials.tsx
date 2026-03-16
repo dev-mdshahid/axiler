@@ -34,25 +34,25 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   return (
-    <SectionWrapper id="testimonials" className="relative py-24 sm:py-32 overflow-hidden">
+    <SectionWrapper id="testimonials" className="relative py-20 md:py-28 lg:py-36 overflow-hidden">
       {/* Dynamic Background */}
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
       <div className="absolute left-1/2 top-0 -z-10 -mt-24 w-full max-w-[1000px] -translate-x-1/2 opacity-30 blur-[100px]">
-        <div className="aspect-[2/1] bg-gradient-to-b from-blue-900 via-purple-900 to-transparent" />
+        <div className="aspect-2/1 bg-gradient-to-b from-blue-900 via-purple-900 to-transparent" />
       </div>
 
       <div className="mx-auto flex w-full max-w-7xl flex-col px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="mx-auto max-w-2xl text-center mb-16 lg:mb-24 relative">
-          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-medium text-cyan-400 backdrop-blur-md mb-6 relative hover:bg-white/10 transition-colors">
-            <span className="flex h-2 w-2 rounded-full bg-cyan-400 mr-2 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
+        <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto relative z-10">
+          <div className="mb-5 inline-flex items-center uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full hover:bg-white/10 transition-colors">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-cyan-400 mr-2 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
             Client Success Stories
           </div>
-          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-5xl mb-6 font-rethink">
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5 font-rethink">
             Words Of Endorsement<br className="hidden sm:block" /> From Our Clients
           </h2>
-          <p className="mt-4 text-lg leading-8 text-neutral-400 max-w-xl mx-auto font-rethink">
+          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400 font-rethink">
             Discover how we&apos;re transforming security landscapes globally through the experiences of our valued partners.
           </p>
         </div>

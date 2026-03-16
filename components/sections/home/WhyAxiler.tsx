@@ -61,17 +61,23 @@ export default function WhyAxiler() {
   }, [isVideoLoaded]);
 
   return (
-    <section id="why-axiler" className="w-full bg-black py-16 md:py-24 lg:py-32">
+    <section id="why-axiler" className="w-full bg-black py-20 md:py-28 lg:py-36">
       <div
         ref={containerRef}
         className={`flex w-full flex-col items-center justify-center transition-all duration-700 ease-out motion-reduce:transition-none ${isIntersecting ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
       >
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 flex flex-col items-center text-center sm:mb-12 md:mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+          <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
+            <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
+              Demo
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
               Why Axiler
             </h2>
+            <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+              See how our autonomous platform remediates risk in runtime instead of creating noisy alerts.
+            </p>
           </div>
         </div>
 

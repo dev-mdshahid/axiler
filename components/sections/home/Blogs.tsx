@@ -26,11 +26,19 @@ const blogs = [
 
 export default function Blogs() {
   return (
-    <section className="relative w-full py-16 md:py-24 bg-transparent overflow-hidden">
+    <section className="relative w-full py-20 md:py-28 lg:py-36 bg-transparent overflow-hidden">
       <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center px-4 sm:px-6 lg:px-8 relative z-10">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-white mb-12 md:mb-16 tracking-tight">
-          Blogs
-        </h2>
+        <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto relative z-10 w-full">
+          <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-[#A855F7] bg-[#A855F7]/10 border border-[#A855F7]/20 px-4 py-1.5 rounded-full">
+            Articles
+          </div>
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+            Blogs
+          </h2>
+          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+            Read our latest articles and insights on cybersecurity and AI agents.
+          </p>
+        </div>
         
         <div className="flex w-full flex-col gap-8 md:gap-12">
           {blogs.map((blog) => (

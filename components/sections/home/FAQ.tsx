@@ -49,27 +49,24 @@ export default function FAQ() {
         <section
             id="faq"
             aria-labelledby="faq-heading"
-            className="w-full bg-black py-16 md:py-24 lg:py-32"
+            className="w-full bg-black py-20 md:py-28 lg:py-36"
         >
             <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-                {/* Top Pill Badge */}
-                <div className="flex items-center gap-2 mb-6 py-1.5 px-4 rounded-full border border-neutral-800 bg-[#161616]">
-                    <div
-                        className="w-2 h-2 rounded-full shrink-0 bg-[#F97316]"
-                        aria-hidden="true"
-                    />
-                    <span className="font-medium text-[13px] leading-snug text-neutral-200 uppercase tracking-wider">
-                        FAQ
-                    </span>
-                </div>
-
-                {/* Heading */}
-                <h2
+                {/* Header section */}
+                <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto w-full">
+                  <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-[#F97316] bg-[#F97316]/10 border border-[#F97316]/20 px-4 py-1.5 rounded-full">
+                    FAQ
+                  </div>
+                  <h2
                     id="faq-heading"
-                    className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl text-center mb-12 sm:mb-16"
-                >
+                    className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5"
+                  >
                     Your Questions, Answered
-                </h2>
+                  </h2>
+                  <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+                    Find common answers about Axiler&apos;s features and capabilities.
+                  </p>
+                </div>
 
                 {/* FAQ Cards — Two independent columns */}
                 <div className="w-full flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-6">
