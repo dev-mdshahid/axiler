@@ -83,7 +83,7 @@ export default function WhyAxiler() {
 
         <div
           ref={videoContainerRef}
-          className="relative flex w-full aspect-video items-center justify-center overflow-hidden"
+          className="relative flex w-full aspect-[21/9] sm:aspect-[2.35/1] items-center justify-center overflow-hidden"
         >
           {/* Fallback space to prevent layout shift before video loads */}
           {!isVideoLoaded && (
