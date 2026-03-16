@@ -47,35 +47,41 @@ export default function WhatItDoes() {
     <section
       id="what-it-does"
       aria-labelledby="what-it-does-heading"
-      className="w-full bg-wid-section-bg py-20 md:py-28 lg:py-36"
+      className="relative w-full bg-[#03040C] py-16 md:py-24 border-t border-white/5 overflow-hidden"
     >
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Background Ambience */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div className="absolute top-[20%] left-[-10%] h-[400px] w-[500px] rounded-full bg-emerald-500/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[10%] h-[300px] w-[400px] rounded-full bg-purple-500/5 blur-[120px]" />
+      </div>
+
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Heading */}
         <div
           ref={sectionRef}
-          className={`mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto transition-all duration-700 ease-out motion-reduce:transition-none ${
+          className={`mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto transition-all duration-1000 ease-out motion-reduce:transition-none ${
             sectionVisible
               ? "translate-y-0 opacity-100"
               : "translate-y-8 opacity-0"
           }`}
         >
-          <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-wid-accent-purple bg-wid-accent-purple/10 border border-wid-accent-purple/20 px-4 py-1.5 rounded-full">
+          <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-purple-400 bg-purple-400/10 border border-purple-400/20 px-4 py-1.5 rounded-full">
             Why Axiler
           </div>
 
           <h2
             id="what-it-does-heading"
-            className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-5"
           >
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60">Fragmented Tools</span>
-            <span className="mx-2 text-neutral-500 sm:mx-3">vs.</span>
-            <br />
-            <span className="bg-linear-to-r from-wid-accent-purple to-wid-accent-green bg-clip-text text-transparent">
-              One Autonomous Platform
+            <span className="mx-2 sm:mx-3 text-neutral-600 font-medium text-2xl sm:text-3xl lg:text-4xl inline-block -translate-y-0.5">vs.</span>
+            <br className="hidden sm:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-emerald-400">
+              {""} One Autonomous Platform
             </span>
           </h2>
 
-          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+          <p className="text-sm sm:text-base font-medium leading-relaxed text-neutral-400">
             Traditional security stacks create noise.
             <br className="hidden sm:block" />
             Axiler unifies detection through remediation in a single agentic flow.
@@ -83,19 +89,19 @@ export default function WhatItDoes() {
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8 w-full max-w-none">
           <div
             ref={leftCardRef}
-            className={`transition-all duration-700 ease-out motion-reduce:transition-none ${
+            className={`transition-all duration-1000 ease-out motion-reduce:transition-none ${
               leftVisible
                 ? "translate-y-0 opacity-100"
-                : "translate-y-10 opacity-0"
-            } ${isShaking ? "wid-shake-red-2s" : ""}`}
+                : "translate-y-8 opacity-0"
+            } ${isShaking ? "animate-pulse" : ""}`}
             style={
               isShaking
                 ? {
                     boxShadow:
-                      "0 0 24px rgba(239,68,68,0.5), 0 0 48px rgba(239,68,68,0.25), inset 0 0 0 1px rgba(239,68,68,0.3)",
+                      "0 0 30px rgba(239,68,68,0.1), 0 0 60px rgba(239,68,68,0.05), inset 0 0 0 1px rgba(239,68,68,0.2)",
                   }
                 : undefined
             }
@@ -110,10 +116,10 @@ export default function WhatItDoes() {
 
           <div
             ref={rightCardRef}
-            className={`transition-all duration-700 ease-out delay-150 motion-reduce:transition-none ${
+            className={`transition-all duration-1000 ease-out delay-150 motion-reduce:transition-none ${
               rightVisible
                 ? "translate-y-0 opacity-100"
-                : "translate-y-10 opacity-0"
+                : "translate-y-8 opacity-0"
             }`}
           >
             <AutonomousPlatformCard

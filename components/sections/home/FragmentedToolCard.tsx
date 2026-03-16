@@ -104,19 +104,18 @@ function FlowNode({
       <div
         className="flex size-11 items-center justify-center rounded-xl border sm:size-12 transition-colors duration-300"
         style={{
-          borderColor: lit ? `${step.color}35` : "rgba(113,113,122,0.4)",
-          background: lit ? `${step.color}0D` : "rgba(63,63,70,0.3)",
-          color: lit ? step.color : "#71717a",
-          transition:
-            "border-color 0.3s ease, background 0.3s ease, color 0.3s ease",
+          borderColor: lit ? `${step.color}50` : "rgba(255,255,255,0.05)",
+          background: lit ? `${step.color}15` : "#0A0B14",
+          color: lit ? step.color : "#a3a3a3",
+          boxShadow: lit ? `0 4px 20px ${step.color}25` : "none",
         }}
       >
         {step.icon}
       </div>
       <span
-        className="text-[11px] font-medium sm:text-xs transition-colors duration-300"
+        className="text-xs font-medium sm:text-sm tracking-wide transition-colors duration-300"
         style={{
-          color: lit ? step.color : "#71717a",
+          color: lit ? step.color : "#737373",
         }}
       >
         {step.label}
@@ -320,15 +319,15 @@ function ToolBox({
         transition: `all 0.6s ease ${delay}ms`,
       }}
     >
-      <div className="mb-2.5 flex items-center gap-2">
-        <span className="flex size-5 items-center justify-center rounded-md bg-neutral-800 text-[10px] font-bold text-neutral-500">
+      <div className="mb-3 flex items-center gap-2.5">
+        <span className="flex size-6 items-center justify-center rounded-md bg-white/5 border border-white/10 text-xs font-semibold text-neutral-400 shadow-sm">
           {toolNumber}
         </span>
-        <span className="text-[10px] font-semibold tracking-[0.15em] text-neutral-400 uppercase sm:text-xs">
+        <span className="text-xs font-bold tracking-[0.2em] text-[#a3a3a3] uppercase sm:text-xs">
           {label}
         </span>
       </div>
-      <div className="rounded-xl border border-dashed border-neutral-700/80 bg-neutral-900/20 px-3 py-5 sm:px-6 sm:py-6">
+      <div className="rounded-xl border border-dashed border-white/10 bg-white/5 px-4 py-6 sm:px-6 sm:py-8 backdrop-blur-sm">
         {children}
       </div>
     </div>
@@ -457,7 +456,7 @@ export function FragmentedToolCard({
   }, [show, runCycle]);
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-wid-card-border bg-wid-card-bg shadow-wid-card">
+    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-[#0A0B14] shadow-sm">
       {/* Wave background — left half so it joins with right card */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
@@ -532,7 +531,7 @@ export function FragmentedToolCard({
       <div className="relative z-10 flex flex-1 flex-col px-5 pt-8 pb-8 sm:px-8 sm:pt-10 sm:pb-10">
         {/* Badge */}
         <div
-          className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/8 px-3 py-1"
+          className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 shadow-[0_0_15px_rgba(239,68,68,0.1)]"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(-8px)",
@@ -540,14 +539,14 @@ export function FragmentedToolCard({
           }}
         >
           <span className="size-1.5 rounded-full bg-red-400" />
-          <span className="text-xs font-medium text-red-400">
+          <span className="text-xs font-semibold text-red-400 tracking-wide uppercase">
             Typical Solution
           </span>
         </div>
 
         {/* Title */}
         <h3
-          className="mb-8 text-center text-lg font-bold text-foreground sm:mb-10 sm:text-xl"
+          className="mb-8 text-center text-xl font-bold text-white tracking-tight sm:mb-10 sm:text-2xl"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",
@@ -556,7 +555,7 @@ export function FragmentedToolCard({
         >
           Modern Security Is
           <br />
-          <span className="text-neutral-400">Fragmented Across Tools</span>
+          <span className="text-neutral-400 font-medium text-lg sm:text-xl">Fragmented Across Tools</span>
         </h3>
 
         {/* Tool A */}

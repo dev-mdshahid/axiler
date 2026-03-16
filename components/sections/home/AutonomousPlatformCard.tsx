@@ -79,7 +79,7 @@ function HubCenter({ animate }: { animate: boolean }) {
         aria-hidden="true"
       />
       <div
-        className="relative flex flex-col items-center justify-center rounded-full border border-neutral-700/80 bg-neutral-900/90"
+        className="relative flex flex-col items-center justify-center rounded-full border border-white/10 bg-[#0A0B14] shadow-xl"
         style={{ width: HUB_D, height: HUB_D }}
       >
         <Image
@@ -132,11 +132,11 @@ function BranchLabel({
       <div
         className={`flex size-11 shrink-0 items-center justify-center rounded-xl border sm:size-12 transition-colors duration-300 ${beatGlow ? "wid-icon-beat-glow" : ""}`}
         style={{
-          borderColor: lit ? `${branch.color}35` : "rgba(113,113,122,0.4)",
-          background: lit ? `${branch.color}0D` : "rgba(63,63,70,0.3)",
-          color: lit ? branch.color : "#71717a",
+          borderColor: lit ? `${branch.color}50` : "rgba(255,255,255,0.05)",
+          background: lit ? `${branch.color}15` : "#0A0B14",
+          color: lit ? branch.color : "#a3a3a3",
           boxShadow: lit
-            ? `0 0 10px ${branch.glowColor}, 0 0 20px ${branch.glowColor}30`
+            ? `0 4px 20px ${branch.color}25`
             : "none",
           transition:
             "border-color 0.3s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
@@ -146,9 +146,9 @@ function BranchLabel({
         {branch.icon}
       </div>
       <span
-        className={`whitespace-nowrap text-xs font-semibold sm:text-sm transition-colors duration-300 ${beatGlow ? "wid-text-beat-glow" : ""}`}
+        className={`whitespace-nowrap text-xs font-medium sm:text-sm tracking-wide transition-colors duration-300 ${beatGlow ? "wid-text-beat-glow" : ""}`}
         style={{
-          color: lit ? branch.color : "#71717a",
+          color: lit ? branch.color : "#737373",
           ...(beatGlow && { ["--glow" as string]: branch.glowColor }),
         }}
       >
@@ -322,8 +322,8 @@ export function AutonomousPlatformCard({
         grayedOut ? "opacity-70 grayscale" : "opacity-100 grayscale-0"
       } ${
         showGreenGlow
-          ? "border-wid-accent-green/40 bg-wid-card-bg shadow-[0_0_32px_rgba(34,197,94,0.2),0_0_64px_rgba(34,197,94,0.1),0_8px_32px_-8px_rgba(0,0,0,0.4)] -translate-y-0.5"
-          : "border-wid-card-border bg-wid-card-bg shadow-wid-card"
+          ? "border-emerald-500/40 bg-[#0A0B14] shadow-[0_0_32px_rgba(34,197,94,0.2),0_0_64px_rgba(34,197,94,0.1),inset_0_0_0_1px_rgba(34,197,94,0.1)] -translate-y-0.5"
+          : "border-white/5 bg-[#0A0B14]"
       }`}
     >
       {/* Wave background — right half so it joins with left card */}
@@ -408,22 +408,22 @@ export function AutonomousPlatformCard({
       <div className="relative z-10 flex flex-1 flex-col px-5 pt-8 pb-8 sm:px-8 sm:pt-10 sm:pb-10">
         {/* Badge */}
         <div
-          className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-wid-accent-green/20 bg-wid-accent-green/10 px-3 py-1"
+          className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(-8px)",
             transition: "all 0.5s ease 100ms",
           }}
         >
-          <span className="size-1.5 rounded-full bg-wid-accent-green" />
-          <span className="text-xs font-medium text-wid-accent-green">
+          <span className="size-1.5 rounded-full bg-emerald-400" />
+          <span className="text-xs font-semibold text-emerald-400 tracking-wide uppercase">
             Axiler Solution
           </span>
         </div>
 
         {/* Title */}
         <h3
-          className="mb-8 text-center text-lg font-bold text-foreground sm:mb-10 sm:text-xl"
+          className="mb-8 text-center text-xl font-bold text-white tracking-tight sm:mb-10 sm:text-2xl"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",
@@ -432,7 +432,7 @@ export function AutonomousPlatformCard({
         >
           One Autonomous Platform,
           <br />
-          <span className="text-neutral-400">Context-Driven Control</span>
+          <span className="text-neutral-400 font-medium text-lg sm:text-xl">Context-Driven Control</span>
         </h3>
 
         {/* Diagram — single relative container measured by ResizeObserver */}
@@ -604,15 +604,15 @@ export function AutonomousPlatformCard({
           }}
         >
           From{" "}
-          <span className="font-semibold text-wid-accent-pink">
+          <span className="font-semibold text-pink-400">
             threat to fix
           </span>
           , unified in one{" "}
-          <span className="font-semibold text-wid-accent-purple">
+          <span className="font-semibold text-purple-400">
             agentic platform
           </span>
           , in{" "}
-          <span className="font-semibold text-wid-accent-green">real time</span>
+          <span className="font-semibold text-emerald-400">real time</span>
           .
         </p>
       </div>
