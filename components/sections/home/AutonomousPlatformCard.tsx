@@ -79,9 +79,25 @@ function HubCenter({ animate }: { animate: boolean }) {
         aria-hidden="true"
       />
       <div
-        className="relative flex flex-col items-center justify-center rounded-full border border-white/10 bg-[#0A0B14] shadow-xl"
-        style={{ width: HUB_D, height: HUB_D }}
+        className="relative flex flex-col items-center justify-center rounded-full border bg-[#050505] shadow-[0_15px_30px_-5px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+        style={{ 
+          width: HUB_D, 
+          height: HUB_D,
+          borderColor: "rgba(96, 165, 250, 0.3)",
+          boxShadow: `inset 0 0 20px -5px rgba(96, 165, 250, 0.3), 0 0 30px -10px rgba(96, 165, 250, 0.3)`,
+        }}
       >
+        <div className="absolute inset-0 -z-20 rounded-full bg-blue-500/10 blur-xl animate-pulse" />
+        <div className="absolute -inset-1 -z-20 rounded-full border border-blue-500/20 animate-ping" style={{ animationDuration: '3s' }} />
+
+        {/* Soft inner core glow */}
+        <div
+          className="absolute inset-0 -z-10 rounded-full mix-blend-screen pointer-events-none opacity-40"
+          style={{
+            background: `radial-gradient(ellipse at center, rgba(96, 165, 250, 0.25) 0%, transparent 70%)`,
+          }}
+        />
+
         <Image
           src="/assets/what-it-does/cade-logo.svg"
           alt="CADE logo"
@@ -118,37 +134,43 @@ function BranchLabel({
 
   return (
     <div
-      className="absolute right-0 flex items-center gap-2.5"
+      className="absolute right-0 flex items-center gap-3 transition-all duration-300"
       style={{
         top: topPx,
         width: ICON_COL_W,
-        transform: animate
-          ? "translateY(-50%)"
-          : "translateY(-50%) translateX(-10px)",
+        transform: animate ? "translateY(-50%) scale(1)" : "translateY(-50%) translateX(-10px) scale(0.95)",
         opacity: animate ? 1 : 0,
         transition: `all 0.5s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms`,
       }}
     >
       <div
-        className={`flex size-11 shrink-0 items-center justify-center rounded-xl border sm:size-12 transition-colors duration-300 ${beatGlow ? "wid-icon-beat-glow" : ""}`}
+        className={`relative flex size-11 shrink-0 items-center justify-center rounded-xl border bg-[#050505] sm:size-12 transition-all duration-500 overflow-hidden ${beatGlow ? "wid-icon-beat-glow" : ""}`}
         style={{
           borderColor: lit ? `${branch.color}50` : "rgba(255,255,255,0.05)",
-          background: lit ? `${branch.color}15` : "#0A0B14",
-          color: lit ? branch.color : "#a3a3a3",
-          boxShadow: lit
-            ? `0 4px 20px ${branch.color}25`
-            : "none",
-          transition:
-            "border-color 0.3s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
+          boxShadow: lit ? `0 0 20px -5px ${branch.color}50, inset 0 0 15px -10px ${branch.color}40` : "inset 0 0 20px -10px transparent",
           ...(beatGlow && { ["--glow" as string]: branch.glowColor }),
         }}
       >
-        {branch.icon}
+        <div
+          className={`absolute inset-0 -z-10 mix-blend-screen pointer-events-none transition-opacity duration-300 ${
+            lit ? 'opacity-40' : 'opacity-10'
+          }`}
+          style={{
+            background: `radial-gradient(ellipse at center, ${branch.glowColor} 0%, transparent 70%)`,
+          }}
+        />
+        <div 
+          className="relative z-10 transition-colors duration-300"
+          style={{ color: lit ? branch.color : "#a3a3a3" }}
+        >
+          {branch.icon}
+        </div>
       </div>
       <span
-        className={`whitespace-nowrap text-xs font-medium sm:text-sm tracking-wide transition-colors duration-300 ${beatGlow ? "wid-text-beat-glow" : ""}`}
+        className={`whitespace-nowrap text-xs font-semibold sm:text-sm tracking-wide transition-colors duration-300 ${beatGlow ? "wid-text-beat-glow" : ""}`}
         style={{
           color: lit ? branch.color : "#737373",
+          textShadow: lit ? `0 0 10px ${branch.color}80` : 'none',
           ...(beatGlow && { ["--glow" as string]: branch.glowColor }),
         }}
       >
@@ -318,12 +340,12 @@ export function AutonomousPlatformCard({
 
   return (
     <div
-      className={`relative flex h-full flex-col overflow-hidden rounded-2xl border transition-all duration-500 ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-2xl border transition-all duration-500 backdrop-blur-md ${
         grayedOut ? "opacity-70 grayscale" : "opacity-100 grayscale-0"
       } ${
         showGreenGlow
-          ? "border-emerald-500/40 bg-[#0A0B14] shadow-[0_0_32px_rgba(34,197,94,0.2),0_0_64px_rgba(34,197,94,0.1),inset_0_0_0_1px_rgba(34,197,94,0.1)] -translate-y-0.5"
-          : "border-white/5 bg-[#0A0B14]"
+          ? "border-emerald-500/40 bg-[#050505]/95 shadow-[0_0_40px_rgba(34,197,94,0.15),0_0_80px_rgba(34,197,94,0.05),inset_0_0_20px_-10px_rgba(34,197,94,0.4)] -translate-y-0.5"
+          : "border-white/5 bg-[#050505]/80 shadow-2xl"
       }`}
     >
       {/* Wave background — right half so it joins with left card */}
@@ -405,7 +427,7 @@ export function AutonomousPlatformCard({
         aria-hidden="true"
       />
 
-      <div className="relative z-10 flex flex-1 flex-col px-5 pt-8 pb-8 sm:px-8 sm:pt-10 sm:pb-10">
+      <div className="relative z-10 flex flex-1 flex-col px-5 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8">
         {/* Badge */}
         <div
           className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
@@ -423,7 +445,7 @@ export function AutonomousPlatformCard({
 
         {/* Title */}
         <h3
-          className="mb-8 text-center text-xl font-bold text-white tracking-tight sm:mb-10 sm:text-2xl"
+          className="mb-5 text-center text-xl font-bold text-white tracking-tight sm:mb-8 sm:text-2xl"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",
@@ -439,7 +461,7 @@ export function AutonomousPlatformCard({
         <div className="relative mx-auto w-full max-w-sm flex-1">
           <div
             ref={diagramRef}
-            className="relative h-full min-h-64 w-full sm:min-h-72 md:min-h-80"
+            className="relative h-full min-h-56 w-full sm:min-h-64 md:min-h-72"
           >
             {/* Full-diagram SVG — pixel viewBox, no distortion */}
             {dims && (
@@ -596,7 +618,7 @@ export function AutonomousPlatformCard({
 
         {/* Bottom text */}
         <p
-          className="mt-8 text-center text-xs leading-relaxed text-neutral-500 sm:mt-10 sm:text-sm"
+          className="mt-6 text-center text-xs leading-relaxed text-neutral-500 sm:mt-8 sm:text-sm"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",

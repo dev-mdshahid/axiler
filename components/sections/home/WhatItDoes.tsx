@@ -96,14 +96,18 @@ export default function WhatItDoes() {
               leftVisible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
-            } ${isShaking ? "animate-pulse" : ""}`}
+            }`}
             style={
               isShaking
                 ? {
+                    transform: "translateX(-2px)",
                     boxShadow:
-                      "0 0 30px rgba(239,68,68,0.1), 0 0 60px rgba(239,68,68,0.05), inset 0 0 0 1px rgba(239,68,68,0.2)",
+                      "0 0 40px rgba(239,68,68,0.15), 0 0 80px rgba(239,68,68,0.08), inset 0 0 0 1px rgba(239,68,68,0.4)",
+                    filter: "contrast(1.1) brightness(1.1) grayscale(0.2)",
                   }
-                : undefined
+                : {
+                    boxShadow: "0 0 0 rgba(239,68,68,0)",
+                  }
             }
           >
             <FragmentedToolCard

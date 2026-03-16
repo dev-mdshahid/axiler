@@ -102,20 +102,33 @@ function FlowNode({
       }}
     >
       <div
-        className="flex size-11 items-center justify-center rounded-xl border sm:size-12 transition-colors duration-300"
+        className="relative flex size-11 items-center justify-center rounded-xl border bg-[#050505] sm:size-12 transition-all duration-500 overflow-hidden"
         style={{
           borderColor: lit ? `${step.color}50` : "rgba(255,255,255,0.05)",
-          background: lit ? `${step.color}15` : "#0A0B14",
-          color: lit ? step.color : "#a3a3a3",
-          boxShadow: lit ? `0 4px 20px ${step.color}25` : "none",
+          boxShadow: lit ? `0 0 20px -5px ${step.color}40, inset 0 0 15px -10px ${step.color}30` : `inset 0 0 20px -10px transparent`,
         }}
       >
-        {step.icon}
+        {/* Soft inner glow */}
+        <div
+          className={`absolute inset-0 -z-10 mix-blend-screen pointer-events-none transition-opacity duration-300 ${
+            lit ? 'opacity-40' : 'opacity-10'
+          }`}
+          style={{
+            background: `radial-gradient(ellipse at center, ${step.glowColor} 0%, transparent 70%)`,
+          }}
+        />
+        <div
+          className="relative z-10 transition-colors duration-300"
+          style={{ color: lit ? step.color : "#a3a3a3" }}
+        >
+          {step.icon}
+        </div>
       </div>
       <span
-        className="text-xs font-medium sm:text-sm tracking-wide transition-colors duration-300"
+        className="text-xs font-semibold sm:text-sm tracking-wide transition-colors duration-300"
         style={{
           color: lit ? step.color : "#737373",
+          textShadow: lit ? `0 0 10px ${step.color}80` : 'none'
         }}
       >
         {step.label}
@@ -142,7 +155,7 @@ function FlowConnector({
   const lineReveal = revealProgress;
 
   return (
-    <div className="flex items-center px-0.5 pb-5 sm:px-1">
+    <div className="flex items-center px-0.5 pb-2 sm:pb-3 sm:px-1">
       <svg
         width="36"
         height="12"
@@ -204,95 +217,70 @@ function BreakIndicator({
   showHandoff: boolean;
 }) {
   return (
-    <div className="my-5 flex flex-col items-center gap-2 sm:my-6">
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 48 48"
-        fill="none"
-        className="size-10 sm:size-12"
-        aria-hidden="true"
-      >
-        {/* Top dashed line — part of connector */}
-        <line
-          x1="24"
-          y1="0"
-          x2="24"
-          y2="15"
-          stroke="#404040"
-          strokeWidth="1.5"
-          strokeDasharray="3 3"
-          style={{
-            strokeDashoffset: showConnectingLine ? 0 : 20,
-            opacity: showConnectingLine ? 1 : 0,
-            transition: "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
-          }}
-        />
-        {/* Red circle glow */}
-        <circle
-          cx="24"
-          cy="24"
-          r="10"
-          fill="none"
-          stroke="rgba(239,68,68,0.3)"
-          strokeWidth="6"
-          style={{
-            opacity: showHandoff ? 1 : 0,
-            transition: "opacity 0.4s ease",
-            filter: "blur(4px)",
-          }}
-        />
-        {/* Red circle */}
-        <circle
-          cx="24"
-          cy="24"
-          r="9"
-          fill="rgba(239,68,68,0.08)"
-          stroke="#ef4444"
-          strokeWidth="1.5"
-          style={{
-            opacity: showHandoff ? 1 : 0,
-            transform: showHandoff ? "scale(1)" : "scale(0)",
-            transformOrigin: "center",
-            transition: "all 0.45s cubic-bezier(0.34,1.56,0.64,1)",
-          }}
-        />
-        {/* Cross icon */}
-        <path
-          d="M19 19L29 29M29 19L19 29"
-          stroke="#ef4444"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          style={{
-            opacity: showHandoff ? 1 : 0,
-            transition: "opacity 0.35s ease 0.1s",
-          }}
-        />
-        {/* Bottom dashed line — connecting line at bottom */}
-        <line
-          x1="24"
-          y1="35"
-          x2="24"
-          y2="48"
-          stroke="#404040"
-          strokeWidth="1.5"
-          strokeDasharray="3 3"
-          style={{
-            strokeDashoffset: showConnectingLine ? 0 : 20,
-            opacity: showConnectingLine ? 1 : 0,
-            transition: "stroke-dashoffset 0.5s ease, opacity 0.4s ease",
-          }}
-        />
-      </svg>
-      <span
-        className="text-[10px] font-semibold tracking-[0.15em] text-red-400/70 uppercase sm:text-xs"
+    <div className="my-4 sm:my-6 flex flex-col items-center gap-3 relative z-20">
+      {/* Top dashed line — part of connector */}
+      <div 
+        className="w-px h-4 sm:h-6 border-l-[1.5px] border-dashed border-[#404040]"
         style={{
-          opacity: showHandoff ? 1 : 0,
+          opacity: showConnectingLine && !showHandoff ? 1 : 0.2,
           transition: "opacity 0.4s ease",
         }}
+      />
+      
+      {/* Alert Badge Container */}
+      <div
+        className="relative flex items-center gap-2 rounded-lg border bg-[#050505] px-4 py-2 backdrop-blur-xl"
+        style={{
+          borderColor: showHandoff ? "rgba(239, 68, 68, 0.4)" : "rgba(255,255,255,0.05)",
+          boxShadow: showHandoff ? "0 0 20px -5px rgba(239, 68, 68, 0.3), inset 0 0 15px -10px rgba(239, 68, 68, 0.2)" : "none",
+          transform: showHandoff ? "scale(1)" : "scale(0.95)",
+          opacity: showConnectingLine ? 1 : 0,
+          transition: "all 0.45s cubic-bezier(0.34,1.56,0.64,1)",
+        }}
       >
-        Manual Handoff
-      </span>
+        {/* Soft warning ambient core glow */}
+        <div 
+          className="absolute left-0 top-0 w-full h-full -z-10 rounded-lg blur-[16px] pointer-events-none"
+          style={{
+            backgroundColor: "#ef4444",
+            opacity: showHandoff ? 0.25 : 0,
+            transition: "opacity 0.5s ease",
+          }}
+        />
+
+        <div 
+          className="flex items-center justify-center shrink-0 size-5 rounded-full"
+          style={{
+            backgroundColor: showHandoff ? "rgba(239, 68, 68, 0.15)" : "transparent",
+            color: showHandoff ? "#ef4444" : "#52525b",
+            transition: "all 0.3s ease",
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+
+        <span
+          className="text-[11px] font-bold tracking-[0.1em] uppercase sm:text-xs"
+          style={{
+            color: showHandoff ? "#ef4444" : "#52525b",
+            transition: "color 0.4s ease",
+          }}
+        >
+          {showHandoff ? "Data Siloed" : "Connecting..."}
+        </span>
+      </div>
+
+      {/* Bottom dashed line — connecting line at bottom */}
+      <div 
+        className="w-px h-4 sm:h-6 border-l-[1.5px] border-dashed border-[#404040]"
+        style={{
+          opacity: showConnectingLine ? 1 : 0.2, // Keeps structure but dims it
+          transition: "opacity 0.4s ease",
+        }}
+      />
     </div>
   );
 }
@@ -312,22 +300,34 @@ function ToolBox({
 }) {
   return (
     <div
-      className="w-full"
+      className="relative w-full rounded-2xl border bg-[#050505] p-4 sm:p-5 backdrop-blur-xl shadow-lg"
       style={{
+        borderColor: "rgba(255,255,255,0.08)",
+        boxShadow: "inset 0 0 20px -10px transparent, 0 10px 30px -10px rgba(0,0,0,0.5)",
         opacity: animate ? 1 : 0,
         transform: animate ? "translateY(0)" : "translateY(12px)",
-        transition: `all 0.6s ease ${delay}ms`,
+        transition: `all 0.6s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms`,
       }}
     >
-      <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex size-6 items-center justify-center rounded-md bg-white/5 border border-white/10 text-xs font-semibold text-neutral-400 shadow-sm">
-          {toolNumber}
-        </span>
-        <span className="text-xs font-bold tracking-[0.2em] text-[#a3a3a3] uppercase sm:text-xs">
-          {label}
-        </span>
+      <div className="absolute inset-0 -z-10 rounded-2xl bg-white/[0.02]" />
+      
+      <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
+        <div className="flex items-center gap-2.5">
+          <span className="flex size-6 items-center justify-center rounded-md bg-white/5 border border-white/10 text-xs font-semibold text-neutral-400 shadow-sm">
+            {toolNumber}
+          </span>
+          <span className="text-[11px] font-bold tracking-[0.2em] text-[#a3a3a3] uppercase sm:text-xs">
+            {label}
+          </span>
+        </div>
+        <div className="flex gap-1.5 opacity-50">
+          <div className="size-2 rounded-full bg-neutral-600" />
+          <div className="size-2 rounded-full bg-neutral-600" />
+          <div className="size-2 rounded-full bg-neutral-600" />
+        </div>
       </div>
-      <div className="rounded-xl border border-dashed border-white/10 bg-white/5 px-4 py-6 sm:px-6 sm:py-8 backdrop-blur-sm">
+
+      <div className="relative pt-2">
         {children}
       </div>
     </div>
@@ -456,10 +456,21 @@ export function FragmentedToolCard({
   }, [show, runCycle]);
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-[#0A0B14] shadow-sm">
+    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-[#050505]/80 shadow-2xl backdrop-blur-md">
+      {/* Background Ambience transitioning to error state */}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-1000 ease-in-out"
+        style={{
+          background: showHandoff
+            ? "radial-gradient(ellipse at 50% 50%, rgba(239, 68, 68, 0.08) 0%, transparent 80%)"
+            : "radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 80%)",
+        }}
+        aria-hidden="true"
+      />
+      
       {/* Wave background — left half so it joins with right card */}
       <div
-        className="pointer-events-none absolute inset-0 z-0"
+        className="pointer-events-none absolute inset-0 z-0 opacity-40 mix-blend-screen"
         style={{
           backgroundImage: "url(/assets/what-it-does/wave-shape.svg)",
           backgroundRepeat: "no-repeat",
@@ -468,67 +479,19 @@ export function FragmentedToolCard({
         }}
         aria-hidden="true"
       />
-      {/* Glow blending with wave — bottom of card */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-90"
-        style={{
-          backgroundImage: "url(/assets/what-it-does/glow-shape.svg)",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "0% 110%",
-          backgroundSize: "contain",
-          mixBlendMode: "screen",
-        }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 70%, rgba(239,68,68,0.05) 0%, transparent 60%)",
-        }}
-        aria-hidden="true"
-      />
+      
       {/* Bottom-left glow — matches flow step colors */}
       <div
-        className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full opacity-40 sm:size-56"
+        className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full opacity-30 sm:size-56"
         style={{
           background:
-            "radial-gradient(circle, rgba(192,169,255,0.25) 0%, rgba(244,114,182,0.18) 30%, rgba(239,68,68,0.12) 50%, rgba(34,197,94,0.08) 70%, transparent 100%)",
+            "radial-gradient(circle, rgba(192,169,255,0.2) 0%, rgba(244,114,182,0.1) 40%, transparent 70%)",
           filter: "blur(40px)",
         }}
         aria-hidden="true"
       />
-      {/* Fill lower-right empty space */}
-      <div
-        className="pointer-events-none absolute -bottom-12 -right-12 h-40 w-3/4 opacity-50 sm:h-48 sm:w-2/3 md:h-56"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 70% at 70% 90%, rgba(192,169,255,0.12) 0%, rgba(244,114,182,0.06) 40%, rgba(34,197,94,0.04) 70%, transparent 100%)",
-          filter: "blur(32px)",
-        }}
-        aria-hidden="true"
-      />
-      {/* Fill top-right area */}
-      <div
-        className="pointer-events-none absolute -right-8 top-8 h-32 w-1/2 opacity-60 sm:h-40 sm:w-2/5"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 80% at 90% 20%, rgba(251,191,36,0.08) 0%, rgba(34,197,94,0.05) 50%, transparent 100%)",
-          filter: "blur(28px)",
-        }}
-        aria-hidden="true"
-      />
-      {/* Subtle dot pattern */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(255,255,255) 1px, transparent 0)`,
-          backgroundSize: "24px 24px",
-        }}
-        aria-hidden="true"
-      />
 
-      <div className="relative z-10 flex flex-1 flex-col px-5 pt-8 pb-8 sm:px-8 sm:pt-10 sm:pb-10">
+      <div className="relative z-10 flex flex-1 flex-col px-5 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8">
         {/* Badge */}
         <div
           className="mx-auto mb-5 flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 shadow-[0_0_15px_rgba(239,68,68,0.1)]"
@@ -546,7 +509,7 @@ export function FragmentedToolCard({
 
         {/* Title */}
         <h3
-          className="mb-8 text-center text-xl font-bold text-white tracking-tight sm:mb-10 sm:text-2xl"
+          className="mb-5 text-center text-xl font-bold text-white tracking-tight sm:mb-8 sm:text-2xl"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",
@@ -621,7 +584,7 @@ export function FragmentedToolCard({
 
         {/* Bottom text — always visible with the card (not part of animation flow) */}
         <p
-          className="mt-8 text-center text-xs leading-relaxed text-neutral-500 sm:mt-10 sm:text-sm"
+          className="mt-6 text-center text-xs leading-relaxed text-neutral-500 sm:mt-8 sm:text-sm"
           style={{
             opacity: show ? 1 : 0,
             transform: show ? "translateY(0)" : "translateY(8px)",
