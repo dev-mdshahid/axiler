@@ -222,10 +222,10 @@ export default function Lifecycle() {
                               </span>
                             </div>
 
-                            <h4 className="text-base sm:text-lg lg:text-[17px] font-semibold text-white mb-1.5 leading-snug tracking-wide transition-colors">
+                            <h4 className="text-base sm:text-lg lg:text-[19px] xl:text-[21px] font-semibold text-white mb-2 leading-snug tracking-wide transition-colors">
                               {step.title}
                             </h4>
-                            <p className="text-xs text-neutral-400 leading-relaxed font-light max-w-[190px] lg:mx-auto opacity-80 group-hover:opacity-100 transition-opacity hidden sm:block text-balance">
+                            <p className="text-xs sm:text-sm lg:text-[14px] text-neutral-400 leading-relaxed font-light max-w-[220px] lg:mx-auto opacity-80 group-hover:opacity-100 transition-opacity hidden sm:block text-balance">
                               Agent-led execution seamlessly inline within phase context.
                             </p>
                          </div>
