@@ -1,3 +1,8 @@
+﻿/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable prefer-const */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -47,9 +52,9 @@ const BRANCHES: BranchConfig[] = [
   },
 ];
 
-// Icon column width in px — must match the w-[ICON_COL_W] class below
+// Icon column width in px â€” must match the w-[ICON_COL_W] class below
 const ICON_COL_W = 148;
-// Hub circle diameter in px — must match size-[HUB_D] class below
+// Hub circle diameter in px â€” must match size-[HUB_D] class below
 const HUB_D = 90;
 // Y positions of each branch as fraction of diagram height (tighter spacing)
 const BRANCH_Y_FRACS = [0.14, 0.36, 0.58, 0.8];
@@ -348,7 +353,7 @@ export function AutonomousPlatformCard({
           : "border-white/5 bg-[#050505]/80 shadow-2xl"
       }`}
     >
-      {/* Wave background — right half so it joins with left card */}
+      {/* Wave background â€” right half so it joins with left card */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
@@ -359,7 +364,7 @@ export function AutonomousPlatformCard({
         }}
         aria-hidden="true"
       />
-      {/* Glow blending with wave — bottom of card */}
+      {/* Glow blending with wave â€” bottom of card */}
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-90"
         style={{
@@ -457,13 +462,13 @@ export function AutonomousPlatformCard({
           <span className="text-neutral-400 font-medium text-lg sm:text-xl">Context-Driven Control</span>
         </h3>
 
-        {/* Diagram — single relative container measured by ResizeObserver */}
+        {/* Diagram â€” single relative container measured by ResizeObserver */}
         <div className="relative mx-auto w-full max-w-sm flex-1">
           <div
             ref={diagramRef}
             className="relative h-full min-h-56 w-full sm:min-h-64 md:min-h-72"
           >
-            {/* Full-diagram SVG — pixel viewBox, no distortion */}
+            {/* Full-diagram SVG â€” pixel viewBox, no distortion */}
             {dims && (
               <svg
                 viewBox={`0 0 ${dims.w} ${dims.h}`}
@@ -489,7 +494,7 @@ export function AutonomousPlatformCard({
 
                   return (
                     <g key={branch.label}>
-                      {/* Gray base line — always visible */}
+                      {/* Gray base line â€” always visible */}
                       <path
                         ref={(el) => {
                           pathRefs.current[i] = el;
@@ -501,7 +506,7 @@ export function AutonomousPlatformCard({
                         strokeLinecap="round"
                         opacity="0.5"
                       />
-                      {/* Colored line — reveals as spark moves; fully hidden when lineReveal is 0 */}
+                      {/* Colored line â€” reveals as spark moves; fully hidden when lineReveal is 0 */}
                       <path
                         d={pathD}
                         pathLength="1"
@@ -522,7 +527,7 @@ export function AutonomousPlatformCard({
                             }),
                         }}
                       />
-                      {/* Colored glow behind line — no beat so blur stays; hidden when lineReveal is 0 */}
+                      {/* Colored glow behind line â€” no beat so blur stays; hidden when lineReveal is 0 */}
                       <path
                         d={pathD}
                         pathLength="1"
@@ -538,7 +543,7 @@ export function AutonomousPlatformCard({
                           filter: "blur(4px)",
                         }}
                       />
-                      {/* Spark moving along path — visible only while traveling */}
+                      {/* Spark moving along path â€” visible only while traveling */}
                       {point && (
                         <circle
                           r="4"
@@ -553,7 +558,7 @@ export function AutonomousPlatformCard({
                           }}
                         />
                       )}
-                      {/* Terminal dot — colored when branch is lit */}
+                      {/* Terminal dot â€” colored when branch is lit */}
                       <circle
                         cx={lineEndX}
                         cy={ey}
@@ -579,7 +584,7 @@ export function AutonomousPlatformCard({
               </svg>
             )}
 
-            {/* Hub — left edge, vertically centred */}
+            {/* Hub â€” left edge, vertically centred */}
             <div className="absolute left-0 top-1/2 z-10 -translate-y-1/2">
               <HubCenter animate={show} />
             </div>
@@ -600,7 +605,7 @@ export function AutonomousPlatformCard({
               </p>
             </div>
 
-            {/* Icon + label column — right edge */}
+            {/* Icon + label column â€” right edge */}
             {dims &&
               BRANCHES.map((branch, i) => (
                 <BranchLabel

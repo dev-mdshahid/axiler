@@ -280,7 +280,7 @@ export default function Cade() {
                     Continuous Zero-Day Protection
                   </p>
                   <p className="text-[15px] leading-relaxed text-neutral-400 max-w-3xl">
-                    CADE doesn't just detect vulnerabilities—it learns from real attack traffic in production, continuously isolating threats, and automatically hot-swapping defenses at the source.
+                    CADE doesn&apos;t just detect vulnerabilities—it learns from real attack traffic in production, continuously isolating threats, and automatically hot-swapping defenses at the source.
                   </p>
                 </div>
               </div>

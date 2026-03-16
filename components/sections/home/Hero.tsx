@@ -11,8 +11,6 @@ export default function Hero() {
   const [hasTimedOut, setHasTimedOut] = useState(false);
 
   useEffect(() => {
-    setHasTimedOut(false);
-
     timeoutRef.current = window.setTimeout(() => {
       // Only mark timeout if video still not loaded or errored
       if (!isVideoLoaded && !hasVideoError) {

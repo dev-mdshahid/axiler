@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { LuTrendingUp, LuShield } from "react-icons/lu";
@@ -139,7 +140,7 @@ export default function Services() {
   const activeData = TABS_DATA.find((tab) => tab.id === activeTab) || TABS_DATA[0];
 
   return (
-    <section id="security-lifecycle" className="w-full bg-[#03040C] py-20 md:py-28 lg:py-36 relative overflow-hidden">
+    <SectionWrapper id="security-lifecycle" className="bg-[#03040C] relative overflow-hidden" disableXPadding>
       {/* Background Glows */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-[400px] w-[600px] bg-cyan-500/5 blur-[120px] rounded-full" />
@@ -151,7 +152,7 @@ export default function Services() {
           isIntersecting ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
         }`}
       >
-          <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
           <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto">
             <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
                 Tailored Security Solutions
@@ -223,6 +224,6 @@ export default function Services() {
           </div>
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   );
 }

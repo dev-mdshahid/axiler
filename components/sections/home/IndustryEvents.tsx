@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import { TbCalendarEvent, TbVideo, TbChevronDown, TbExternalLink } from "react-icons/tb";
+import { TbCalendarEvent, TbVideo, TbExternalLink } from "react-icons/tb";
 
 export default function IndustryEvents() {
   const { ref: containerRef, isIntersecting } = useIntersectionObserver({

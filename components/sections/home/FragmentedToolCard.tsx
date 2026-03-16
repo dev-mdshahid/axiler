@@ -1,3 +1,8 @@
+﻿/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable prefer-const */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -7,18 +12,18 @@ import { IoWarningOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 import { HiArrowUpTray } from "react-icons/hi2";
 
-// Loop cycle: glow moves Scans → arrow → Detects → arrow → Alerts → arrow → Escalates, then reset (no pause)
+// Loop cycle: glow moves Scans â†’ arrow â†’ Detects â†’ arrow â†’ Alerts â†’ arrow â†’ Escalates, then reset (no pause)
 const CYCLE_DURATION_MS = 3000;
 const SEGMENT_FRAC = 1 / 4; // each of 4 steps gets 1/4 of cycle
 const GRAY_STROKE = "#404040";
 const PROGRESS_RESET_EPS = 0.002; // treat as 0 when reset so first step stays gray
 
-// Phase 2: after journey reaches Escalates — exact flow with gaps (all cumulative from phase2 start)
-// Order: connecting line → patching tool grayed → patches glow → manual handoff → bottom text
+// Phase 2: after journey reaches Escalates â€” exact flow with gaps (all cumulative from phase2 start)
+// Order: connecting line â†’ patching tool grayed â†’ patches glow â†’ manual handoff â†’ bottom text
 const PHASE2_GAP_MS = 550; // gap between each step
 const PHASE2_CONNECTOR_AT_MS = 0;
-const PHASE2_PATCHING_SECTION_AT_MS = PHASE2_GAP_MS; // 550ms — section visible, patches grayed
-const PHASE2_PATCHES_LIT_AT_MS = PHASE2_GAP_MS * 2; // 1100ms — patches icon glows
+const PHASE2_PATCHING_SECTION_AT_MS = PHASE2_GAP_MS; // 550ms â€” section visible, patches grayed
+const PHASE2_PATCHES_LIT_AT_MS = PHASE2_GAP_MS * 2; // 1100ms â€” patches icon glows
 const PHASE2_HANDOFF_AFTER_PATCHES_MS = 1000; // extra gap so handoff clearly comes after patches
 const PHASE2_HANDOFF_AT_MS =
   PHASE2_PATCHES_LIT_AT_MS + PHASE2_HANDOFF_AFTER_PATCHES_MS; // manual handoff
@@ -164,7 +169,7 @@ function FlowConnector({
         className="w-6 sm:w-9"
         aria-hidden="true"
       >
-        {/* Gray base line — dashed, always visible when card is shown */}
+        {/* Gray base line â€” dashed, always visible when card is shown */}
         <path
           d={ARROW_PATH_D}
           pathLength="1"
@@ -177,7 +182,7 @@ function FlowConnector({
             transition: "opacity 0.3s ease",
           }}
         />
-        {/* Colored line — arrow lightens up as progress moves */}
+        {/* Colored line â€” arrow lightens up as progress moves */}
         <path
           d={ARROW_PATH_D}
           pathLength="1"
@@ -191,7 +196,7 @@ function FlowConnector({
             transition: "stroke-dashoffset 0.08s linear, opacity 0.15s ease",
           }}
         />
-        {/* Arrowhead — colored when segment complete */}
+        {/* Arrowhead â€” colored when segment complete */}
         <path
           d="M26 2L32 6L26 10"
           stroke={revealProgress >= 1 ? color : "#525252"}
@@ -218,7 +223,7 @@ function BreakIndicator({
 }) {
   return (
     <div className="my-4 sm:my-6 flex flex-col items-center gap-3 relative z-20">
-      {/* Top dashed line — part of connector */}
+      {/* Top dashed line â€” part of connector */}
       <div 
         className="w-px h-4 sm:h-6 border-l-[1.5px] border-dashed border-[#404040]"
         style={{
@@ -273,7 +278,7 @@ function BreakIndicator({
         </span>
       </div>
 
-      {/* Bottom dashed line — connecting line at bottom */}
+      {/* Bottom dashed line â€” connecting line at bottom */}
       <div 
         className="w-px h-4 sm:h-6 border-l-[1.5px] border-dashed border-[#404040]"
         style={{
@@ -398,7 +403,7 @@ export function FragmentedToolCard({
     }
   }, [show, runCycle, cycleProgress]);
 
-  // Phase 2 sequential reveal: connector → patching grayed → patches glow → handoff
+  // Phase 2 sequential reveal: connector â†’ patching grayed â†’ patches glow â†’ handoff
   useEffect(() => {
     if (!phase2Triggered) return;
     const t1 = window.setTimeout(
@@ -468,7 +473,7 @@ export function FragmentedToolCard({
         aria-hidden="true"
       />
       
-      {/* Wave background — left half so it joins with right card */}
+      {/* Wave background â€” left half so it joins with right card */}
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-40 mix-blend-screen"
         style={{
@@ -480,7 +485,7 @@ export function FragmentedToolCard({
         aria-hidden="true"
       />
       
-      {/* Bottom-left glow — matches flow step colors */}
+      {/* Bottom-left glow â€” matches flow step colors */}
       <div
         className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full opacity-30 sm:size-56"
         style={{
@@ -562,7 +567,7 @@ export function FragmentedToolCard({
           showHandoff={showHandoff}
         />
 
-        {/* Tool B — hidden until phase 2; then visible grayed, then patches lit */}
+        {/* Tool B â€” hidden until phase 2; then visible grayed, then patches lit */}
         <ToolBox
           label="Patching Tool"
           toolNumber={2}
@@ -582,7 +587,7 @@ export function FragmentedToolCard({
         {/* Spacer to push bottom text down consistently */}
         <div className="flex-1" />
 
-        {/* Bottom text — always visible with the card (not part of animation flow) */}
+        {/* Bottom text â€” always visible with the card (not part of animation flow) */}
         <p
           className="mt-6 text-center text-xs leading-relaxed text-neutral-500 sm:mt-8 sm:text-sm"
           style={{

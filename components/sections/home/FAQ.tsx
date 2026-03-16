@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { FAQCard, type FAQItem } from './FAQCard'
+import { SectionWrapper } from "@/components/ui/SectionWrapper"
 
 const FAQ_ITEMS: FAQItem[] = [
     {
@@ -46,17 +47,18 @@ export default function FAQ() {
     const rightColumnIndexes = [1, 3, 5]
 
     return (
-        <section
+        <SectionWrapper
             id="faq"
             aria-labelledby="faq-heading"
-            className="relative w-full bg-[#03040C] py-16 md:py-24 overflow-hidden border-t border-white/5"
+            className="relative w-full bg-[#03040C] overflow-hidden border-t border-white/5"
+            disableXPadding
         >
             {/* Background Ambience */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <div className="absolute top-[30%] right-[10%] h-[300px] w-[500px] rounded-full bg-orange-500/5 blur-[120px]" />
             </div>
 
-            <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 flex flex-col items-center relative z-10">
+            <div className="mx-auto w-full max-w-6xl flex flex-col items-center relative z-10">
                 {/* Header section */}
                 <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto w-full">
                   <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-orange-400 bg-orange-400/10 border border-orange-400/20 px-4 py-1.5 rounded-full">
@@ -106,6 +108,6 @@ export default function FAQ() {
                     </div>
                 </div>
             </div>
-        </section>
+        </SectionWrapper>
     )
 }

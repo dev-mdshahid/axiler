@@ -61,18 +61,18 @@ export default function WhyAxiler() {
   }, [isVideoLoaded]);
 
   return (
-    <section id="why-axiler" className="w-full bg-black">
+    <SectionWrapper id="why-axiler" className="bg-black">
       <div
         ref={containerRef}
         className={`flex w-full flex-col items-center justify-center transition-all duration-700 ease-out motion-reduce:transition-none ${isIntersecting ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
       >
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
+          <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-10 lg:mb-16">
             <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
               Instant Remediation
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5">
               Experience Autonomous Security In Action
             </h2>
             <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
@@ -83,7 +83,7 @@ export default function WhyAxiler() {
 
         <div
           ref={videoContainerRef}
-          className="relative flex w-full aspect-[21/9] sm:aspect-[2.35/1] items-center justify-center overflow-hidden"
+          className="relative flex w-full max-w-[1400px] rounded-xl sm:rounded-2xl border border-white/10 aspect-[16/9] sm:aspect-[21/9] lg:aspect-[2.35/1] items-center justify-center overflow-hidden shadow-2xl"
         >
           {/* Fallback space to prevent layout shift before video loads */}
           {!isVideoLoaded && (
@@ -105,6 +105,6 @@ export default function WhyAxiler() {
           </video>
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   );
 }

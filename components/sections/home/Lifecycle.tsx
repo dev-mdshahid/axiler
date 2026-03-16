@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import { LuChevronRight } from "react-icons/lu";
+
 import {
   TbSettingsCheck,
   TbDeviceDesktopCode,

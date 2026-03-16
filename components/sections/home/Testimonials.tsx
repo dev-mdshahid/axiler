@@ -37,14 +37,14 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   return (
-    <SectionWrapper id="testimonials" className="relative w-full bg-[#03040C] py-16 md:py-24 overflow-hidden border-t border-white/5">
+    <SectionWrapper id="testimonials" className="relative w-full bg-[#03040C] overflow-hidden border-t border-white/5">
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="absolute top-[10%] left-[10%] h-[300px] w-[500px] rounded-full bg-cyan-500/5 blur-[120px]" />
         <div className="absolute bottom-[20%] right-[10%] h-[300px] w-[400px] rounded-full bg-purple-500/5 blur-[120px]" />
       </div>
 
-      <div className="mx-auto flex w-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="mx-auto flex w-full max-w-7xl flex-col relative z-10">
         
         {/* Header Section */}
         <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto w-full">
@@ -86,7 +86,7 @@ export default function Testimonials() {
                 </div>
                 
                 <p className="text-sm sm:text-[15px] leading-relaxed text-neutral-400 group-hover:text-neutral-300 transition-colors">
-                  "{testimonial.text}"
+                  &quot;{testimonial.text}&quot;
                 </p>
               </div>
 

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SectionWrapper } from "@/components/ui/SectionWrapper";
 
 const blogs = [
   {
@@ -26,13 +27,13 @@ const blogs = [
 
 export default function Blogs() {
   return (
-    <section className="relative w-full py-16 md:py-24 bg-[#03040C] overflow-hidden border-t border-white/5">
+    <SectionWrapper className="relative w-full bg-[#03040C] overflow-hidden border-t border-white/5" disableXPadding>
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="absolute top-[20%] left-[-10%] h-[400px] w-[600px] rounded-full bg-purple-500/5 blur-[120px]" />
       </div>
 
-      <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-center relative z-10">
         <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto w-full">
           <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-purple-400 bg-purple-400/10 border border-purple-400/20 px-4 py-1.5 rounded-full">
             Cybersecurity Insights
@@ -108,6 +109,6 @@ export default function Blogs() {
           ))}
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   );
 }
