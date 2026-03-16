@@ -5,27 +5,27 @@ import { useRef, useEffect, useState } from "react";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const timeoutRef = useRef<number | null>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [hasVideoError, setHasVideoError] = useState(false);
+  const [hasTimedOut, setHasTimedOut] = useState(false);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    setHasTimedOut(false);
 
-    const handleLoadedData = () => {
-      setIsVideoLoaded(true);
-    };
-
-    video.addEventListener("loadeddata", handleLoadedData);
-
-    /* Attempt autoplay — browsers may block without muted */
-    video.play().catch(() => {
-      /* Autoplay blocked — video still shows first frame */
-    });
+    timeoutRef.current = window.setTimeout(() => {
+      // Only mark timeout if video still not loaded or errored
+      if (!isVideoLoaded && !hasVideoError) {
+        setHasTimedOut(true);
+      }
+    }, 8000);
 
     return () => {
-      video.removeEventListener("loadeddata", handleLoadedData);
+      if (timeoutRef.current !== null) {
+        window.clearTimeout(timeoutRef.current);
+      }
     };
-  }, []);
+  }, [isVideoLoaded, hasVideoError]);
 
   return (
     <section
@@ -39,19 +39,50 @@ export default function Hero() {
         The dark background fills the remaining space seamlessly.
         Desktop (md+): object-cover for full-bleed cinematic effect.
       */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        className={`absolute inset-0 size-full scale-150 object-contain transition-opacity duration-1000 motion-reduce:transition-none sm:scale-130 md:scale-100 md:object-cover ${isVideoLoaded ? "opacity-100" : "opacity-0"
-          }`}
-        aria-hidden="true"
-      >
-        <source src="/assets/hero-bg-video.mp4" type="video/mp4" />
-      </video>
+      {!hasVideoError && (
+        <>
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className={`absolute inset-0 size-full scale-150 object-contain transition-opacity duration-1000 motion-reduce:transition-none sm:scale-130 md:scale-100 md:object-cover ${
+              isVideoLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            aria-hidden="true"
+            onLoadedData={() => {
+              setIsVideoLoaded(true);
+              if (timeoutRef.current !== null) {
+                window.clearTimeout(timeoutRef.current);
+              }
+            }}
+            onError={() => {
+              setHasVideoError(true);
+              if (timeoutRef.current !== null) {
+                window.clearTimeout(timeoutRef.current);
+              }
+            }}
+          >
+            <source src="/assets/hero-bg-video.mp4" type="video/mp4" />
+          </video>
+
+          {!isVideoLoaded && !hasTimedOut && (
+            <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center bg-gradient-to-b from-background via-background/90 to-background">
+              <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-white/80" />
+            </div>
+          )}
+        </>
+      )}
+
+      {hasVideoError && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background">
+          <p className="rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-white/60 backdrop-blur">
+            Background video unavailable in this environment.
+          </p>
+        </div>
+      )}
 
       {/* ── Gradient Overlays ─────────────────────────────── */}
       {/* Top fade for navbar readability */}
