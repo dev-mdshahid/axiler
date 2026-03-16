@@ -214,47 +214,51 @@ export default function Lifecycle() {
                  </p>
               </div>
 
-              {/* The Timeline / Steps */}
-              <div className="relative flex flex-col lg:flex-row items-stretch gap-12 lg:gap-4 w-full">
+              {/* The Timeline / Roadmap Horizontal Pipeline */}
+              <div className="relative w-full mt-4 lg:mt-10 pt-4 pb-2">
                 
-                {/* Connecting Line (Desktop) */}
-                <div className="absolute top-7 left-[30px] right-[30px] h-[2px] bg-white/5 hidden lg:block overflow-hidden rounded-full">
-                   <div className="h-full w-1/3 bg-linear-to-r from-transparent via-cyan-400/50 to-transparent animate-pulse" />
+                {/* Continuous Horizontal Connecting Line (Desktop) */}
+                <div className="absolute top-[44px] -translate-y-1/2 left-[10%] right-[10%] h-[2px] bg-white/10 hidden lg:block rounded-full overflow-hidden">
+                  <div className="h-full w-[40%] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent animate-pulse" style={{ animationDuration: "3s" }} />
                 </div>
-                {/* Connecting Line (Mobile) */}
-                <div className="absolute top-[30px] bottom-[30px] left-7 w-[2px] bg-white/5 block lg:hidden overflow-hidden rounded-full">
-                   <div className="w-full h-1/3 bg-linear-to-b from-transparent via-cyan-400/50 to-transparent animate-pulse" />
+                
+                {/* Vertical Connecting Line (Mobile) */}
+                <div className="absolute top-[10%] bottom-[10%] left-[27px] w-[2px] bg-white/10 block lg:hidden rounded-full overflow-hidden">
+                  <div className="w-full h-[40%] bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent animate-pulse" style={{ animationDuration: "3s" }} />
                 </div>
 
-                {activeTab.steps.map((step, idx) => {
-                  const theme = THEMES[step.theme as keyof typeof THEMES];
-                  
-                  return (
-                    <div key={idx} className="relative w-full lg:flex-1 flex flex-row lg:flex-col items-start gap-6 lg:gap-0 group">
-                       
-                       {/* Node / Icon */}
-                       <div className="relative z-10 flex shrink-0 items-center justify-center w-14 h-14 rounded-full border border-white/10 bg-[#0A0B14] shadow-lg mb-0 lg:mb-8 group-hover:border-white/30 transition-all duration-300 mx-0 lg:mx-auto">
-                          <div className={`absolute inset-0 rounded-full transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${theme.glow}`} />
-                          <step.icon size={26} strokeWidth={1.5} className={`${theme.iconColor} transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_currentColor]`} />
-                       </div>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-4 w-full">
+                  {activeTab.steps.map((step, idx) => {
+                    const theme = THEMES[step.theme as keyof typeof THEMES];
+                    
+                    return (
+                      <div key={idx} className="relative flex flex-row lg:flex-col items-start lg:items-center text-left lg:text-center group w-full">
+                         
+                         {/* Node on the Timeline */}
+                         <div className="relative z-10 flex shrink-0 items-center justify-center w-[56px] h-[56px] rounded-full border border-white/10 bg-[#0A0B14] shadow-[0_0_15px_rgba(0,0,0,0.6)] group-hover:border-white/30 transition-all duration-500 mx-0 lg:mx-auto">
+                            <div className={`absolute inset-0 rounded-full transition-all duration-500 opacity-0 group-hover:opacity-100 ${theme.glow}`} />
+                            <step.icon size={24} strokeWidth={1.5} className={`${theme.iconColor} transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_currentColor]`} />
+                         </div>
 
-                       {/* Card Content */}
-                       <div className="flex-1 flex flex-col w-full rounded-2xl border border-white/5 bg-white/2 p-6 lg:p-7 transition-all duration-300 hover:bg-white/4 hover:border-white/10 hover:-translate-y-1">
-                          <div className="mb-3 flex items-center justify-between">
-                             <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500">Stage {idx + 1}</span>
-                          </div>
-                          <h4 className="text-lg font-semibold text-white mb-3 leading-snug">
-                            {step.title}
-                          </h4>
-                          <div className="h-px w-8 bg-white/10 mb-4 transition-all duration-300 group-hover:w-full group-hover:bg-white/20" />
-                          <p className="text-sm text-neutral-400 leading-relaxed font-light">
-                            Agent-led validation and execution in this phase.
-                          </p>
-                       </div>
+                         {/* Timeline Content (Borderless) */}
+                         <div className="flex-1 mt-0 lg:mt-6 ml-5 lg:ml-0 flex flex-col items-start lg:items-center border-none bg-transparent">
+                            <div className="mb-2 lg:mb-3 flex items-center justify-center">
+                              <span className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-neutral-400 transition-all duration-300 ${theme.iconColor.replace('text-', 'group-hover:text-')} group-hover:border-current/30 group-hover:bg-white/10 shadow-sm`}>
+                                Phase 0{idx + 1}
+                              </span>
+                            </div>
 
-                    </div>
-                  );
-                })}
+                            <h4 className="text-base sm:text-lg lg:text-[17px] font-semibold text-white mb-1.5 leading-snug tracking-wide transition-colors">
+                              {step.title}
+                            </h4>
+                            <p className="text-xs text-neutral-400 leading-relaxed font-light max-w-[190px] lg:mx-auto opacity-80 group-hover:opacity-100 transition-opacity hidden sm:block text-balance">
+                              Agent-led execution seamlessly inline within phase context.
+                            </p>
+                         </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               
             </div>
