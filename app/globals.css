@@ -60,6 +60,16 @@
   --wid-accent-purple: #c0a9ff;
   --wid-accent-yellow: #fbbf24;
   --wid-card-border: rgba(255, 255, 255, 0.06);
+
+  /* The Result Section */
+  --result-bg-start: #000000;
+  --result-bg-end: #2C1635;
+  --result-block-bg: #190825;
+  --result-block-border: #D1B3FC;
+  --result-letter-spacing: -0.005em;
+
+  /* Brands Section */
+  --brands-bg: #100b0c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -123,11 +133,29 @@
   --color-wid-accent-yellow: var(--wid-accent-yellow);
   --color-wid-card-border: var(--wid-card-border);
 
+  /* The Result Section Colors */
+  --color-result-bg-start: var(--result-bg-start);
+  --color-result-bg-end: var(--result-bg-end);
+  --color-result-block-bg: var(--result-block-bg);
+  --color-result-block-border: var(--result-block-border);
+
+  /* Brands Section Colors */
+  --color-brands-bg: var(--brands-bg);
+
+  /* Background Images */
+  --background-image-result-gradient: linear-gradient(180deg, var(--result-bg-start) 10.62%, var(--result-bg-end) 100%);
+
+  /* Typography */
+  --tracking-result: var(--result-letter-spacing);
+
   /* Spacing */
   --spacing-navbar: var(--navbar-height);
 
   /* What It Does — red alert shake */
   --animate-wid-red-alert-shake: wid-red-alert-shake 0.15s ease-in-out infinite;
+
+  /* Animations for Brands Marquee */
+  --animate-marquee: marquee 30s linear infinite;
 }
 
 /* ── Base Resets ───────────────────────────────────────────────── */
@@ -146,6 +174,12 @@ html {
 *:focus-visible {
   outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
+}
+
+/* ── Common Animations ─────────────────────────────────────────── */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
 }
 
 /* ── WhatItDoes Section Animations ─────────────────────────────── */
@@ -273,10 +307,14 @@ html {
 @keyframes wid-icon-beat-glow {
   0%,
   100% {
-    box-shadow: 0 0 10px var(--glow), 0 0 20px var(--glow);
+    box-shadow:
+      0 0 10px var(--glow),
+      0 0 20px var(--glow);
   }
   50% {
-    box-shadow: 0 0 18px var(--glow), 0 0 36px var(--glow);
+    box-shadow:
+      0 0 18px var(--glow),
+      0 0 36px var(--glow);
   }
 }
 
