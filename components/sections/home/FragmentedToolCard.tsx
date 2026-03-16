@@ -155,7 +155,7 @@ function FlowConnector({
   const lineReveal = revealProgress;
 
   return (
-    <div className="flex items-center px-0.5 pb-2 sm:pb-3 sm:px-1">
+    <div className="flex h-11 items-center px-0.5 sm:h-12 sm:px-1">
       <svg
         width="36"
         height="12"
@@ -528,9 +528,9 @@ export function FragmentedToolCard({
           animate={show}
           delay={250}
         >
-          <div className="flex items-center justify-center gap-0">
+          <div className="flex justify-center gap-0 items-start">
             {TOOL_A_STEPS.map((step, i) => (
-              <div key={step.label} className="flex items-center">
+              <div key={step.label} className="flex items-start">
                 <FlowNode
                   step={step}
                   index={i}
