@@ -154,19 +154,17 @@ export default function Services() {
           <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
           <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
             <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-4 py-1.5 rounded-full">
-              Industries
+                Tailored Security Solutions
+              </div>
+              <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+                Security Engineered for Every Industry
+              </h2>
+              <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+                Whether in finance, healthcare, or retail, our AI-driven security modules adapt to your specific operational risks and compliance mandates seamlessly.
+              </p>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
-              Secure Every Sector
-            </h2>
-            <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
-              Axiler deploys purpose-built AI agents that operate across every layer of modern
-              application security. From visibility and validation to autonomous remediation,
-              security becomes continuous, contextual, and self-improving.
-            </p>
-          </div>
 
-          {/* Outer Container for Tabs & Cards */}
+            {/* Outer Container for Tabs & Cards */}
           <div className="flex w-full flex-col gap-6 rounded-4xl border border-white/10 bg-[#161726]/80 p-6 md:flex-row backdrop-blur-sm lg:gap-8 lg:p-8">
             
             {/* Tabs Sidebar */}

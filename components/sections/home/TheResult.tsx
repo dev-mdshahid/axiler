@@ -86,13 +86,13 @@ export default function TheResult() {
         {/* Header section */}
         <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
           <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
-            Before & After
+            Proven Outcomes
           </div>
           <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
-            The Result
+            Measurable Impact of Autonomous Cybersecurity
           </h2>
           <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
-            We Remove The Complexity With AI
+            Eliminate manual investigation and false positives. See how our AI-powered security platform transforms your cybersecurity posture and accelerates incident response.
           </p>
         </div>
 

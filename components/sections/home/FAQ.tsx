@@ -55,20 +55,20 @@ export default function FAQ() {
                 {/* Header section */}
                 <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto w-full">
                   <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-[#F97316] bg-[#F97316]/10 border border-[#F97316]/20 px-4 py-1.5 rounded-full">
-                    FAQ
+                      Security FAQs
+                    </div>
+                    <h2
+                      id="faq-heading"
+                      className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5"
+                    >
+                      Frequently Asked Questions
+                    </h2>
+                    <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+                      Learn more about our autonomous AI integration, compliance modules, and how our platform proactively secures your infrastructure.
+                    </p>
                   </div>
-                  <h2
-                    id="faq-heading"
-                    className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5"
-                  >
-                    Your Questions, Answered
-                  </h2>
-                  <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
-                    Find common answers about Axiler&apos;s features and capabilities.
-                  </p>
-                </div>
 
-                {/* FAQ Cards — Two independent columns */}
+                  {/* FAQ Cards — Two independent columns */}
                 <div className="w-full flex flex-col lg:flex-row lg:items-start gap-4 lg:gap-6">
                     {/* Left column */}
                     <div className="w-full lg:w-1/2 flex flex-col gap-4 lg:gap-6 min-w-0">

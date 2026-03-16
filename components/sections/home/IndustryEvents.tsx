@@ -28,17 +28,17 @@ export default function IndustryEvents() {
         {/* Header Section */}
         <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
           <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
-            Knowledge Sharing
+              Cybersecurity Community
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+              Leading the Cybersecurity Conversation
+            </h2>
+            <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+              Join us at premier industry events where we share insights on autonomous threat mitigation, AI-driven defense, and proactive security measures.
+            </p>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
-            Industry Events & Engagements
-          </h2>
-          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
-            Learn how different sectors are affected by cyber attacks and the importance of early security measures.
-          </p>
-        </div>
 
-        {/* Timeline Layout */}
+          {/* Timeline Layout */}
         <div className="w-full relative px-2 sm:px-4 md:px-8">
           
           {/* Top Buttons Segment */}

@@ -47,13 +47,13 @@ export default function Testimonials() {
         <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto relative z-10">
           <div className="mb-5 inline-flex items-center uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full hover:bg-white/10 transition-colors">
             <span className="flex h-1.5 w-1.5 rounded-full bg-cyan-400 mr-2 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
-            Client Success Stories
+            Success Stories
           </div>
           <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5 font-rethink">
-            Words Of Endorsement<br className="hidden sm:block" /> From Our Clients
+            Trusted by Cybersecurity Leaders
           </h2>
           <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400 font-rethink">
-            Discover how we&apos;re transforming security landscapes globally through the experiences of our valued partners.
+            See how top-tier organizations leverage our autonomous security platform to reduce risk, ensure compliance, and scale operations securely.
           </p>
         </div>
 

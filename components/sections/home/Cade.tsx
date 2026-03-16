@@ -35,13 +35,13 @@ export default function Cade() {
           {/* Header */}
           <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
             <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-blue-400 bg-blue-400/10 border border-blue-400/20 px-4 py-1.5 rounded-full">
-              Core Engine
+              Autonomous AI Engine
             </div>
             <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
-              CADE
+              Context Aware Defense Enforcer
             </h2>
             <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
-              Context Aware Defence Enforcer. Self-Healing Application Security Powered by Live Attack Intelligence
+              Our proprietary CADE engine continually analyzes runtime behavior, identifies critical threats, and autonomously applies remediation.
             </p>
           </div>
 

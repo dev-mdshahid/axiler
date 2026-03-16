@@ -127,19 +127,15 @@ export default function Lifecycle() {
         {/* Header section */}
         <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
           <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
-            Axiler Security Lifecycle
+              Comprehensive AI Security Lifecycle
+            </div>
+            <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+              End-to-End Autonomous Application Security
+            </h2>
+            <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+              From code creation to runtime defense, our purpose-built AI agents operate across every phase to minimize your attack surface continuously.
+            </p>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
-            Agentic Intelligence Across <br className="hidden sm:block" />
-            The Application Security Lifecycle
-          </h2>
-          <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
-            Axiler deploys purpose-built AI agents that operate across every
-            layer of modern application security. From visibility and validation
-            to autonomous remediation, security becomes continuous, contextual,
-            and self-improving.
-          </p>
-        </div>
 
         {/* Main Content Interface */}
         <div className="flex flex-col xl:flex-row gap-8 lg:gap-12 mt-10">
