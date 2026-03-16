@@ -37,7 +37,7 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   return (
-    <SectionWrapper id="testimonials" className="relative w-full bg-[#03040C] overflow-hidden border-t border-white/5">
+    <SectionWrapper id="testimonials" className="relative w-full bg-transparent overflow-hidden border-t border-white/5">
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="absolute top-[10%] left-[10%] h-[300px] w-[500px] rounded-full bg-cyan-500/5 blur-[120px]" />

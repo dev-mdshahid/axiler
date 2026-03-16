@@ -117,7 +117,7 @@ export default function Integrations() {
   return (
     <section
       id="integrations"
-      className="relative w-full bg-[#050509] py-20 md:py-28 lg:py-36 overflow-hidden"
+      className="relative w-full bg-transparent py-20 md:py-28 lg:py-36 overflow-hidden"
     >
       <div
         ref={ref}

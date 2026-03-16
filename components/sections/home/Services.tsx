@@ -140,7 +140,7 @@ export default function Services() {
   const activeData = TABS_DATA.find((tab) => tab.id === activeTab) || TABS_DATA[0];
 
   return (
-    <SectionWrapper id="security-lifecycle" className="bg-[#03040C] relative overflow-hidden" disableXPadding>
+    <SectionWrapper id="security-lifecycle" className="bg-transparent relative overflow-hidden" disableXPadding>
       {/* Background Glows */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-[400px] w-[600px] bg-cyan-500/5 blur-[120px] rounded-full" />

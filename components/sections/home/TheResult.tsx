@@ -70,7 +70,7 @@ export default function TheResult() {
   });
 
   return (
-    <section id="the-result" className="relative w-full bg-[#03040C] py-20 md:py-28 lg:py-36 overflow-hidden">
+    <section id="the-result" className="relative w-full bg-transparent py-20 md:py-28 lg:py-36 overflow-hidden">
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
         <div className="absolute top-1/4 -left-[10%] h-[400px] w-[600px] rounded-full bg-cyan-500/10 blur-[120px]" />

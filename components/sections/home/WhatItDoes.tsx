@@ -47,7 +47,7 @@ export default function WhatItDoes() {
     <section
       id="what-it-does"
       aria-labelledby="what-it-does-heading"
-      className="relative w-full bg-[#03040C] py-16 md:py-24 border-t border-white/5 overflow-hidden"
+      className="relative w-full bg-transparent py-16 md:py-24 border-t border-white/5 overflow-hidden"
     >
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">

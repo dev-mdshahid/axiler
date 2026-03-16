@@ -26,7 +26,7 @@ export default function Cade() {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
   return (
-    <section id="cade" className="w-full bg-background pt-10 pb-12 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24 relative overflow-hidden">
+    <section id="cade" className="w-full bg-transparent pt-10 pb-12 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24 relative overflow-hidden">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
           ref={sectionRef}

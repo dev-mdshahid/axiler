@@ -50,7 +50,7 @@ export default function FAQ() {
         <SectionWrapper
             id="faq"
             aria-labelledby="faq-heading"
-            className="relative w-full bg-[#03040C] overflow-hidden border-t border-white/5"
+            className="relative w-full bg-transparent overflow-hidden border-t border-white/5"
             disableXPadding
         >
             {/* Background Ambience */}

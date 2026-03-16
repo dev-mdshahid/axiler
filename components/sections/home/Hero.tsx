@@ -29,7 +29,7 @@ export default function Hero() {
     <section
       id="hero"
       aria-label="Hero section"
-      className="relative flex min-h-dvh w-full flex-col items-center justify-end overflow-hidden bg-background"
+      className="relative flex min-h-dvh w-full flex-col items-center justify-end overflow-hidden bg-transparent"
     >
       {/* ── Background Video ──────────────────────────────── */}
       {/*
@@ -75,7 +75,7 @@ export default function Hero() {
       )}
 
       {hasVideoError && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background">
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-transparent">
           <p className="rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-white/60 backdrop-blur">
             Background video unavailable in this environment.
           </p>

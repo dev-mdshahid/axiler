@@ -27,7 +27,7 @@ const blogs = [
 
 export default function Blogs() {
   return (
-    <SectionWrapper className="relative w-full bg-[#03040C] overflow-hidden border-t border-white/5" disableXPadding>
+    <SectionWrapper className="relative w-full bg-transparent overflow-hidden border-t border-white/5" disableXPadding>
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="absolute top-[20%] left-[-10%] h-[400px] w-[600px] rounded-full bg-purple-500/5 blur-[120px]" />

@@ -21,7 +21,7 @@ export default function Brands() {
   return (
     <SectionWrapper
       id="brands"
-      className="bg-brands-bg overflow-hidden relative"
+      className="bg-transparent overflow-hidden relative"
     >
       <div
         ref={ref}

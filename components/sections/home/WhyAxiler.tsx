@@ -61,7 +61,7 @@ export default function WhyAxiler() {
   }, [isVideoLoaded]);
 
   return (
-    <SectionWrapper id="why-axiler" className="bg-black">
+    <SectionWrapper id="why-axiler" className="bg-transparent">
       <div
         ref={containerRef}
         className={`flex w-full flex-col items-center justify-center transition-all duration-700 ease-out motion-reduce:transition-none ${isIntersecting ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"

@@ -112,7 +112,7 @@ export default function Lifecycle() {
   return (
     <section
       id="security-lifecycle-main"
-      className="relative w-full bg-[#03040C] py-20 md:py-28 lg:py-36 overflow-hidden"
+      className="relative w-full bg-transparent py-20 md:py-28 lg:py-36 overflow-hidden"
     >
       {/* Background Ambience */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
