@@ -70,6 +70,13 @@
 
   /* Brands Section */
   --brands-bg: #100b0c;
+
+  /* Testimonials Section */
+  --testi-card-bg: #111111;
+  --testi-border-purple: #A855F7;
+  --testi-border-cyan: #06B6D4;
+  --testi-border-orange: #F97316;
+  --testi-text-disabled: #B4B6B8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -108,6 +115,7 @@
   /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-rethink: var(--font-rethink-sans);
 
   /* Border Radius */
   --radius-sm: var(--radius-sm);
@@ -141,6 +149,13 @@
 
   /* Brands Section Colors */
   --color-brands-bg: var(--brands-bg);
+
+  /* Testimonials Section Colors */
+  --color-testi-card-bg: var(--testi-card-bg);
+  --color-testi-border-purple: var(--testi-border-purple);
+  --color-testi-border-cyan: var(--testi-border-cyan);
+  --color-testi-border-orange: var(--testi-border-orange);
+  --color-content-disabled: var(--testi-text-disabled);
 
   /* Background Images */
   --background-image-result-gradient: linear-gradient(180deg, var(--result-bg-start) 10.62%, var(--result-bg-end) 100%);

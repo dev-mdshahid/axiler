@@ -502,7 +502,7 @@ import { RiStarFill } from "react-icons/ri";            // Remix Icons
 | ARIA labels                    | Buttons/links with icon-only content → `aria-label` |
 | Reduced motion                 | `motion-reduce:` variant for all animations      |
 | Form labels                    | Every `<input>` has a visible `<label>`          |
-| Link text                      | No "click here" — use descriptive text           |
+| Link text                      | No "click here" — use descriptive text           | 
 
 
 ## 10 · ANIMATIONS & TRANSITIONS
