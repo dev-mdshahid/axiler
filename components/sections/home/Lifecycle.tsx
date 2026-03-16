@@ -120,7 +120,7 @@ export default function Lifecycle() {
 
       <div
         ref={containerRef}
-        className={`relative z-10 mx-auto w-full max-w-[1400px] px-4 pt-10 sm:px-6 lg:px-8 transition-all duration-1000 ease-out ${
+        className={`relative z-10 mx-auto w-full max-w-7xl px-4 pt-10 sm:px-6 lg:px-8 transition-all duration-1000 ease-out ${
           isIntersecting ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
         }`}
       >
