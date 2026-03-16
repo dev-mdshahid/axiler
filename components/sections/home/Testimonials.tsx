@@ -49,7 +49,7 @@ export default function Testimonials() {
             <span className="flex h-1.5 w-1.5 rounded-full bg-cyan-400 mr-2 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
             Success Stories
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5 font-rethink">
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5 font-rethink">
             Trusted by Cybersecurity Leaders
           </h2>
           <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400 font-rethink">

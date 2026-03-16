@@ -65,9 +65,9 @@ export default function WhatItDoes() {
 
           <h2
             id="what-it-does-heading"
-            className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5"
+            className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5"
           >
-            <span className="text-white">Fragmented Tools</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60">Fragmented Tools</span>
             <span className="mx-2 text-neutral-500 sm:mx-3">vs.</span>
             <br />
             <span className="bg-linear-to-r from-wid-accent-purple to-wid-accent-green bg-clip-text text-transparent">

@@ -88,7 +88,7 @@ export default function TheResult() {
           <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
             Proven Outcomes
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5">
             Measurable Impact of Autonomous Cybersecurity
           </h2>
           <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">

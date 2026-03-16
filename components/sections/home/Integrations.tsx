@@ -131,7 +131,7 @@ export default function Integrations() {
           <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-blue-400 bg-blue-400/10 border border-blue-400/20 px-4 py-1.5 rounded-full">
             Seamless Integrations
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+          <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5">
             Integrates Seamlessly Into Ecosystems You Already Trust
           </h2>
           <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">

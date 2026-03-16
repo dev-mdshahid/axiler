@@ -156,7 +156,7 @@ export default function Services() {
             <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-4 py-1.5 rounded-full">
                 Tailored Security Solutions
               </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-white mb-5">
+              <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5">
                 Security Engineered for Every Industry
               </h2>
               <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
