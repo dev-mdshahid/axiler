@@ -16,18 +16,18 @@ export default function Home() {
   return (
     <main id="main-content">
       <Hero />
+      <WhatItDoes />
       <Brands />
       <Integrations />
-      <WhatItDoes />
+      <WhyAxiler />
       <TheResult />
       <Cade />
-      <Services />
-      <Testimonials />
-      <WhyAxiler />
       <Lifecycle />
       <IndustryEvents />
-      <FAQ />
+      <Testimonials />
+      <Services />
       <Blogs />
+      <FAQ />
     </main>
   );
 }
