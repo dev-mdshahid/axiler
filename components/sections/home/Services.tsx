@@ -139,44 +139,44 @@ export default function Services() {
   const activeData = TABS_DATA.find((tab) => tab.id === activeTab) || TABS_DATA[0];
 
   return (
-    <section id="security-lifecycle" className="w-full bg-background py-20 md:py-28 lg:py-36 relative overflow-hidden">
-      {/* Background Glows to match the screenshot vibe */}
+    <section id="security-lifecycle" className="w-full bg-[#03040C] py-20 md:py-28 lg:py-36 relative overflow-hidden">
+      {/* Background Glows */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="h-[500px] w-[800px] bg-brand-primary opacity-20 blur-[120px] rounded-full" />
+        <div className="h-[400px] w-[600px] bg-cyan-500/5 blur-[120px] rounded-full" />
       </div>
 
       <div
         ref={containerRef}
-        className={`relative z-10 w-full transition-all duration-700 ease-out motion-reduce:transition-none ${
+        className={`relative z-10 w-full transition-all duration-1000 ease-out ${
           isIntersecting ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
         }`}
       >
           <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
-          <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto">
-            <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-brand-primary bg-brand-primary/10 border border-brand-primary/20 px-4 py-1.5 rounded-full">
+          <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto">
+            <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
                 Tailored Security Solutions
               </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5">
                 Security Engineered for Every Industry
               </h2>
-              <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+              <p className="text-sm sm:text-base font-medium leading-relaxed text-neutral-400">
                 Whether in finance, healthcare, or retail, our AI-driven security modules adapt to your specific operational risks and compliance mandates seamlessly.
               </p>
             </div>
 
             {/* Outer Container for Tabs & Cards */}
-          <div className="flex w-full flex-col gap-6 rounded-4xl border border-white/10 bg-[#161726]/80 p-6 md:flex-row backdrop-blur-sm lg:gap-8 lg:p-8">
+          <div className="flex w-full flex-col gap-6 rounded-3xl border border-white/5 bg-[#0A0B14] p-5 md:flex-row lg:gap-8 lg:p-6">
             
             {/* Tabs Sidebar */}
-            <div className="flex w-full flex-col gap-3 md:w-[280px] md:min-w-[280px]">
+            <div className="flex w-full flex-col gap-2 md:w-[260px] md:min-w-[260px]">
               {TABS_DATA.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex w-full items-center rounded-2xl px-6 py-5 text-left text-lg font-medium transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                  className={`flex w-full items-center rounded-xl px-5 py-3.5 text-left text-sm md:text-base font-semibold transition-all duration-300 border ${
                     activeTab === tab.id
-                      ? "bg-brand-primary text-white"
-                      : "bg-[#1C1F33] text-neutral-300 hover:bg-[#232740] hover:text-white"
+                      ? "bg-cyan-500/10 border-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.05)]"
+                      : "bg-transparent border-transparent text-neutral-400 hover:bg-white/5 hover:text-neutral-200"
                   }`}
                 >
                   {tab.label}
@@ -185,25 +185,25 @@ export default function Services() {
             </div>
 
             {/* Cards Area */}
-            <div className="grid flex-1 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {activeData.cards.map((card, idx) => (
                 <div
                   key={`${activeData.id}-${idx}`}
-                  className="flex h-full flex-col items-start rounded-2xl border border-white/10 bg-transparent p-8 transition-all duration-300 hover:bg-white/2"
+                  className="group flex h-full flex-col items-start rounded-2xl border border-white/5 bg-[#03040C]/50 p-6 md:p-8 transition-all duration-300 hover:bg-white/[0.02] hover:border-white/10"
                 >
-                  <div className="mb-8 flex text-[32px] text-white/90">
-                    <card.icon strokeWidth={1.5} />
+                  <div className="mb-6 flex items-center justify-center w-12 h-12 rounded-xl border border-white/5 bg-white/5 text-cyan-400 transition-transform duration-300 group-hover:scale-110 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/20">
+                    <card.icon size={24} strokeWidth={1.5} />
                   </div>
                   
-                  <h4 className="mb-3 text-[11px] font-bold tracking-widest text-[#A3A3A3]">
+                  <h4 className="mb-3 text-[10px] sm:text-[11px] font-bold tracking-widest text-neutral-500 uppercase">
                     {card.overline}
                   </h4>
                   
-                  <h3 className="mb-4 text-xl font-semibold leading-tight text-white">
+                  <h3 className="mb-4 text-lg sm:text-xl font-semibold leading-tight text-white group-hover:text-cyan-50 transition-colors">
                     {card.title}
                   </h3>
                   
-                  <p className="mb-8 flex-1 text-[15px] leading-relaxed text-[#A3A3A3]">
+                  <p className="mb-8 flex-1 text-sm sm:text-[15px] leading-relaxed text-neutral-400 group-hover:text-neutral-300 transition-colors">
                     {card.description}
                   </p>
                   
@@ -211,7 +211,7 @@ export default function Services() {
                     {card.tags.map((tag, tagIdx) => (
                       <span
                         key={tagIdx}
-                        className="rounded-full border border-white/8 px-3 py-1.5 text-[12px] font-medium text-white/70"
+                        className="rounded-full border border-white/5 bg-white/5 px-3 py-1 text-[11px] sm:text-[12px] font-medium text-neutral-400 transition-colors group-hover:border-white/10 group-hover:text-neutral-300"
                       >
                         {tag}
                       </span>
