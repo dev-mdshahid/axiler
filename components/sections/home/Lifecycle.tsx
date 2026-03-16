@@ -1,130 +1,146 @@
 "use client";
 
 import { useState } from "react";
-import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import { LuTrendingUp, LuShield } from "react-icons/lu";
-import { TbChartCandle, TbChartBar } from "react-icons/tb";
+import { LuBan, LuSparkles, LuArrowRight } from "react-icons/lu";
+import {
+  TbSettingsCheck,
+  TbDeviceDesktopCode,
+  TbRadar,
+  TbPuzzle,
+  TbSitemap,
+  TbFileSearch,
+  TbBrain,
+  TbCube,
+  TbFence,
+  TbShieldCheck,
+  TbHeartRateMonitor,
+  TbZoomCheck,
+  TbArrowsRightLeft,
+  TbCloudStar,
+  TbListDetails,
+  TbSettingsAutomation,
+  TbArrowsExchange,
+  TbScan,
+} from "react-icons/tb";
 
-const TABS_DATA = [
+const THEMES = {
+  pink: {
+    gradient: "from-[#FF8A9B]/10 to-transparent",
+    border: "border-[#FF8A9B]/30",
+    iconColor: "text-[#FF8A9B]",
+  },
+  orange: {
+    gradient: "from-[#FFBB8A]/10 to-transparent",
+    border: "border-[#FFBB8A]/30",
+    iconColor: "text-[#FFBB8A]",
+  },
+  slate: {
+    gradient: "from-[#A6B2D1]/10 to-transparent",
+    border: "border-[#A6B2D1]/30",
+    iconColor: "text-[#A6B2D1]",
+  },
+  indigo: {
+    gradient: "from-[#8B9DF1]/10 to-transparent",
+    border: "border-[#8B9DF1]/30",
+    iconColor: "text-[#8B9DF1]",
+  },
+  purple: {
+    gradient: "from-[#C58CFF]/10 to-transparent",
+    border: "border-[#C58CFF]/30",
+    iconColor: "text-[#C58CFF]",
+  },
+  blue: {
+    gradient: "from-[#7EC4FF]/10 to-transparent",
+    border: "border-[#7EC4FF]/30",
+    iconColor: "text-[#7EC4FF]",
+  },
+  green: {
+    gradient: "from-[#A0E6AD]/10 to-transparent",
+    border: "border-[#A0E6AD]/30",
+    iconColor: "text-[#A0E6AD]",
+  },
+};
+
+const LIFECYCLE_TABS = [
   {
-    id: "financial-services",
-    label: "Financial Services",
-    cards: [
+    id: "secure-sdlc",
+    title: "Secure SDLC",
+    description:
+      "Embedded AI agents operate across development pipelines, validating code, dependencies, and configurations in context.",
+    steps: [
+      { title: "Detect in\nCI", icon: TbSettingsCheck, theme: "pink" },
       {
-        icon: TbChartBar,
-        overline: "BANKING & FINTECH",
-        title: "Financial Gateway Security",
-        description:
-          "Protect financial transactions, APIs, and customer data with advanced threat detection and compliance-ready security.",
-        tags: ["Payment Fraud", "Account Takeover", "API Abuse"],
+        title: "Confirm\nExploitability",
+        icon: TbDeviceDesktopCode,
+        theme: "orange",
+      },
+      { title: "Prevent Merge", icon: LuBan, theme: "slate" },
+      { title: "Auto\nRemediate", icon: LuSparkles, theme: "indigo" },
+    ],
+  },
+  {
+    id: "governance-compliance",
+    title: "Governance & Compliance",
+    description:
+      "AI agents generate audit-ready evidence, map findings to regulatory frameworks, and produce executive-ready reporting automatically. Compliance becomes continuous, not reactive.",
+    steps: [
+      { title: "Evaluate\nRisk", icon: TbRadar, theme: "pink" },
+      { title: "Continuously\nAlign", icon: TbPuzzle, theme: "purple" },
+      { title: "Auto-Generate\nEvidence", icon: TbSitemap, theme: "blue" },
+      { title: "Stay Audit-\nReady", icon: TbFileSearch, theme: "green" },
+    ],
+  },
+  {
+    id: "secure-architecture",
+    title: "Secure Architecture & Design",
+    description:
+      "Identify architectural risks in real time. Agentic intelligence evaluates design decisions and self-heals before they become vulnerabilities.",
+    steps: [
+      { title: "Interpret\nArchitecture", icon: TbBrain, theme: "purple" },
+      { title: "Simulate\nThreats", icon: TbCube, theme: "pink" },
+      { title: "Apply AI\nGuardrails", icon: TbFence, theme: "orange" },
+      { title: "Validate Secure\nDesign", icon: TbShieldCheck, theme: "green" },
+    ],
+  },
+  {
+    id: "threat-vulnerability",
+    title: "Threat & Vulnerability Detection",
+    description:
+      "Detect real exploitability without requiring manual input by correlating runtime behavior with contextualized application risk.",
+    steps: [
+      {
+        title: "Monitor Runtime\nSignals",
+        icon: TbHeartRateMonitor,
+        theme: "pink",
+      },
+      { title: "Contextualize\nRisk", icon: TbZoomCheck, theme: "orange" },
+      {
+        title: "Validate Real\nExploitability",
+        icon: TbArrowsRightLeft,
+        theme: "blue",
       },
       {
-        icon: LuShield,
-        overline: "INSURANCE",
-        title: "Insurance Platform Protection",
-        description:
-          "Secure digital insurance platforms from quote manipulation and fraudulent claims while ensuring compliance.",
-        tags: ["Form Tampering", "Data Theft", "Rate Scraping"],
-      },
-      {
-        icon: TbChartCandle,
-        overline: "INVESTMENT PLATFORMS",
-        title: "Trading Security",
-        description:
-          "Protect trading platforms from automated bots and ensure fair access to market data.",
-        tags: ["Market Manipulation", "Data Scraping", "Bot Trading"],
+        title: "Initiate\nAutonomous Action",
+        icon: TbCloudStar,
+        theme: "indigo",
       },
     ],
   },
   {
-    id: "ecommerce-retail",
-    label: "E-commerce & Retail",
-    cards: [
+    id: "autonomous-remediation",
+    title: "Autonomous Remediation",
+    description:
+      "Priorities what truly matters. Apply fixes intelligently and prevent recurrence through closed-loop learning.",
+    steps: [
+      { title: "Priorities\nRisks", icon: TbListDetails, theme: "purple" },
       {
-        icon: LuTrendingUp,
-        overline: "RETAIL & DIGITAL",
-        title: "E-Commerce Protection",
-        description:
-          "Prevent inventory hoarding, checkout abuse, and credential stuffing during high-traffic flash sales.",
-        tags: ["Scalping", "Checkout Abuse", "Inventory Hoarding"],
+        title: "Autonomously\nApply Fixes",
+        icon: TbSettingsAutomation,
+        theme: "blue",
       },
-      {
-        icon: LuShield,
-        overline: "MARKETPLACES",
-        title: "Marketplace Integrity",
-        description:
-          "Ensure trust and safety by blocking fake reviews, account takeovers, and seller fraud.",
-        tags: ["Review Fraud", "Seller Fraud", "Account Abuse"],
-      },
-      {
-        icon: TbChartBar,
-        overline: "LOYALTY PROGRAMS",
-        title: "Reward Security",
-        description:
-          "Stop automated exploitation of loyalty points, gift cards, and promotional discounts.",
-        tags: ["Points Fraud", "Promo Abuse", "Gift Card Theft"],
-      },
-    ],
-  },
-  {
-    id: "healthcare",
-    label: "Healthcare",
-    cards: [
-      {
-        icon: LuShield,
-        overline: "PATIENT PORTALS",
-        title: "Patient Data Security",
-        description:
-          "Secure patient health information (PHI) and portals against unauthorized access and data exfiltration.",
-        tags: ["Data Exfiltration", "PHI Theft", "Unauthorized Access"],
-      },
-      {
-        icon: TbChartCandle,
-        overline: "CLINICAL TRIALS",
-        title: "Research Integrity",
-        description:
-          "Protect proprietary medical research and clinical trial data from espionage and tampering.",
-        tags: ["Data Tampering", "Espionage", "Research Theft"],
-      },
-      {
-        icon: TbChartBar,
-        overline: "TELEHEALTH",
-        title: "Telehealth Platforms",
-        description:
-          "Ensure secure and compliant operations of remote health services and virtual consultations.",
-        tags: ["Session Hijacking", "Compliance", "API Abuse"],
-      },
-    ],
-  },
-  {
-    id: "saas-technology",
-    label: "SaaS & Technology",
-    cards: [
-      {
-        icon: LuTrendingUp,
-        overline: "CLOUD SERVICES",
-        title: "Cloud Infrastructure",
-        description:
-          "Defend cloud management planes, APIs, and critical infrastructure from sophisticated threats.",
-        tags: ["API Exploitation", "Resource Hijacking", "DDoS"],
-      },
-      {
-        icon: LuShield,
-        overline: "B2B APPLICATIONS",
-        title: "Enterprise App Security",
-        description:
-          "Secure enterprise applications against logic abuse, unauthorized access, and supply chain attacks.",
-        tags: ["Logic Abuse", "Supply Chain", "Access Controls"],
-      },
-      {
-        icon: TbChartCandle,
-        overline: "DEV SEC OPS",
-        title: "Development Pipelines",
-        description:
-          "Integrate security deeply into CI/CD pipelines to prevent secrets leakage and code tampering.",
-        tags: ["Secrets Leakage", "Code Tampering", "Pipeline Attacks"],
-      },
+      { title: "Reinforce\nSystem", icon: TbArrowsExchange, theme: "indigo" },
+      { title: "Prevent\nRecurrence", icon: TbScan, theme: "green" },
     ],
   },
 ];
@@ -135,13 +151,14 @@ export default function Lifecycle() {
     threshold: 0.1,
   });
 
-  const [activeTab, setActiveTab] = useState(TABS_DATA[0].id);
-
-  const activeData = TABS_DATA.find((tab) => tab.id === activeTab) || TABS_DATA[0];
+  const [activeTabId, setActiveTabId] = useState(LIFECYCLE_TABS[0].id);
+  const activeTab = LIFECYCLE_TABS.find((tab) => tab.id === activeTabId)!;
 
   return (
-    <section id="security-lifecycle" className="w-full bg-background py-16 md:py-24 lg:py-32 relative overflow-hidden">
-      {/* Background Glows to match the screenshot vibe */}
+    <section
+      id="security-lifecycle-main"
+      className="w-full bg-background py-16 md:py-24 lg:py-32 relative overflow-hidden"
+    >
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-[500px] w-[800px] bg-brand-primary opacity-20 blur-[120px] rounded-full" />
       </div>
@@ -149,77 +166,99 @@ export default function Lifecycle() {
       <div
         ref={containerRef}
         className={`relative z-10 w-full transition-all duration-700 ease-out motion-reduce:transition-none ${
-          isIntersecting ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+          isIntersecting
+            ? "translate-y-0 opacity-100"
+            : "translate-y-8 opacity-0"
         }`}
       >
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center px-4 sm:px-6 lg:px-8">
           <div className="mb-12 flex flex-col items-center text-center sm:mb-16 md:mb-20">
             <h2 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
               Agentic Intelligence Across <br className="hidden sm:block" />
               The Application Security Lifecycle
             </h2>
             <p className="mt-6 max-w-4xl text-base leading-relaxed text-neutral-400 sm:text-lg">
-              Axiler deploys purpose-built AI agents that operate across every layer of modern
-              application security. From visibility and validation to autonomous remediation,
-              security becomes continuous, contextual, and self-improving.
+              Axiler deploys purpose-built AI agents that operate across every
+              layer of modern application security. From visibility and
+              validation to autonomous remediation, security becomes continuous,
+              contextual, and self-improving.
             </p>
           </div>
 
-          {/* Outer Container for Tabs & Cards */}
-          <div className="flex w-full flex-col gap-6 rounded-4xl border border-white/10 bg-[#161726]/80 p-6 md:flex-row backdrop-blur-sm lg:gap-8 lg:p-8">
-            
-            {/* Tabs Sidebar */}
-            <div className="flex w-full flex-col gap-3 md:w-[280px] md:min-w-[280px]">
-              {TABS_DATA.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex w-full items-center rounded-2xl px-6 py-5 text-left text-lg font-medium transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
-                    activeTab === tab.id
-                      ? "bg-brand-primary text-white"
-                      : "bg-[#1C1F33] text-neutral-300 hover:bg-[#232740] hover:text-white"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+          <div className="w-full rounded-[24px] md:rounded-[32px] border border-white/10 bg-[#222233] p-4 shadow-[0_30px_60px_rgba(0,0,0,0.5)] sm:p-6 lg:p-10 relative overflow-hidden">
+            {/* A large radiant blur blob placed behind the right diagram side to simulate the background glow */}
+            <div className="absolute right-[-10%] top-1/2 -translate-y-1/2 h-[400px] w-[600px] bg-linear-to-r from-purple-500/10 via-pink-400/10 to-indigo-500/10 blur-[80px] pointer-events-none rounded-full" />
 
-            {/* Cards Area */}
-            <div className="grid flex-1 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {activeData.cards.map((card, idx) => (
-                <div
-                  key={`${activeData.id}-${idx}`}
-                  className="flex h-full flex-col items-start rounded-2xl border border-white/10 bg-transparent p-8 transition-all duration-300 hover:bg-white/2"
-                >
-                  <div className="mb-8 flex text-[32px] text-white/90">
-                    <card.icon strokeWidth={1.5} />
-                  </div>
-                  
-                  <h4 className="mb-3 text-[11px] font-bold tracking-widest text-[#A3A3A3]">
-                    {card.overline}
-                  </h4>
-                  
-                  <h3 className="mb-4 text-xl font-semibold leading-tight text-white">
-                    {card.title}
-                  </h3>
-                  
-                  <p className="mb-8 flex-1 text-[15px] leading-relaxed text-[#A3A3A3]">
-                    {card.description}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {card.tags.map((tag, tagIdx) => (
-                      <span
-                        key={tagIdx}
-                        className="rounded-full border border-white/8 px-3 py-1.5 text-[12px] font-medium text-white/70"
+            <div className="relative z-10 flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
+              {/* Left sidebar space (Tabs) */}
+              <div className="flex w-full flex-col gap-3 xl:w-[480px] xl:min-w-[480px]">
+                {LIFECYCLE_TABS.map((tab) => {
+                  const isActive = activeTabId === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTabId(tab.id)}
+                      className={`relative flex w-full flex-col rounded-[20px] px-6 py-4 text-left transition-all duration-300 ${
+                        isActive
+                          ? "bg-linear-to-r from-[#9862F0]/30 to-[#4E3182]/10 ring-[1.5px] ring-[#AF7EFF] shadow-[inset_0_0_24px_rgba(175,126,255,0.2),0_0_15px_rgba(175,126,255,0.2)]"
+                          : "bg-[#333346]/80 hover:bg-[#3D3D52]/90 border border-transparent"
+                      }`}
+                    >
+                      <h3
+                        className={`text-[17px] font-semibold tracking-wide ${isActive ? "text-white" : "text-white/60"}`}
                       >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                        {tab.title}
+                      </h3>
+                      {isActive && tab.description && (
+                        <p className="mt-2.5 text-[14px] sm:text-[15px] leading-relaxed text-[#D1D1E0]">
+                          {tab.description}
+                        </p>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right content (Diagram side) */}
+              <div
+                key={activeTab.id}
+                className="flex flex-1 items-center justify-center xl:justify-end py-8 xl:py-0 w-full overflow-x-auto scrollbar-hide animate-in fade-in duration-500"
+              >
+                <div className="flex min-w-max items-center justify-center gap-1 sm:gap-2 lg:gap-3 px-2 xl:px-4">
+                  {activeTab.steps.map((step, idx) => {
+                    const theme = THEMES[step.theme as keyof typeof THEMES];
+                    return (
+                      <div
+                        key={idx}
+                        className="flex items-center shrink-0 group relative z-10"
+                      >
+                        <div
+                          className={`relative flex h-[150px] w-[115px] flex-col items-center justify-center gap-4 rounded-[20px] border ${theme.border} bg-[#2F2F42] bg-linear-to-b ${theme.gradient} p-4 transition-all duration-500 hover:-translate-y-1 sm:h-[180px] sm:w-[140px] lg:h-[210px] lg:w-[155px] shadow-[0_10px_30px_rgba(0,0,0,0.1)]`}
+                        >
+                          <div
+                            className={`flex items-center justify-center ${theme.iconColor}`}
+                          >
+                            <step.icon
+                              size={34}
+                              strokeWidth={1.5}
+                              className="drop-shadow-[0_0_8px_currentColor]"
+                            />
+                          </div>
+                          <p className="text-center text-[12px] sm:text-[14px] font-semibold leading-[1.3] text-white whitespace-pre-line px-1">
+                            {step.title}
+                          </p>
+                        </div>
+
+                        {idx < activeTab.steps.length - 1 && (
+                          <div className="mx-[6px] text-white/40 sm:mx-2 lg:mx-3 shrink-0 flex items-center justify-center">
+                            <LuArrowRight size={16} />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>
