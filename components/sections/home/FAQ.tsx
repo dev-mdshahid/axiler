@@ -58,7 +58,7 @@ export default function FAQ() {
                 <div className="absolute top-[30%] right-[10%] h-[300px] w-[500px] rounded-full bg-orange-500/5 blur-[120px]" />
             </div>
 
-            <div className="mx-auto w-full max-w-6xl flex flex-col items-center relative z-10">
+            <div className="mx-auto w-full max-w-6xl flex flex-col items-center relative z-10 px-4 sm:px-6 lg:px-8">
                 {/* Header section */}
                 <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto w-full">
                   <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-orange-400 bg-orange-400/10 border border-orange-400/20 px-4 py-1.5 rounded-full">

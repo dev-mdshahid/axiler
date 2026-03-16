@@ -153,7 +153,7 @@ export default function Services() {
         }`}
       >
           <div className="mx-auto flex w-full max-w-7xl flex-col items-center">
-          <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto">
+          <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto px-4 md:px-0">
             <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-4 py-1.5 rounded-full">
                 Tailored Security Solutions
               </div>
@@ -168,13 +168,13 @@ export default function Services() {
             {/* Outer Container for Tabs & Cards */}
           <div className="flex w-full flex-col gap-6 rounded-3xl border border-white/5 bg-[#0A0B14] p-5 md:flex-row lg:gap-8 lg:p-6">
             
-            {/* Tabs Sidebar */}
-            <div className="flex w-full flex-col gap-2 md:w-[260px] md:min-w-[260px]">
+            {/* Tabs Navigation */}
+            <div className="flex w-full overflow-x-auto gap-2 md:flex-col md:w-[260px] md:min-w-[260px] pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {TABS_DATA.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex w-full items-center rounded-xl px-5 py-3.5 text-left text-sm md:text-base font-semibold transition-all duration-300 border ${
+                  className={`flex shrink-0 w-auto md:w-full items-center justify-center md:justify-start rounded-xl px-5 py-3 md:py-3.5 text-sm md:text-base font-semibold transition-all duration-300 border ${
                     activeTab === tab.id
                       ? "bg-cyan-500/10 border-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.05)]"
                       : "bg-transparent border-transparent text-neutral-400 hover:bg-white/5 hover:text-neutral-200"

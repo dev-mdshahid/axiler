@@ -41,8 +41,8 @@ export function Footer() {
             </p>
             
             {/* Subscribe Input & Button */}
-            <div className="mt-8 flex w-full max-w-md items-center justify-center lg:justify-start gap-4">
-              <div className="relative w-full max-w-[280px]">
+            <div className="mt-8 flex w-full flex-col sm:flex-row max-w-md items-center justify-center lg:justify-start gap-4">
+              <div className="relative w-full sm:max-w-[280px]">
                 <input
                   type="email"
                   placeholder="Enter your Email"
@@ -51,7 +51,7 @@ export function Footer() {
               </div>
               <button
                 type="button"
-                className="relative flex h-12 shrink-0 items-center justify-center rounded-full bg-white px-7 text-sm font-bold text-black transition-all hover:bg-neutral-200 hover:scale-105 active:scale-95"
+                className="relative flex w-full sm:w-auto h-12 shrink-0 items-center justify-center rounded-full bg-white px-7 text-sm font-bold text-black transition-all hover:bg-neutral-200 hover:scale-105 active:scale-95"
               >
                 Subscribe
               </button>
@@ -75,22 +75,22 @@ export function Footer() {
           </div>
 
           {/* Column 4: Contact (Span 4) */}
-          <div className="flex flex-col items-center lg:items-end gap-10 lg:col-span-4 mt-4 lg:mt-0">
+          <div className="flex flex-col items-center lg:items-end gap-10 lg:col-span-4 mt-8 lg:mt-0">
             
-            <div className="flex items-center gap-4 text-right group cursor-pointer justify-end">
-              <p className="text-sm font-medium leading-relaxed text-neutral-400 group-hover:text-neutral-200 transition-colors max-w-[200px]">
+            <div className="flex flex-col md:flex-row items-center gap-4 md:text-right group cursor-pointer lg:justify-end text-center">
+              <p className="text-sm font-medium leading-relaxed text-neutral-400 group-hover:text-neutral-200 transition-colors max-w-[240px] md:max-w-[200px] order-2 md:order-1">
                 HQ: 46-01, OCBC Centre, 65, Chulia Street, Singapore 049513
               </p>
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#0A0B14] text-neutral-400 transition-all group-hover:border-white/30 group-hover:text-white">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#0A0B14] text-neutral-400 transition-all group-hover:border-white/30 group-hover:text-white order-1 md:order-2">
                 <MapPin size={20} strokeWidth={1.5} />
               </div>
             </div>
 
-            <div className="flex items-center gap-4 text-right group cursor-pointer justify-end">
-              <p className="text-sm font-medium text-neutral-400 group-hover:text-neutral-200 transition-colors">
+            <div className="flex flex-col md:flex-row items-center gap-4 md:text-right group cursor-pointer lg:justify-end text-center">
+              <p className="text-sm font-medium text-neutral-400 group-hover:text-neutral-200 transition-colors order-2 md:order-1">
                 reachus@axiler.com
               </p>
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#0A0B14] text-neutral-400 transition-all group-hover:border-white/30 group-hover:text-white">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#0A0B14] text-neutral-400 transition-all group-hover:border-white/30 group-hover:text-white order-1 md:order-2">
                 <Mail size={20} strokeWidth={1.5} />
               </div>
             </div>
@@ -105,9 +105,10 @@ export function Footer() {
         {/* Bottom Footer */}
         <div className="flex flex-col-reverse items-center justify-between gap-8 md:flex-row">
           
-          <div className="flex flex-wrap items-center justify-center gap-6 text-[13px] font-medium text-neutral-500">
-            <span className="cursor-default tracking-wide uppercase">© Axiler {new Date().getFullYear()}</span>
+          <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-6 text-[13px] font-medium text-neutral-500 text-center">
+            <span className="cursor-default tracking-wide uppercase w-full md:w-auto mb-2 md:mb-0">© Axiler {new Date().getFullYear()}</span>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <span className="hidden md:inline text-white/20">•</span>
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
           </div>
 
