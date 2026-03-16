@@ -48,9 +48,9 @@ export default function Cade() {
 
           {/* Diagram Area */}
           <div 
-            className="relative mx-auto w-full max-w-[1200px] overflow-x-auto overflow-y-hidden pt-0 pb-6 -mt-20 -mb-4 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-white/5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/10 hover:[&::-webkit-scrollbar-thumb]:bg-white/20 transition-all font-sans"
+            className="relative mx-auto w-full max-w-[1200px] overflow-x-auto overflow-y-hidden pt-0 pb-6 -mt-20 -mb-16 md:-mb-4 [&::-webkit-scrollbar]:h-0 [scrollbar-width:none] transition-all font-sans"
           >
-            <div className="relative mx-auto h-[620px] min-w-[1200px] select-none">
+            <div className="relative mx-auto h-[540px] md:h-[620px] min-w-[1200px] select-none">
 
               {/* SVG Paths */}
               <svg className="absolute inset-0 z-0 h-full w-full pointer-events-none" aria-hidden="true">
@@ -265,7 +265,7 @@ export default function Cade() {
           </div>
 
           {/* Integrated Footer Banner */}
-          <div className="relative mx-auto mt-0 max-w-5xl px-4 sm:px-6">
+          <div className="hidden md:block relative mx-auto mt-0 max-w-5xl px-4 sm:px-6">
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#050505]/40 backdrop-blur-xl p-8 sm:p-10 shadow-2xl">
               {/* Subtle thematic glow inside the footer */}
               <div className="absolute -top-24 -right-24 -z-10 h-64 w-64 rounded-full bg-blue-500/10 blur-[80px]" />

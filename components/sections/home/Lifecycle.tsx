@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TbChevronDown, TbChevronUp } from "react-icons/tb";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 import {
@@ -105,6 +106,7 @@ export default function Lifecycle() {
   });
 
   const [activeTabId, setActiveTabId] = useState(LIFECYCLE_TABS[0].id);
+  const [expandedStep, setExpandedStep] = useState<number | null>(null);
   const activeTab = LIFECYCLE_TABS.find((tab) => tab.id === activeTabId)!;
 
   return (
@@ -148,7 +150,10 @@ export default function Lifecycle() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTabId(tab.id)}
+                    onClick={() => {
+                      setActiveTabId(tab.id);
+                      setExpandedStep(null);
+                    }}
                     className={`group relative flex items-center justify-center rounded-full px-5 py-3 md:px-6 md:py-3.5 text-sm md:text-[15px] font-medium transition-all duration-300 border shrink-0 ${
                       isActive
                         ? "border-cyan-400/50 bg-cyan-400/10 text-white shadow-[0_0_20px_rgba(34,211,238,0.15)]"
@@ -189,7 +194,7 @@ export default function Lifecycle() {
               </div>
 
               {/* The Timeline / Roadmap Horizontal Pipeline */}
-              <div className="relative w-full mt-4 lg:mt-10 pt-4 pb-2">
+              <div className="relative w-full mt-6 lg:mt-12 pt-4 pb-2">
                 
                 {/* Continuous Horizontal Connecting Line (Desktop) */}
                 <div className="absolute top-[44px] -translate-y-1/2 left-[10%] right-[10%] h-[2px] bg-white/10 hidden lg:block rounded-full overflow-hidden">
@@ -197,13 +202,14 @@ export default function Lifecycle() {
                 </div>
                 
                 {/* Vertical Connecting Line (Mobile) */}
-                <div className="absolute top-[10%] bottom-[10%] left-[27px] w-[2px] bg-white/10 block lg:hidden rounded-full overflow-hidden">
+                <div className="absolute top-8 bottom-8 left-[27px] w-[2px] bg-white/10 block lg:hidden rounded-full overflow-hidden">
                   <div className="w-full h-[40%] bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent animate-pulse" style={{ animationDuration: "3s" }} />
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-4 w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 sm:gap-12 lg:gap-4 w-full relative">
                   {activeTab.steps.map((step, idx) => {
                     const theme = THEMES[step.theme as keyof typeof THEMES];
+                    const isExpanded = expandedStep === idx;
                     
                     return (
                       <div key={idx} className="relative flex flex-row lg:flex-col items-start lg:items-center text-left lg:text-center group w-full">
@@ -214,20 +220,38 @@ export default function Lifecycle() {
                             <step.icon size={24} strokeWidth={1.5} className={`${theme.iconColor} transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_currentColor]`} />
                          </div>
 
-                         {/* Timeline Content (Borderless) */}
-                         <div className="flex-1 mt-0 lg:mt-6 ml-5 lg:ml-0 flex flex-col items-start lg:items-center border-none bg-transparent">
-                            <div className="mb-2 lg:mb-3 flex items-center justify-center">
-                              <span className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-neutral-400 transition-all duration-300 ${theme.iconColor.replace('text-', 'group-hover:text-')} group-hover:border-current/30 group-hover:bg-white/10 shadow-sm`}>
-                                Phase 0{idx + 1}
-                              </span>
-                            </div>
+                         {/* Timeline Content */}
+                         <div className="flex-1 mt-0 lg:mt-6 ml-6 lg:ml-0 flex flex-col items-start lg:items-center border-none bg-transparent pt-1 lg:pt-0 w-full">
+                            <button
+                              onClick={() => setExpandedStep(isExpanded ? null : idx)}
+                              className="flex flex-col items-start lg:items-center w-full text-left lg:text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded-md"
+                              aria-expanded={isExpanded}
+                            >
+                              <div className="mb-2 lg:mb-3 flex items-center justify-center">
+                                <span className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-neutral-400 transition-all duration-300 ${theme.iconColor.replace('text-', 'group-hover:text-')} group-hover:border-current/30 group-hover:bg-white/10 shadow-sm`}>
+                                  Phase 0{idx + 1}
+                                </span>
+                              </div>
 
-                            <h4 className="text-base sm:text-lg lg:text-[19px] xl:text-[21px] font-semibold text-white mb-2 leading-snug tracking-wide transition-colors">
-                              {step.title}
-                            </h4>
-                            <p className="text-xs sm:text-sm lg:text-[14px] text-neutral-400 leading-relaxed font-light max-w-[220px] lg:mx-auto opacity-80 group-hover:opacity-100 transition-opacity hidden sm:block text-balance">
-                              Agent-led execution seamlessly inline within phase context.
-                            </p>
+                              <div className="flex items-start sm:items-center justify-between w-full lg:w-auto lg:justify-center gap-3 lg:gap-0">
+                                <h4 className="text-lg lg:text-[19px] xl:text-[21px] font-semibold text-white mb-0 lg:mb-2 leading-snug tracking-wide transition-colors">
+                                  {step.title}
+                                </h4>
+                                <span className="lg:hidden text-neutral-500 group-hover:text-white transition-colors shrink-0 mt-0.5 sm:mt-0">
+                                  {isExpanded ? <TbChevronUp size={20} /> : <TbChevronDown size={20} />}
+                                </span>
+                              </div>
+                            </button>
+                            
+                            <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out w-full
+                              ${isExpanded ? 'grid-rows-[1fr] opacity-100 mt-2 lg:mt-0' : 'grid-rows-[0fr] opacity-0 lg:grid-rows-[1fr] lg:opacity-100'}
+                            `}>
+                              <div className="overflow-hidden">
+                                <p className="text-sm lg:text-[14px] text-neutral-400 leading-relaxed font-light lg:max-w-[220px] lg:mx-auto opacity-90 lg:opacity-80 group-hover:opacity-100 transition-opacity text-balance">
+                                  Agent-led execution seamlessly inline within phase context.
+                                </p>
+                              </div>
+                            </div>
                          </div>
                       </div>
                     );
