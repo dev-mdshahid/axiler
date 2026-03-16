@@ -376,23 +376,12 @@ export function AutonomousPlatformCard({
         }}
         aria-hidden="true"
       />
-      {/* Green glow background when right flow is active or in final state */}
-      <div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(34,197,94,0.12) 0%, rgba(34,197,94,0.05) 50%, transparent 70%)",
-          filter: "blur(28px)",
-          opacity: showGreenGlow ? 1 : 0,
-        }}
-        aria-hidden="true"
-      />
       {/* Background glows */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 30% 50%, rgba(192,169,255,0.05) 0%, transparent 60%), radial-gradient(ellipse at 50% 85%, rgba(34,197,94,0.04) 0%, transparent 50%)",
+            "radial-gradient(ellipse at 30% 50%, rgba(192,169,255,0.05) 0%, transparent 60%)",
         }}
         aria-hidden="true"
       />
@@ -400,7 +389,7 @@ export function AutonomousPlatformCard({
         className="pointer-events-none absolute -bottom-16 -left-16 size-48 rounded-full opacity-40 sm:size-56"
         style={{
           background:
-            "radial-gradient(circle, rgba(192,169,255,0.3) 0%, rgba(244,114,182,0.2) 30%, rgba(251,191,36,0.15) 50%, rgba(34,197,94,0.1) 70%, transparent 100%)",
+            "radial-gradient(circle, rgba(192,169,255,0.3) 0%, rgba(244,114,182,0.2) 30%, rgba(251,191,36,0.15) 50%, transparent 100%)",
           filter: "blur(40px)",
         }}
         aria-hidden="true"
@@ -409,7 +398,7 @@ export function AutonomousPlatformCard({
         className="pointer-events-none absolute -bottom-12 -right-12 h-40 w-3/4 opacity-50 sm:h-48 sm:w-2/3 md:h-56"
         style={{
           background:
-            "radial-gradient(ellipse 80% 70% at 70% 90%, rgba(192,169,255,0.12) 0%, rgba(244,114,182,0.06) 40%, rgba(34,197,94,0.04) 70%, transparent 100%)",
+            "radial-gradient(ellipse 80% 70% at 70% 90%, rgba(192,169,255,0.12) 0%, rgba(244,114,182,0.06) 40%, transparent 100%)",
           filter: "blur(32px)",
         }}
         aria-hidden="true"
@@ -418,7 +407,7 @@ export function AutonomousPlatformCard({
         className="pointer-events-none absolute -right-8 top-8 h-32 w-1/2 opacity-60 sm:h-40 sm:w-2/5"
         style={{
           background:
-            "radial-gradient(ellipse 70% 80% at 90% 20%, rgba(251,191,36,0.08) 0%, rgba(34,197,94,0.05) 50%, transparent 100%)",
+            "radial-gradient(ellipse 70% 80% at 90% 20%, rgba(251,191,36,0.08) 0%, transparent 100%)",
           filter: "blur(28px)",
         }}
         aria-hidden="true"
