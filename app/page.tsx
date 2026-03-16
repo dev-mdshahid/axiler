@@ -1,5 +1,6 @@
 import Hero from "@/components/sections/home/Hero";
 import Brands from "@/components/sections/home/Brands";
+import Integrations from "@/components/sections/home/Integrations";
 import WhatItDoes from "@/components/sections/home/WhatItDoes";
 import TheResult from "@/components/sections/home/TheResult";
 import Cade from "@/components/sections/home/Cade";
@@ -16,6 +17,7 @@ export default function Home() {
     <main id="main-content">
       <Hero />
       <Brands />
+      <Integrations />
       <WhatItDoes />
       <TheResult />
       <Cade />
