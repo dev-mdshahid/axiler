@@ -49,21 +49,26 @@ export default function FAQ() {
         <section
             id="faq"
             aria-labelledby="faq-heading"
-            className="w-full bg-black py-20 md:py-28 lg:py-36"
+            className="relative w-full bg-[#03040C] py-16 md:py-24 overflow-hidden border-t border-white/5"
         >
-            <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+            {/* Background Ambience */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div className="absolute top-[30%] right-[10%] h-[300px] w-[500px] rounded-full bg-orange-500/5 blur-[120px]" />
+            </div>
+
+            <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 flex flex-col items-center relative z-10">
                 {/* Header section */}
-                <div className="mb-14 sm:mb-20 flex flex-col items-center text-center max-w-4xl mx-auto w-full">
-                  <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-[#F97316] bg-[#F97316]/10 border border-[#F97316]/20 px-4 py-1.5 rounded-full">
+                <div className="mb-14 sm:mb-16 flex flex-col items-center text-center max-w-3xl mx-auto w-full">
+                  <div className="mb-5 inline-flex uppercase tracking-[0.2em] text-[11px] sm:text-xs font-bold text-orange-400 bg-orange-400/10 border border-orange-400/20 px-4 py-1.5 rounded-full">
                       Security FAQs
                     </div>
-                                        <h2
-                                            id="faq-heading"
-                                            className="text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5"
-                                        >
+                    <h2
+                        id="faq-heading"
+                        className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/60 mb-5"
+                    >
                       Frequently Asked Questions
                     </h2>
-                    <p className="text-base sm:text-lg font-medium leading-relaxed text-neutral-400">
+                    <p className="text-sm sm:text-base font-medium leading-relaxed text-neutral-400">
                       Learn more about our autonomous AI integration, compliance modules, and how our platform proactively secures your infrastructure.
                     </p>
                   </div>

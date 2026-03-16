@@ -16,8 +16,10 @@ export function FAQCard({ item, isOpen, onToggle }: FAQCardProps) {
     return (
         <div
             className={cn(
-                'cursor-pointer select-none transition-all duration-300 ease-in-out py-6 px-6 lg:py-8 lg:px-8 rounded-3xl border',
-                isOpen ? 'bg-[#1C1C1E] border-neutral-800' : 'bg-[#121212] border-transparent hover:border-neutral-800'
+                'group cursor-pointer select-none transition-all duration-300 ease-in-out py-6 px-6 lg:py-7 lg:px-8 rounded-3xl border',
+                isOpen 
+                  ? 'bg-white/[0.03] border-white/10 shadow-[0_0_30px_rgba(249,115,22,0.03)]' 
+                  : 'bg-[#0A0B14] border-white/5 hover:bg-white/[0.02] hover:border-white/10'
             )}
             onClick={onToggle}
             role="button"
@@ -33,21 +35,23 @@ export function FAQCard({ item, isOpen, onToggle }: FAQCardProps) {
             <div className="flex flex-col">
                 {/* Question row */}
                 <div className="flex items-center justify-between gap-4">
-                    <h3 className={cn('text-foreground font-medium text-lg lg:text-[22px] min-w-0 transition-all duration-300 leading-snug', isOpen ? 'whitespace-normal' : 'truncate')}>
+                    <h3 className={cn('text-white font-medium text-base lg:text-[18px] min-w-0 transition-all duration-300 leading-snug group-hover:text-orange-50', isOpen ? 'whitespace-normal' : 'truncate')}>
                         {item.question}
                     </h3>
 
                     {/* Toggle Icon */}
                     <div
                         className={cn(
-                            'shrink-0 flex items-center justify-center w-9 h-9 rounded-full transition-all duration-300',
-                            isOpen ? 'bg-[#2A2A2A]' : 'bg-white'
+                            'shrink-0 flex items-center justify-center w-8 h-8 rounded-full border transition-all duration-300',
+                            isOpen 
+                              ? 'bg-orange-500/10 border-orange-500/30' 
+                              : 'bg-white/5 border-white/10 group-hover:bg-white/10 group-hover:border-white/20'
                         )}
                     >
                         {isOpen ? (
-                            <Minus size={18} color="white" strokeWidth={2} />
+                            <Minus size={16} className="text-orange-400" strokeWidth={2.5} />
                         ) : (
-                            <Plus size={18} color="#111111" strokeWidth={2} />
+                            <Plus size={16} className="text-neutral-400 group-hover:text-white" strokeWidth={2.5} />
                         )}
                     </div>
                 </div>
@@ -61,7 +65,7 @@ export function FAQCard({ item, isOpen, onToggle }: FAQCardProps) {
                         marginTop: isOpen ? '16px' : '0px',
                     }}
                 >
-                    <p className="leading-relaxed font-normal text-neutral-400 text-base md:text-lg">
+                    <p className="leading-relaxed font-normal text-neutral-400 text-sm md:text-[15px]">
                         {item.answer}
                     </p>
                 </div>
