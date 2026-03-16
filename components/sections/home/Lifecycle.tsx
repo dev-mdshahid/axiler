@@ -138,66 +138,40 @@ export default function Lifecycle() {
           </div>
 
         {/* Main Content Interface */}
-        <div className="flex flex-col xl:flex-row gap-8 lg:gap-12 mt-10">
+        <div className="flex flex-col gap-8 lg:gap-10 mt-6 lg:mt-10 max-w-[1200px] mx-auto w-full">
           
-          {/* Left: Domain List Navigation */}
-          <div className="w-full xl:w-[380px] shrink-0 flex flex-col gap-2">
-            <div className="mb-2 pl-4">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
-                Lifecycle Domains
-              </span>
-            </div>
-            
-            {LIFECYCLE_TABS.map((tab, idx) => {
-              const isActive = activeTabId === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTabId(tab.id)}
-                  className={`group relative flex w-full flex-col justify-center rounded-2xl p-5 text-left transition-all duration-300 border ${
-                    isActive
-                      ? "border-white/10 bg-white/6 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] backdrop-blur-md"
-                      : "border-transparent hover:bg-white/2 hover:border-white/5"
-                  }`}
-                >
-                  {/* Left Active Glow Line */}
-                  {isActive && (
-                    <div className="absolute left-0 top-1/2 h-10 w-1 -translate-y-1/2 rounded-r-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
-                  )}
-
-                  <div className="flex flex-col gap-4 w-full">
-                    <div className="flex w-full items-center justify-between">
-                      <div className="flex items-center gap-4">
-                         <div className={`flex items-center justify-center w-8 h-8 rounded-full border text-xs font-bold transition-all duration-300 ${
-                            isActive 
-                              ? "border-cyan-400/30 bg-cyan-400/10 text-cyan-400" 
-                              : "border-white/10 bg-white/5 text-neutral-500 group-hover:border-white/20 group-hover:text-neutral-300"
-                         }`}>
-                           {String(idx + 1).padStart(2, "0")}
-                         </div>
-                         <h3 className={`text-[17px] font-semibold tracking-wide transition-colors ${
-                            isActive ? "text-white" : "text-neutral-400 group-hover:text-neutral-200"
-                         }`}>
-                           {tab.title}
-                         </h3>
-                      </div>
-                      <LuChevronRight 
-                        size={20}
-                        className={`transition-all duration-300 ${
-                          isActive 
-                            ? "text-cyan-400 translate-x-0 opacity-100" 
-                            : "text-neutral-600 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0"
-                        }`} 
-                      />
+          {/* Top: Horizontal Domain List Navigation */}
+          <div className="w-full overflow-x-auto pb-4 -mb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="flex items-center justify-start lg:justify-center gap-2 sm:gap-3 min-w-max px-2">
+              {LIFECYCLE_TABS.map((tab, idx) => {
+                const isActive = activeTabId === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTabId(tab.id)}
+                    className={`group relative flex items-center justify-center rounded-full px-5 py-3 md:px-6 md:py-3.5 text-sm md:text-[15px] font-medium transition-all duration-300 border shrink-0 ${
+                      isActive
+                        ? "border-cyan-400/50 bg-cyan-400/10 text-white shadow-[0_0_20px_rgba(34,211,238,0.15)]"
+                        : "border-white/10 bg-[#0A0B14] text-neutral-400 hover:bg-white/5 hover:border-white/20 hover:text-neutral-200"
+                    }`}
+                  >
+                    {isActive && (
+                      <div className="absolute -bottom-px left-1/2 w-1/2 h-[2px] -translate-x-1/2 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)] rounded-t-full" />
+                    )}
+                    <div className="flex items-center gap-3">
+                      <span className={`text-[11px] md:text-xs font-bold font-mono tracking-widest ${isActive ? "text-cyan-400" : "text-neutral-500 group-hover:text-neutral-400"}`}>
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span>{tab.title}</span>
                     </div>
-                  </div>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Right: Active Domain View */}
-          <div className="flex-1 relative rounded-3xl border border-white/5 bg-[#0A0B14]/80 px-6 py-10 sm:p-12 shadow-2xl overflow-hidden backdrop-blur-xl ring-1 ring-white/10">
+          {/* Active Domain View Container */}
+          <div className="w-full relative rounded-3xl border border-white/5 bg-[#0A0B14]/80 px-6 py-10 sm:p-12 shadow-2xl overflow-hidden backdrop-blur-xl ring-1 ring-white/10">
             {/* Inner Glows */}
             <div className="absolute inset-0 bg-linear-to-b from-white/2 to-transparent pointer-events-none" />
             <div className="absolute top-0 right-0 w-full h-[500px] bg-linear-to-b from-blue-500/5 to-transparent blur-[100px] pointer-events-none" />
