@@ -4,77 +4,109 @@ import { cn } from "@/lib/utils";
 
 const TESTIMONIALS = [
   {
-    name: "Natasha Syed - CEO",
+    name: "Natasha Syed",
+    role: "CEO",
     company: "Skilledin Green",
     text: "Implementing CADE has transformed the way we approach application security. Its real-time threat detection and automated protection have significantly reduced vulnerabilities, giving our team confidence and peace of mind. CADE's intuitive interface and actionable insights make it an indispensable part of our security strategy.",
     logoSrc: "/assets/brands/skilled-in.svg",
-    glowClass: "shadow-[inset_0_2px_0_0_var(--color-testi-border-purple),0_-8px_32px_-12px_var(--color-testi-border-purple)] border-testi-border-purple/20",
+    highlight: "from-purple-500/20 to-transparent",
+    borderHighlight: "group-hover:border-purple-500/50 hover:shadow-[0_0_30px_-5px_var(--tw-shadow-color)] hover:shadow-purple-500/30",
   },
   {
-    name: "A M Ishtiaque Sarwar - Managing Director",
+    name: "A M Ishtiaque Sarwar",
+    role: "Managing Director",
     company: "aamarPay",
     text: "I wanted to express my heartfelt appreciation for the outstanding protection CADE has provided. Its advanced application security capabilities and real-time threat detection have been invaluable in safeguarding our organization's digital assets. The Axiler team was very responsive and supportive throughout the engagement.",
     logoSrc: "/assets/brands/aamarpay.svg",
-    glowClass: "shadow-[inset_0_2px_0_0_var(--color-testi-border-cyan),0_-8px_32px_-12px_var(--color-testi-border-cyan)] border-testi-border-cyan/20",
+    highlight: "from-cyan-500/20 to-transparent",
+    borderHighlight: "group-hover:border-cyan-500/50 hover:shadow-[0_0_30px_-5px_var(--tw-shadow-color)] hover:shadow-cyan-500/30",
   },
   {
-    name: "Shahjalal Palash - Head of IT",
+    name: "Shahjalal Palash",
+    role: "Head of IT",
     company: "Renata PLC",
     text: "Axiler's security services helped us address and close our security gaps. They allowed us to resolve vulnerabilities quickly and efficiently. We appreciate their professional approach to securing our business environment.",
     logoSrc: "/assets/brands/renata.svg",
-    glowClass: "shadow-[inset_0_2px_0_0_var(--color-testi-border-orange),0_-8px_32px_-12px_var(--color-testi-border-orange)] border-testi-border-orange/20",
+    highlight: "from-orange-500/20 to-transparent",
+    borderHighlight: "group-hover:border-orange-500/50 hover:shadow-[0_0_30px_-5px_var(--tw-shadow-color)] hover:shadow-orange-500/30",
   }
 ];
 
 export default function Testimonials() {
   return (
-    <SectionWrapper id="testimonials" className="relative py-20 md:py-28 lg:py-36">
-      {/* Optional faint background grid similar to the screenshot */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[32px_32px]" />
+    <SectionWrapper id="testimonials" className="relative py-24 sm:py-32 overflow-hidden">
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      <div className="absolute left-1/2 top-0 -z-10 -mt-24 w-full max-w-[1000px] -translate-x-1/2 opacity-30 blur-[100px]">
+        <div className="aspect-[2/1] bg-gradient-to-b from-blue-900 via-purple-900 to-transparent" />
+      </div>
 
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-col px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="mb-14 flex flex-col items-center text-center md:mb-16 lg:mb-20">
-          <h2 className="mb-5 text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-            Words Of Endorsement<br />From Our Clients
+        <div className="mx-auto max-w-2xl text-center mb-16 lg:mb-24 relative">
+          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-medium text-cyan-400 backdrop-blur-md mb-6 relative hover:bg-white/10 transition-colors">
+            <span className="flex h-2 w-2 rounded-full bg-cyan-400 mr-2 shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
+            Client Success Stories
+          </div>
+          <h2 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-5xl mb-6 font-rethink">
+            Words Of Endorsement<br className="hidden sm:block" /> From Our Clients
           </h2>
-          <p className="max-w-2xl text-base font-medium leading-relaxed text-neutral-300 sm:text-lg">
-            Check out what all our happy clients have to say about us!
+          <p className="mt-4 text-lg leading-8 text-neutral-400 max-w-xl mx-auto font-rethink">
+            Discover how we&apos;re transforming security landscapes globally through the experiences of our valued partners.
           </p>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {TESTIMONIALS.map((col, idx) => (
+        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3 z-10">
+          {TESTIMONIALS.map((testimonial, idx) => (
             <div 
               key={idx}
               className={cn(
-                "relative flex h-full flex-col overflow-hidden rounded-2xl border bg-[#0D0D0D]/80 p-8 backdrop-blur-md transition-all duration-300 hover:scale-[1.02]",
-                col.glowClass
+                "group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#0D0D0D]/60 p-8 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2",
+                testimonial.borderHighlight
               )}
             >
-              {/* Inner card background grid to match the design */}
-              <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[48px_48px] mix-blend-overlay" />
+              {/* Card gradient aura on hover */}
+              <div 
+                className={cn(
+                  "absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+                  testimonial.highlight
+                )}
+              />
 
-              <div className="relative z-10 flex h-full flex-col">
-                <div className="mb-6 font-rethink text-sm font-extrabold leading-none tracking-normal text-white">
-                  <span>{col.name}</span>
-                  <br />
-                  <span>{col.company}</span>
+              {/* Inner subtle grid */}
+              <div className="absolute inset-x-0 inset-y-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] rounded-3xl [mask-image:linear-gradient(to_bottom,white,transparent_80%)]" />
+              
+              <div className="relative z-10">
+                {/* Decorative quote icon */}
+                <div className="mb-8">
+                  <svg className="h-10 w-10 text-white/10 transition-colors duration-500 group-hover:text-white/20" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.694 20 9.24L20 10.054 24 10.054 24 18M3.017 18L3.017 10.609C3.017 4.905 6.748 1.039 12 0L12.995 2.151C10.563 3.068 9 5.694 9 9.24L9 10.054 13 10.054 13 18" />
+                  </svg>
                 </div>
                 
-                <p className="flex-1 font-rethink text-sm font-normal leading-normal tracking-normal text-content-disabled align-middle">
-                  {col.text}
+                <p className="text-base leading-relaxed text-neutral-300 font-rethink relative z-10">
+                  "{testimonial.text}"
                 </p>
+              </div>
 
-                <div className="mt-8 flex items-end">
+              <div className="mt-10 flex items-center justify-between border-t border-white/5 pt-6 relative z-10">
+                <div>
+                  <div className="font-semibold text-white tracking-wide font-rethink">
+                    {testimonial.name}
+                  </div>
+                  <div className="text-sm font-medium text-neutral-400 mt-1 font-rethink">
+                    {testimonial.role} &bull; <span className="text-white/70">{testimonial.company}</span>
+                  </div>
+                </div>
+                <div className="ml-4 shrink-0">
                   <Image
-                    src={col.logoSrc}
-                    alt={`${col.company} logo`}
-                    width={112}
-                    height={38}
-                    className="h-[38px] w-[112px] object-contain"
+                    src={testimonial.logoSrc}
+                    alt={`${testimonial.company} logo`}
+                    width={96}
+                    height={32}
+                    className="h-8 w-auto object-contain opacity-50 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
                   />
                 </div>
               </div>
