@@ -60,11 +60,11 @@ export function Footer() {
 
           {/* Column 2: Links (Span 3) */}
           <div className="flex flex-col items-center lg:items-start gap-5 text-sm font-semibold tracking-wider text-neutral-400 lg:col-span-2 mt-4 lg:mt-0 uppercase">
-            <Link href="#service" className="hover:text-white transition-colors">Service</Link>
-            <Link href="#testimonial" className="hover:text-white transition-colors">Testimonial</Link>
-            <Link href="#demo" className="hover:text-white transition-colors">Book a Demo</Link>
-            <Link href="#rnd" className="hover:text-white transition-colors">R&D</Link>
-            <Link href="#certification" className="hover:text-white transition-colors">Certification</Link>
+            <Link href="#security-lifecycle" className="hover:text-white transition-colors">Service</Link>
+            <Link href="#testimonials" className="hover:text-white transition-colors">Testimonial</Link>
+            <Link href="#why-axiler" className="hover:text-white transition-colors">Why Axiler</Link>
+            <Link href="#cade" className="hover:text-white transition-colors">Cade Platform</Link>
+            <Link href="#faq" className="hover:text-white transition-colors">FAQ</Link>
           </div>
 
           {/* Column 3: Certifications (Span 1) */}

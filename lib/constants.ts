@@ -9,8 +9,9 @@ export const SITE_NAME = "Axiler";
 export const SITE_URL = "https://axiler.com";
 
 export const NAV_LINKS: NavLink[] = [
-  { label: "Features", href: "#features" },
-  { label: "Blog", href: "#blog" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "What It Does", href: "#what-it-does" },
+  { label: "Why Axiler", href: "#why-axiler" },
+  { label: "Services", href: "#security-lifecycle" },
+  { label: "Testimonials", href: "#testimonials" },
+  { label: "FAQ", href: "#faq" },
 ];
