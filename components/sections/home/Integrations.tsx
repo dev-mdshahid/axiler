@@ -146,7 +146,7 @@ export default function Integrations() {
             return (
               <div
                 key={rowIndex}
-                className="relative mx-auto w-full overflow-hidden before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-[18%] sm:before:w-[14%] md:before:w-[10%] before:bg-linear-to-r before:from-[#050509] before:to-transparent after:pointer-events-none after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-[18%] sm:after:w-[14%] md:after:w-[10%] after:bg-linear-to-l after:from-[#050509] after:to-transparent"
+                className="relative mx-auto w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
               >
                 <div
                   className="flex w-max animate-marquee hover:play-state-paused"

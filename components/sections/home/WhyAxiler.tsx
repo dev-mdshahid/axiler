@@ -39,7 +39,7 @@ export default function WhyAxiler() {
     };
   }, []);
 
-  // Performance optimization: Pause video when out of viewport
+  // Performance optimization: Restart video when entering viewport, pause when out
   useEffect(() => {
     const video = videoRef.current;
     const container = videoContainerRef.current;
@@ -48,6 +48,7 @@ export default function WhyAxiler() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          video.currentTime = 0;
           video.play().catch(() => { });
         } else {
           video.pause();

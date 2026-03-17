@@ -19,9 +19,9 @@ export default function Brands() {
   const extendedBrands = Array.from({ length: 4 }, () => BRANDS).flat();
 
   return (
-    <SectionWrapper
+    <section
       id="brands"
-      className="bg-transparent overflow-hidden relative"
+      className="w-full py-16 sm:py-20 lg:py-24 bg-transparent overflow-hidden relative"
     >
       <div
         ref={ref}
@@ -90,6 +90,6 @@ export default function Brands() {
           </div>
         </div>
       </div>
-    </SectionWrapper>
+    </section>
   );
 }

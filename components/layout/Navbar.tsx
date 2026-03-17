@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2";
+import { HiOutlineBars3BottomRight, HiOutlineXMark } from "react-icons/hi2";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -33,11 +33,12 @@ export function Navbar() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header
-      className={cn(
+    <>
+      <header
+        className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300 motion-reduce:transition-none",
         isScrolled
-          ? "bg-neutral-950/80 shadow-lg backdrop-blur-xl"
+          ? "bg-background/80 border-b border-white/5 shadow-lg backdrop-blur-xl"
           : "bg-transparent"
       )}
     >
@@ -74,16 +75,16 @@ export function Navbar() {
         {/* ── Desktop CTA Buttons ────────────────────────────── */}
         <div className="hidden items-center gap-3 lg:flex">
           <Link
-            href="#partnership"
-            className="inline-flex h-10 items-center justify-center rounded-full border border-white px-6 text-sm font-medium text-white transition-all duration-300 hover:bg-white hover:text-neutral-950 motion-reduce:transition-none"
+            href="#what-it-does"
+            className="inline-flex h-10 items-center justify-center rounded-lg border border-white px-6 text-sm font-medium text-white transition-all duration-300 hover:bg-white hover:text-black motion-reduce:transition-none"
           >
-            Apply Partnership
+            Why Axiler
           </Link>
           <Link
-            href="#demo"
-            className="inline-flex h-10 items-center justify-center rounded-full border border-white bg-white px-6 text-sm font-medium text-neutral-950 transition-all duration-300 hover:bg-transparent hover:text-white motion-reduce:transition-none"
+            href="#cade"
+            className="inline-flex h-10 items-center justify-center rounded-lg bg-white px-6 text-sm font-medium text-black shadow-lg shadow-white/10 transition-all duration-300 hover:bg-neutral-200 hover:shadow-xl hover:shadow-white/20 active:scale-95 motion-reduce:transition-none"
           >
-            Demo
+            How It Works
           </Link>
         </div>
 
@@ -98,22 +99,23 @@ export function Navbar() {
           {isMobileMenuOpen ? (
             <HiOutlineXMark className="size-6" aria-hidden="true" />
           ) : (
-            <HiOutlineBars3 className="size-6" aria-hidden="true" />
+            <HiOutlineBars3BottomRight className="size-6" aria-hidden="true" />
           )}
         </button>
       </nav>
+    </header>
 
-      {/* ── Mobile Menu Overlay ─────────────────────────────── */}
-      <div
-        className={cn(
-          "fixed inset-0 z-40 bg-neutral-950/95 backdrop-blur-xl transition-all duration-500 motion-reduce:transition-none lg:hidden",
-          isMobileMenuOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
-        )}
-      >
-        <div className="flex h-full flex-col items-center justify-center gap-8">
-          <ul className="flex flex-col items-center gap-6">
+    {/* ── Mobile Menu Overlay ─────────────────────────────── */}
+    <div
+      className={cn(
+        "fixed inset-0 z-40 bg-background/95 backdrop-blur-xl transition-all duration-500 motion-reduce:transition-none lg:hidden",
+        isMobileMenuOpen
+          ? "pointer-events-auto opacity-100"
+          : "pointer-events-none opacity-0"
+      )}
+    >
+      <div className="flex h-full flex-col items-center justify-center gap-8">
+        <ul className="flex flex-col items-center gap-6">
             {NAV_LINKS.map((link, index) => (
               <li
                 key={link.href}
@@ -155,22 +157,22 @@ export function Navbar() {
             }}
           >
             <Link
-              href="#partnership"
-              className="inline-flex h-12 w-56 items-center justify-center rounded-full border border-white text-base font-medium text-white transition-all duration-300 hover:bg-white hover:text-neutral-950"
+              href="#what-it-does"
+              className="inline-flex h-12 w-56 items-center justify-center rounded-lg border border-white text-base font-medium text-white transition-all duration-300 hover:bg-white hover:text-black"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Apply Partnership
+              Why Axiler
             </Link>
             <Link
-              href="#demo"
-              className="inline-flex h-12 w-56 items-center justify-center rounded-full border border-white bg-white text-base font-medium text-neutral-950 transition-all duration-300 hover:bg-transparent hover:text-white"
+              href="#cade"
+              className="inline-flex h-12 w-56 items-center justify-center rounded-lg bg-white text-base font-medium text-black shadow-lg shadow-white/10 transition-all duration-300 hover:bg-neutral-200 hover:shadow-xl hover:shadow-white/20 active:scale-95"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Demo
+              How It Works
             </Link>
           </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }
