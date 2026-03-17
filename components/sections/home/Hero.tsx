@@ -25,6 +25,27 @@ export default function Hero() {
     };
   }, [isVideoLoaded, hasVideoError]);
 
+  // Performance optimization: Pause video when not in viewport
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [isVideoLoaded]);
+
   return (
     <section
       id="hero"
@@ -40,11 +61,10 @@ export default function Hero() {
         <div className="relative w-full aspect-video md:absolute md:inset-0 md:aspect-auto z-0 mt-20 md:mt-0">
           <video
             ref={videoRef}
-            autoPlay
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             className={`absolute inset-0 size-full object-contain transition-opacity duration-1000 motion-reduce:transition-none md:scale-100 md:object-cover ${
               isVideoLoaded ? "opacity-100" : "opacity-0"
             }`}
@@ -73,44 +93,32 @@ export default function Hero() {
               {/* Top-down scanning laser line */}
               <div className="absolute top-0 left-0 w-full h-[1px] bg-white/30 shadow-[0_0_15px_#ffffff] animate-[ping_3s_linear_infinite]" />
               
-              <div className="relative flex items-center justify-center">
+              <div className="relative flex items-center justify-center h-16 w-16 md:h-40 md:w-40 md:mt-0">
                 {/* Advanced targeting crosshairs */}
-                <div className="absolute h-40 w-40 border border-white/5 rounded-full animate-[spin_10s_linear_infinite]" />
-                <div className="absolute h-32 w-32 border-2 border-transparent border-t-white/40 border-b-white/40 rounded-full animate-[spin_3s_linear_infinite]" />
+                <div className="absolute h-16 w-16 md:h-40 md:w-40 border border-white/5 rounded-full animate-[spin_10s_linear_infinite]" />
+                <div className="absolute h-14 w-14 md:h-32 md:w-32 border-2 border-transparent border-t-white/40 border-b-white/40 rounded-full animate-[spin_3s_linear_infinite]" />
                 
                 {/* Data processing rings */}
-                <div className="absolute h-24 w-24 border border-dashed border-white/20 rounded-full animate-[spin_5s_linear_infinite_reverse]" />
-                <div className="absolute h-16 w-16 border-2 border-transparent border-r-white/60 border-l-white/60 rounded-full animate-[spin_2s_linear_infinite]" />
+                <div className="absolute h-10 w-10 md:h-24 md:w-24 border border-dashed border-white/20 rounded-full animate-[spin_5s_linear_infinite_reverse]" />
+                <div className="absolute h-6 w-6 md:h-16 md:w-16 border-2 border-transparent border-r-white/60 border-l-white/60 rounded-full animate-[spin_2s_linear_infinite]" />
                 
                 {/* Core Lock / Processing unit */}
-                <div className="h-6 w-6 border border-white/50 bg-white/5 animate-pulse flex items-center justify-center backdrop-blur-sm shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-                  <div className="h-2 w-2 bg-white/90 animate-ping" />
+                <div className="h-3 w-3 md:h-6 md:w-6 border border-white/50 bg-white/5 animate-pulse flex items-center justify-center backdrop-blur-sm shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                  <div className="h-1 w-1 md:h-2 md:w-2 bg-white/90 animate-ping" />
                 </div>
               </div>
 
               {/* Terminal / Code-style Status Output */}
-              <div className="mt-16 flex flex-col items-center gap-1.5 font-mono z-10 w-full px-6">
-                <p className="text-sm font-bold tracking-[0.2em] text-white/90 uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] flex items-center">
-                  <span className="mr-2 opacity-50">_</span> INITIATING_SECURE_LINK
-                  <span className="ml-1 inline-block w-2 bg-white/70 animate-pulse">_</span>
+              <div className="mt-3 md:mt-12 flex flex-col items-center gap-0.5 font-mono z-10 w-full px-2 text-center">
+                <p className="text-[7px] md:text-sm font-bold tracking-[0.1em] md:tracking-[0.2em] text-white/90 uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] flex items-center justify-center">
+                  <span className="mr-1 md:mr-2 opacity-50">_</span> INITIATING_SECURE_LINK
+                  <span className="ml-1 inline-block w-1 md:w-2 h-1.5 md:h-3 bg-white/70 animate-pulse" />
                 </p>
-                <div className="flex gap-2 items-center mt-1 text-[10px] sm:text-xs text-white/50 tracking-widest uppercase">
-                  <span>[<span className="text-white/90 animate-pulse">OK</span>] Handshake</span>
-                  <span>|</span>
-                  <span>[<span className="text-white/90 animate-pulse">OK</span>] Encryption</span>
-                  <span>|</span>
-                  <span className="flex items-center gap-1">
-                    Loading Payload
-                    <span className="flex gap-0.5">
-                      <span className="h-1 w-1 bg-white/60 rounded-full animate-[bounce_1s_infinite_-0.3s]" />
-                      <span className="h-1 w-1 bg-white/60 rounded-full animate-[bounce_1s_infinite_-0.15s]" />
-                      <span className="h-1 w-1 bg-white/60 rounded-full animate-[bounce_1s_infinite_0s]" />
-                    </span>
-                  </span>
+                <div className="flex flex-row flex-nowrap justify-center gap-1 mx-auto mt-0.5 md:mt-2 text-[5px] md:text-xs text-white/50 tracking-[0.1em] md:tracking-widest uppercase text-center">
+                  <span className="flex items-center">[<span className="text-white/90 animate-pulse mx-0.5">OK</span>] Handshake</span>
+                  <span className="">|</span>
+                  <span className="flex items-center">[<span className="text-white/90 animate-pulse mx-0.5">OK</span>] Encrypt</span>
                 </div>
-                <p className="text-[10px] tracking-[0.3em] font-semibold text-white/30 mt-4 uppercase">
-                  SYS.ID: 0x8F9E2A // ZERO-TRUST ENV
-                </p>
               </div>
             </div>
           )}

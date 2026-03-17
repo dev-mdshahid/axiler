@@ -29,11 +29,6 @@ export default function WhyAxiler() {
       video.addEventListener("loadeddata", handleLoadedData);
     }
 
-    // Play/catch logic for initial load
-    video.play().catch(() => {
-      // Autoplay prevented by browser
-    });
-
     return () => {
       video.removeEventListener("loadeddata", handleLoadedData);
     };
