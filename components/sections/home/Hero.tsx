@@ -29,16 +29,15 @@ export default function Hero() {
     <section
       id="hero"
       aria-label="Hero section"
-      className="relative flex min-h-dvh w-full flex-col items-center justify-end overflow-hidden bg-transparent"
+      className="relative flex w-full flex-col items-center md:min-h-dvh md:justify-end overflow-hidden bg-transparent"
     >
       {/* ── Background Video ──────────────────────────────── */}
       {/*
-        Mobile: object-contain keeps the full video visible (no cropping).
-        The dark background fills the remaining space seamlessly.
-        Desktop (md+): object-cover for full-bleed cinematic effect.
+        Mobile: relative positioning, object-contain
+        Desktop (md+): absolute inset-0, object-cover for full-bleed cinematic effect.
       */}
       {!hasVideoError && (
-        <>
+        <div className="relative w-full aspect-video md:absolute md:inset-0 md:aspect-auto z-0 mt-20 md:mt-0">
           <video
             ref={videoRef}
             autoPlay
@@ -46,7 +45,7 @@ export default function Hero() {
             loop
             playsInline
             preload="metadata"
-            className={`absolute inset-0 size-full scale-150 object-contain transition-opacity duration-1000 motion-reduce:transition-none sm:scale-130 md:scale-100 md:object-cover ${
+            className={`absolute inset-0 size-full object-contain transition-opacity duration-1000 motion-reduce:transition-none md:scale-100 md:object-cover ${
               isVideoLoaded ? "opacity-100" : "opacity-0"
             }`}
             aria-hidden="true"
@@ -71,11 +70,11 @@ export default function Hero() {
               <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-white/80" />
             </div>
           )}
-        </>
+        </div>
       )}
 
       {hasVideoError && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-transparent">
+        <div className="relative md:absolute inset-0 flex items-center justify-center bg-transparent py-20 md:py-0">
           <p className="rounded-full bg-white/5 px-4 py-2 text-xs font-medium text-white/60 backdrop-blur">
             Background video unavailable in this environment.
           </p>
@@ -85,17 +84,17 @@ export default function Hero() {
       {/* ── Gradient Overlays ─────────────────────────────── */}
       {/* Top fade for navbar readability */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background/80 to-transparent"
+        className="pointer-events-none hidden md:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background/80 to-transparent z-0"
         aria-hidden="true"
       />
       {/* Bottom fade for CTA readability */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background/70 to-transparent"
+        className="pointer-events-none hidden md:block absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background/70 to-transparent z-0"
         aria-hidden="true"
       />
 
       {/* ── CTA Content ────────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col items-center px-4 pb-12 sm:pb-16 md:pb-20 lg:pb-24">
+      <div className="relative z-10 flex flex-col items-center px-4 pb-12 pt-8 sm:pb-16 md:pt-0 md:pb-20 lg:pb-24">
         <Link
           href="#demo"
           className="inline-flex h-12 items-center justify-center rounded-lg bg-brand-primary px-8 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:bg-brand-primary-dark hover:shadow-xl active:scale-95 motion-reduce:transition-none sm:h-14 sm:px-10 sm:text-lg"
